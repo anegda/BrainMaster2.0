@@ -2,4 +2,6 @@
     <string name="app_name">BrainMaster</string>
     <string name="entrar">ENTRAR</string>
     <string name="registro">REGISTRARTE</string>
+    <string name="usuario">Usuario</string>
+    <string name="contraseña">Contraseña</string>
 </resources>

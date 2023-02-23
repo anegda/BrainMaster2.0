@@ -3,4 +3,6 @@
     <string name="app_name">BrainMaster</string>
     <string name="entrar">SARTU</string>
     <string name="registro">ERREGISTRATU</string>
+    <string name="usuario">Erabiltzailea</string>
+    <string name="contraseña">Pasahitza</string>
 </resources>
