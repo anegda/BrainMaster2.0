@@ -5,4 +5,8 @@
     <string name="registro">ERREGISTRATU</string>
     <string name="usuario">Erabiltzailea</string>
     <string name="contraseña">Pasahitza</string>
+    <string name="email">Email</string>
+    <string name="fN">Jaiotze data</string>
+    <string name="nombre">Izena</string>
+    <string name="apellido">Abizena</string>
 </resources>

@@ -5,4 +5,8 @@
     <string name="registro">SIGN UP</string>
     <string name="usuario">User</string>
     <string name="contraseña">Password</string>
+    <string name="email">Email</string>
+    <string name="fN">Birth date</string>
+    <string name="nombre">Name</string>
+    <string name="apellido">Surname</string>
 </resources>
