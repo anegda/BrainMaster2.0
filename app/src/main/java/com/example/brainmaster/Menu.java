@@ -13,7 +13,7 @@ public class Menu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         int[] logos={R.drawable.botones, R.drawable.palabras};
         String [] nombres={"Botones", "Palabras"};
-        double [] dificultad={2.0, 1.5};
+        double [] dificultad={2, 1};
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
