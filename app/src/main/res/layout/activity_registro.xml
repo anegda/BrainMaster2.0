@@ -140,7 +140,7 @@
         android:layout_marginTop="590dp"
         android:ems="10"
         android:hint="@string/fN"
-        android:inputType="date"
+        android:focusable="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
