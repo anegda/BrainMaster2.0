@@ -13,7 +13,7 @@ public class miBD extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE Usuarios ('Codigo' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'Nombre' VARCHAR(255), 'Apellidos' VARCHAR(255), 'usuario' VARCHAR(255), 'password' VARCHAR(255), 'email' VARCHAR(255), 'fechaNac' DATE)");
+        sqLiteDatabase.execSQL("CREATE TABLE Usuarios ('Codigo' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'nombre' VARCHAR(255), 'apellidos' VARCHAR(255), 'usuario' VARCHAR(255), 'password' VARCHAR(255), 'email' VARCHAR(255), 'fechaNac' DATE)");
     }
 
     @Override
