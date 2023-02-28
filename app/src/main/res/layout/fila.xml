@@ -9,12 +9,13 @@
         android:id="@+id/imagen"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
         android:layout_weight="1"
         app:srcCompat="@drawable/botones" />
 
     <TextView
         android:id="@+id/etiqueta"
-        android:layout_width="wrap_content"
+        android:layout_width="168dp"
         android:layout_height="38dp"
         android:layout_weight="1"
         android:text="TextView"
@@ -23,10 +24,10 @@
 
     <RatingBar
         android:id="@+id/barra"
-        android:layout_width="112dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginRight="15dp"
         android:isIndicator="true"
         android:numStars="3"
-        android:stepSize="1" />
+        android:stepSize="0.1" />
 </LinearLayout>

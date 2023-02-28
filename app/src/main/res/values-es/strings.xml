@@ -9,4 +9,6 @@
     <string name="fN">Fecha de nacimiento</string>
     <string name="nombre">Nombre</string>
     <string name="apellido">Apellido</string>
+    <string name="botones">Botones</string>
+    <string name="palabras">Palabras</string>
 </resources>

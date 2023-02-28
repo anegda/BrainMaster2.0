@@ -12,7 +12,7 @@ public class Menu extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int[] logos={R.drawable.botones, R.drawable.palabras};
-        String [] nombres={"Botones", "Palabras"};
+        String [] nombres={String.valueOf(R.string.botones), String.valueOf(R.string.palabras)};
         double [] dificultad={2, 1};
 
         super.onCreate(savedInstanceState);
