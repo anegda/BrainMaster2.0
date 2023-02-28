@@ -11,4 +11,5 @@
     <string name="apellido">Surname</string>
     <string name="botones">Buttons</string>
     <string name="palabras">Words</string>
+    <string name="idiomas">Choose the language:</string>
 </resources>
