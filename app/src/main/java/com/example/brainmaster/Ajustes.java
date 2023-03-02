@@ -34,6 +34,7 @@ public class Ajustes extends AppCompatActivity {
 
         if(tema==1) {
             setTheme(R.style.Theme_BrainMaster);
+
         }
         else if(tema==2){
             setTheme(R.style.Theme_BrainMasterSummer);
@@ -44,6 +45,7 @@ public class Ajustes extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajustes);
+
         //https://code.tutsplus.com/es/tutorials/how-to-add-a-dropdown-menu-in-android-studio--cms-37860
         Spinner temas = findViewById(R.id.temasDes);
         ArrayAdapter<CharSequence> adapter= ArrayAdapter.createFromResource(this, R.array.temas, android.R.layout.simple_spinner_item);
@@ -56,10 +58,15 @@ public class Ajustes extends AppCompatActivity {
             public void onClick(View view) {
                 //Notificaciones
                 NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(Ajustes.this,"IdCanal");
-                elBuilder.setSmallIcon(R.drawable.logo).setContentTitle("Has actualizado la configuración").setContentText("Te informamos de que has cambiado la configuración y esta ha sido guardada.").setSubText("Aprovecha ahora para jugar").setVibrate(new long[] {0,500,100,1000}).setAutoCancel(true);
+                NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(Ajustes.this,"11");
+                elBuilder.setSmallIcon(R.drawable.logo)
+                        .setContentTitle("Has actualizado la configuración")
+                        .setContentText("Te informamos de que has cambiado la configuración y esta ha sido guardada.")
+                        .setSubText("Aprovecha ahora para jugar")
+                        .setVibrate(new long[] {0,500,100,1000})
+                        .setAutoCancel(true);
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    NotificationChannel elCanal = new NotificationChannel("idCanal","NombreCanal",NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationChannel elCanal = new NotificationChannel("11","NombreCanal",NotificationManager.IMPORTANCE_DEFAULT);
                     elCanal.setDescription("Descripción del canal");
                     elCanal.enableLights(true);
                     elCanal.setLightColor(Color.RED);
