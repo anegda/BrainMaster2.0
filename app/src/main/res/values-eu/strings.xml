@@ -12,4 +12,12 @@
     <string name="botones">Botoiak</string>
     <string name="palabras">Hitzak</string>
     <string name="idiomas">Aukeratu hizkuntza:</string>
+    <string name="tema">Gaia:</string>
+    <string-array name="temas">
+        <item>1 Klasiko</item>
+        <item>2 Uda</item>
+        <item>3 Punk</item>
+    </string-array>
+    <string name="notificación">Jakinarazpenak:</string>
+    <string name="guardar">GORDE</string>
 </resources>

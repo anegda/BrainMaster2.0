@@ -3,11 +3,13 @@ package com.example.brainmaster;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -37,13 +39,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //DIÁLOGO DEL BOTÓN IDIOMAS
         ImageButton btn_idiomas = (ImageButton) findViewById(R.id.idiomas);
-        /*btn_idiomas.setOnClickListener(new View.OnClickListener() {
+        btn_idiomas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                Log.d("DAS","Botón pulsado");
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle(getString(R.string.idiomas));
-                final CharSequence[] opciones = {"Español", "English", "Euskera"};
+                final CharSequence[] opciones = {"English", "Español", "Euskera"};
                 builder.setSingleChoiceItems(opciones, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -56,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
                             Context context = getBaseContext().createConfigurationContext(configuration);
                             getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+
+                            finish();
+                            startActivity(getIntent());
                         }
                         else if(i==1){
                             Locale nuevaloc = new Locale("es");
@@ -66,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
                             Context context = getBaseContext().createConfigurationContext(configuration);
                             getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+
+                            finish();
+                            startActivity(getIntent());
                         }
                         else{
                             Locale nuevaloc = new Locale("eu");
@@ -76,11 +86,16 @@ public class MainActivity extends AppCompatActivity {
 
                             Context context = getBaseContext().createConfigurationContext(configuration);
                             getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+
+                            finish();
+                            startActivity(getIntent());
                         }
                     }
                 });
+                AlertDialog ad = builder.create();
+                ad.show();
             }
-        });*/
+        });
 
     }
 }

@@ -12,4 +12,12 @@
     <string name="botones">Buttons</string>
     <string name="palabras">Words</string>
     <string name="idiomas">Choose the language:</string>
+    <string name="tema">Theme:</string>
+    <string-array name="temas">
+        <item>1 Classic</item>
+        <item>2 Summer</item>
+        <item>3 Punk</item>
+    </string-array>
+    <string name="notificación">Notifications:</string>
+    <string name="guardar">SAVE</string>
 </resources>

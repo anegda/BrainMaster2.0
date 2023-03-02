@@ -2,7 +2,11 @@ package com.example.brainmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.List;
@@ -20,5 +24,14 @@ public class Menu extends AppCompatActivity {
         ListView juegos = (ListView) findViewById(R.id.lista);
         AdaptadorListView eladap = new AdaptadorListView(getApplicationContext(), nombres, logos, dificultad);
         juegos.setAdapter(eladap);
+
+        //BOTÓN DE AJUSTES
+        ImageButton btn_ajustes = (ImageButton) findViewById(R.id.ajustes);
+        btn_ajustes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Menu.this, Ajustes.class));
+            }
+        });
     }
 }
