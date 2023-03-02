@@ -27,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/notis2"
+        android:id="@+id/notis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
@@ -43,7 +43,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="100dp"
-        app:layout_constraintStart_toEndOf="@+id/notis2"
+        app:layout_constraintStart_toEndOf="@+id/notis"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
