@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
                 long timeAtButtonClick = System.currentTimeMillis();
 
-                alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonClick+5000, pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeAtButtonClick,1000*60*60*24, pendingIntent);
 
                 startActivity(new Intent(MainActivity.this, Registro.class));
             }
