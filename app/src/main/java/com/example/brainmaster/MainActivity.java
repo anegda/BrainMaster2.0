@@ -44,18 +44,6 @@ public class MainActivity extends AppCompatActivity {
         btn_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //NOTIFICACIÓN PERIÓDICA
-                //https://www.youtube.com/watch?v=nl-dheVpt8o
-                //https://developer.android.com/training/scheduling/alarms?hl=es-419
-                //https://www.tutorialspoint.com/how-to-create-everyday-notifications-at-certain-time-in-android
-                Intent intent = new Intent(MainActivity.this, ReminderBroadcast.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,intent,PendingIntent.FLAG_IMMUTABLE);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-                long timeAtButtonClick = System.currentTimeMillis();
-
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeAtButtonClick,1000*60*60*24, pendingIntent);
-
                 startActivity(new Intent(MainActivity.this, Registro.class));
             }
         });
@@ -81,41 +69,17 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(i==0){
-                            Locale nuevaloc = new Locale("en");
-                            Locale.setDefault(nuevaloc);
-                            Configuration configuration = getBaseContext().getResources().getConfiguration();
-                            configuration.setLocale(nuevaloc);
-                            configuration.setLayoutDirection(nuevaloc);
-
-                            Context context = getBaseContext().createConfigurationContext(configuration);
-                            getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
-
+                            cambiarIdioma("en");
                             finish();
                             startActivity(getIntent());
                         }
                         else if(i==1){
-                            Locale nuevaloc = new Locale("es");
-                            Locale.setDefault(nuevaloc);
-                            Configuration configuration = getBaseContext().getResources().getConfiguration();
-                            configuration.setLocale(nuevaloc);
-                            configuration.setLayoutDirection(nuevaloc);
-
-                            Context context = getBaseContext().createConfigurationContext(configuration);
-                            getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
-
+                            cambiarIdioma("es");
                             finish();
                             startActivity(getIntent());
                         }
                         else{
-                            Locale nuevaloc = new Locale("eu");
-                            Locale.setDefault(nuevaloc);
-                            Configuration configuration = getBaseContext().getResources().getConfiguration();
-                            configuration.setLocale(nuevaloc);
-                            configuration.setLayoutDirection(nuevaloc);
-
-                            Context context = getBaseContext().createConfigurationContext(configuration);
-                            getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
-
+                            cambiarIdioma("eu");
                             finish();
                             startActivity(getIntent());
                         }
@@ -125,5 +89,16 @@ public class MainActivity extends AppCompatActivity {
                 ad.show();
             }
         });
+    }
+
+    protected void cambiarIdioma(String idioma){
+        Locale nuevaloc = new Locale(idioma);
+        Locale.setDefault(nuevaloc);
+        Configuration configuration = getBaseContext().getResources().getConfiguration();
+        configuration.setLocale(nuevaloc);
+        configuration.setLayoutDirection(nuevaloc);
+
+        Context context = getBaseContext().createConfigurationContext(configuration);
+        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
     }
 }

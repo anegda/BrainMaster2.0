@@ -18,6 +18,7 @@
         <item>2 Verano</item>
         <item>3 Punk</item>
     </string-array>
-    <string name="notificación">Notificaciones:</string>
+    <string name="notificación">Notificaciones Diarias:</string>
     <string name="guardar">GUARDAR</string>
+    <string name="activar">ACTIVAR</string>
 </resources>

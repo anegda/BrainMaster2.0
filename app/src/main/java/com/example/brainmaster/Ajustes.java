@@ -1,27 +1,22 @@
 package com.example.brainmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.Switch;
 
 public class Ajustes extends AppCompatActivity {
     int tema=1;
@@ -52,6 +47,25 @@ public class Ajustes extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         temas.setAdapter(adapter);
 
+        //NOTIFICACIÓN PERIÓDICA
+        //https://www.youtube.com/watch?v=nl-dheVpt8o
+        //https://developer.android.com/training/scheduling/alarms?hl=es-419
+        //https://www.tutorialspoint.com/how-to-create-everyday-notifications-at-certain-time-in-android
+        Button btn_notis = (Button) findViewById(R.id.btn_notis);
+        btn_notis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Ajustes.this, ReminderBroadcast.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(Ajustes.this,0,intent,PendingIntent.FLAG_IMMUTABLE);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+                long timeAtButtonClick = System.currentTimeMillis();
+
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeAtButtonClick,1000*60*60*24, pendingIntent);
+            }
+        });
+
+        //GUARDAR CONFIGURACIÓN Y PREFERENCIAS
         Button btn_guardar = (Button) findViewById(R.id.btn_guardar);
         btn_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
