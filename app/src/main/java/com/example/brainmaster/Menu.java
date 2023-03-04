@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -24,6 +25,16 @@ public class Menu extends AppCompatActivity {
         ListView juegos = (ListView) findViewById(R.id.lista);
         AdaptadorListView eladap = new AdaptadorListView(getApplicationContext(), nombres, logos, dificultad);
         juegos.setAdapter(eladap);
+
+        //ONCLICK DE LA LISTA
+        juegos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position==0){
+                    startActivity(new Intent(Menu.this, JuegoBotonesTablero.class));
+                }
+            }
+        });
 
         //BOTÓN DE AJUSTES
         ImageButton btn_ajustes = (ImageButton) findViewById(R.id.ajustes);
