@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/imagen"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_weight="0"
         app:srcCompat="@drawable/botones" />
 
@@ -29,5 +29,6 @@
         android:layout_weight="0"
         android:isIndicator="true"
         android:numStars="3"
-        android:stepSize="0.1" />
+        android:stepSize="0.1"
+        style="@style/newRatingBar"/>
 </LinearLayout>
