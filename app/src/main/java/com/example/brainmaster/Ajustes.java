@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import java.util.Locale;
@@ -56,9 +56,11 @@ public class Ajustes extends AppCompatActivity {
             setTheme(R.style.Theme_BrainMasterPunk);
         }
 
+        //CREAR INTERFAZ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajustes);
 
+        //DESPLEGABLES
         //https://code.tutsplus.com/es/tutorials/how-to-add-a-dropdown-menu-in-android-studio--cms-37860
         Spinner temas = findViewById(R.id.temasDes);
         ArrayAdapter<CharSequence> adapter= ArrayAdapter.createFromResource(this, R.array.temas, android.R.layout.simple_spinner_item);
@@ -83,23 +85,22 @@ public class Ajustes extends AppCompatActivity {
             }
         });
 
-        //GUARDAR CONFIGURACIÓN Y PREFERENCIAS
+        //APLICAR CONFIGURACIÓN Y PREFERENCIAS
         Button btn_guardar = (Button) findViewById(R.id.btn_guardar);
         btn_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Notificaciones
                 NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(Ajustes.this,"11");
+                NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(Ajustes.this,"notifySimple");
                 elBuilder.setSmallIcon(R.drawable.logo)
-                        .setContentTitle("Has actualizado la configuración")
-                        .setContentText("Te informamos de que has cambiado la configuración y esta ha sido guardada.")
-                        .setSubText("Aprovecha ahora para jugar")
+                        .setContentTitle(getString(R.string.noti1Titulo))
+                        .setContentText(getString(R.string.noti1Contenido))
                         .setVibrate(new long[] {0,500,100,1000})
                         .setAutoCancel(true);
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    NotificationChannel elCanal = new NotificationChannel("11","NombreCanal",NotificationManager.IMPORTANCE_DEFAULT);
-                    elCanal.setDescription("Descripción del canal");
+                    NotificationChannel elCanal = new NotificationChannel("notifySimple","Canal notificación simple",NotificationManager.IMPORTANCE_DEFAULT);
+                    elCanal.setDescription("Canal notificación simple");
                     elCanal.enableLights(true);
                     elCanal.setLightColor(Color.RED);
                     elCanal.setVibrationPattern(new long[]{0, 500, 100, 1000});
@@ -126,6 +127,19 @@ public class Ajustes extends AppCompatActivity {
             }
         });
 
+        //COMPARTIR
+        //https://www.programaenlinea.net/crear-boton-compartir-android/
+        ImageButton btn_compartir = (ImageButton) findViewById(R.id.btn_compartir);
+        btn_compartir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent compartir = new Intent(android.content.Intent.ACTION_SEND);
+                compartir.setType("text/plain");
+                compartir.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+                compartir.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.compartirContenido));
+                startActivity(Intent.createChooser(compartir, "Compartir vía"));
+            }
+        });
     }
 
     @Override

@@ -21,4 +21,10 @@
     <string name="notificación">Eguneroko Jakinarazpenak:</string>
     <string name="guardar">GORDE</string>
     <string name="activar">AKTIBATU</string>
+    <string name="compartir">Partekatu:</string>
+    <string name="compartirContenido">Deskargatu BrainMaster zure garuna entrenatzeko.</string>
+    <string name="noti1Titulo">Zure konfigurazioa gaurkoratu duzu</string>
+    <string name="noti1Contenido">Aldaketak gorde dira</string>
+    <string name="noti2Titulo">Praktikatzeko ordua da!</string>
+    <string name="noti2Contenido">Garuna entrenatzea oso garrantzitsua da.</string>
 </resources>

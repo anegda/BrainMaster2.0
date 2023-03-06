@@ -21,4 +21,10 @@
     <string name="notificación">Daily Notifications:</string>
     <string name="guardar">SAVE</string>
     <string name="activar">ACTIVATE</string>
+    <string name="compartir">Share:</string>
+    <string name="compartirContenido">Download BrainMaster to train your Brain.</string>
+    <string name="noti1Titulo">You have upgraded your configuration</string>
+    <string name="noti1Contenido">Changes have been saved</string>
+    <string name="noti2Titulo">Its time for practice!</string>
+    <string name="noti2Contenido">Training the brain is very important.</string>
 </resources>
