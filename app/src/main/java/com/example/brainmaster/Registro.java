@@ -1,10 +1,13 @@
 package com.example.brainmaster;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -21,8 +24,21 @@ import java.util.Locale;
 
 public class Registro extends AppCompatActivity {
     Calendar calendario = Calendar.getInstance();
+    String pIdioma;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //MANTENER IDIOMA EN HORIZONTAL
+        if (savedInstanceState != null) {
+            pIdioma = savedInstanceState.getString("idiomaAct");
+            cambiarIdioma(pIdioma);
+        }
+        else{
+            Locale locale = getResources().getConfiguration().getLocales().get(0);
+            pIdioma = locale.getLanguage();
+            getIntent().putExtra("idiomaAct",pIdioma);
+        }
+
+        //INTERFAZ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
@@ -75,5 +91,78 @@ public class Registro extends AppCompatActivity {
                 startActivity(new Intent(Registro.this, Menu.class));
             }
         });
+    }
+
+    //MANTENER DATOS EN HORIZONTAL
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        String idiomaAct = getIntent().getStringExtra("idiomaAct");
+        savedInstanceState.putString("idiomaAct", idiomaAct);
+
+        EditText nombreE = (EditText) findViewById(R.id.nombreREdit);
+        String nombre = nombreE.getText().toString();
+        savedInstanceState.putString("nombre", nombre);
+
+        EditText apellidosE = (EditText) findViewById(R.id.apellidoREdit);
+        String apellidos = apellidosE.getText().toString();
+        savedInstanceState.putString("apellidos", apellidos);
+
+        EditText usuarioE = (EditText) findViewById(R.id.usuarioREdit);
+        String usuario = usuarioE.getText().toString();
+        savedInstanceState.putString("usuario", usuario);
+
+        EditText passwordE = (EditText) findViewById(R.id.contraREdit);
+        String password = passwordE.getText().toString();
+        savedInstanceState.putString("password", password);
+
+        EditText emailE = (EditText)  findViewById(R.id.emailREdit);
+        String email = emailE.getText().toString();
+        savedInstanceState.putString("email", email);
+
+        EditText fechaNacE = (EditText) findViewById(R.id.fechaNacREdit);
+        String fechaNac = fechaNacE.getText().toString();
+        savedInstanceState.putString("fechaNac", fechaNac);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        String nombre = savedInstanceState.getString("nombre");
+        EditText nombreE = (EditText) findViewById(R.id.nombreREdit);
+        nombreE.setText(nombre);
+
+        String apellidos = savedInstanceState.getString("apellidos");
+        EditText apellidosE = (EditText) findViewById(R.id.apellidoREdit);
+        apellidosE.setText(apellidos);
+
+        String usuario = savedInstanceState.getString("usuario");
+        EditText usuarioE = (EditText) findViewById(R.id.usuarioREdit);
+        usuarioE.setText(usuario);
+
+        String password = savedInstanceState.getString("password");
+        EditText passwordE = (EditText) findViewById(R.id.contraREdit);
+        passwordE.setText(password);
+
+        String email = savedInstanceState.getString("email");
+        EditText emailE = (EditText)  findViewById(R.id.emailREdit);
+        emailE.setText(email);
+
+        String fechaNac = savedInstanceState.getString("fechaNac");
+        EditText fechaNacE = (EditText) findViewById(R.id.fechaNacREdit);
+        fechaNacE.setText(fechaNac);
+    }
+
+    //CAMBIAR IDIOMA
+    protected void cambiarIdioma(String idioma){
+        Locale nuevaloc = new Locale(idioma);
+        Locale.setDefault(nuevaloc);
+        Configuration configuration = getBaseContext().getResources().getConfiguration();
+        configuration.setLocale(nuevaloc);
+        configuration.setLayoutDirection(nuevaloc);
+
+        Context context = getBaseContext().createConfigurationContext(configuration);
+        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
     }
 }

@@ -1,5 +1,6 @@
 package com.example.brainmaster;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
@@ -10,18 +11,35 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import java.util.Locale;
+
 public class Ajustes extends AppCompatActivity {
     int tema=1;
+    String pIdioma;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //MANTENER IDIOMA EN HORIZONTAL
+        if (savedInstanceState != null) {
+            pIdioma = savedInstanceState.getString("idiomaAct");
+            cambiarIdioma(pIdioma);
+        }
+        else{
+            Locale locale = getResources().getConfiguration().getLocales().get(0);
+            pIdioma = locale.getLanguage();
+            getIntent().putExtra("idiomaAct",pIdioma);
+        }
+
+        //APLICAR TEMA
         if (getIntent().hasExtra("bundle") && savedInstanceState==null){
             savedInstanceState = getIntent().getExtras().getBundle("bundle");
             tema = getIntent().getExtras().getInt("tema");
@@ -108,5 +126,30 @@ public class Ajustes extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        String idiomaAct = getIntent().getStringExtra("idiomaAct");
+        savedInstanceState.putString("idiomaAct", idiomaAct);
+    }
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String idiomaAct = savedInstanceState.getString("idiomaAct");
+        pIdioma = idiomaAct;
+    }
+
+    protected void cambiarIdioma(String idioma){
+        Log.d("DAS",idioma);
+        Locale nuevaloc = new Locale(idioma);
+        Locale.setDefault(nuevaloc);
+        Configuration configuration = getBaseContext().getResources().getConfiguration();
+        configuration.setLocale(nuevaloc);
+        configuration.setLayoutDirection(nuevaloc);
+
+        Context context = getBaseContext().createConfigurationContext(configuration);
+        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
     }
 }
