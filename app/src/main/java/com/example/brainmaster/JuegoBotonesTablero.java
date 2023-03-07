@@ -15,7 +15,7 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class JuegoBotonesTablero extends AppCompatActivity{
+public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBotonesTablero.listenerDelFragment{
     static ArrayList<Integer> solucion;
     Runnable runnable = new Runnable() {
         @Override
@@ -52,4 +52,8 @@ public class JuegoBotonesTablero extends AppCompatActivity{
         handler.postDelayed(runnable,4000);
     }
 
+    @Override
+    public void enviarInformacion(ArrayList<Integer> resultado) {
+        solucion = resultado;
+    }
 }

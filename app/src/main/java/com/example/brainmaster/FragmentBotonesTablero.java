@@ -1,5 +1,6 @@
 package com.example.brainmaster;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -20,10 +21,11 @@ import java.util.concurrent.TimeUnit;
 public class FragmentBotonesTablero extends Fragment {
 
     public interface  listenerDelFragment{
-
+        void enviarInformacion(ArrayList<Integer> resultado);
     }
+
     private listenerDelFragment elListener;
-    static ArrayList<Integer> resultado;
+    static ArrayList<Integer> resultado = new ArrayList<Integer>();
 
     public FragmentBotonesTablero() {
         // Required empty public constructor
@@ -54,7 +56,7 @@ public class FragmentBotonesTablero extends Fragment {
                 Button btn = (Button) getView().findViewById(view.getId());
                 int num = Integer.parseInt((String) btn.getText());
                 resultado.add(num);
-                Log.d("DAS",Integer.toString(num));
+                elListener.enviarInformacion(resultado);
             }
         };
 
@@ -69,4 +71,14 @@ public class FragmentBotonesTablero extends Fragment {
         view.findViewById(R.id.button9).setOnClickListener(clicker);
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try{
+            elListener=(listenerDelFragment) context;
+        }
+        catch (ClassCastException e){
+            throw new ClassCastException("La clase " +context.toString() + "debe implementar listenerDelFragment");
+        }
+    }
 }
