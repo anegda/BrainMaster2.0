@@ -21,11 +21,10 @@ import java.util.concurrent.TimeUnit;
 public class FragmentBotonesTablero extends Fragment {
 
     public interface  listenerDelFragment{
-        void enviarInformacion(ArrayList<Integer> resultado);
+        void enviarInformacion(int resultado);
     }
 
     private listenerDelFragment elListener;
-    static ArrayList<Integer> resultado = new ArrayList<Integer>();
 
     public FragmentBotonesTablero() {
         // Required empty public constructor
@@ -55,8 +54,8 @@ public class FragmentBotonesTablero extends Fragment {
             public void onClick(View view) {
                 Button btn = (Button) getView().findViewById(view.getId());
                 int num = Integer.parseInt((String) btn.getText());
-                resultado.add(num);
-                elListener.enviarInformacion(resultado);
+                Log.d("DAS",Integer.toString(num));
+                elListener.enviarInformacion(num);
             }
         };
 

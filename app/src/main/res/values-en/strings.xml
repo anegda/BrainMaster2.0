@@ -27,4 +27,6 @@
     <string name="noti1Contenido">Changes have been saved</string>
     <string name="noti2Titulo">Its time for practice!</string>
     <string name="noti2Contenido">Training the brain is very important.</string>
+    <string name="ranking">Ranking</string>
+    <string name="puntuacion">Points:</string>
 </resources>

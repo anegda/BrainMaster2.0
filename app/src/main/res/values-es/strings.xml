@@ -27,4 +27,6 @@
     <string name="noti1Contenido">Se han guardado los cambios</string>
     <string name="noti2Titulo">Es la hora de practicar!</string>
     <string name="noti2Contenido">Entrenar el cerebro es super importante.</string>
+    <string name="ranking">Ranking</string>
+    <string name="puntuacion">Puntuación:</string>
 </resources>

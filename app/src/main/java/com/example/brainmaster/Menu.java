@@ -33,9 +33,9 @@ public class Menu extends AppCompatActivity {
         }
 
         //CREAR INTERFAZ
-        int[] logos={R.drawable.botones, R.drawable.palabras};
-        String [] nombres={getString(R.string.botones), getString(R.string.palabras)};
-        double [] dificultad={2, 1};
+        int[] logos={R.drawable.botones, R.drawable.palabras, R.drawable.trofeo};
+        String [] nombres={getString(R.string.botones), getString(R.string.palabras), getString(R.string.ranking)};
+        double [] dificultad={2, 1, 0};
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);

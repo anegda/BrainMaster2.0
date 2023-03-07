@@ -10,36 +10,43 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBotonesTablero.listenerDelFragment{
+    static boolean espera;
     static ArrayList<Integer> solucion;
-    Runnable runnable = new Runnable() {
+    static ClaseBotonesJuego juego;
+    Runnable ronda = new Runnable() {
         @Override
         public void run() {
-            ClaseBotonesJuego juego = new ClaseBotonesJuego();
-            boolean finalizar = false;
-            while(!finalizar){
-                ArrayList<Integer> ronda = juego.getSecuencia();
-                for(Integer i:ronda){
-                    int btn_id = getResources().getIdentifier("button"+Integer.toString(i),"id",getPackageName());
-                    Button btn_act = (Button) findViewById(btn_id);
+            ArrayList<Integer> ronda = juego.getSecuencia();
+            long step = 2000;
+            long numRonda = 0;
+            for (Integer i : ronda) {
+                Handler handler = new Handler();
+                //ESPERAMOS ANTES DE ENCENDERLO
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        int btn_id = getResources().getIdentifier("button" + Integer.toString(i), "id", getPackageName());
+                        Button btn_act = (Button) findViewById(btn_id);
+                        btn_act.setBackgroundColor(Color.RED);
+                    }
+                },1000+step*numRonda);
 
-                    btn_act.setBackgroundColor(Color.RED);
-                    //ESPERAMOS UN SEGUNDO ANTES DE APAGARLO
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            int btn_id = getResources().getIdentifier("button"+Integer.toString(i),"id",getPackageName());
-                            Button btn_act = (Button) findViewById(btn_id);
-                            btn_act.setBackgroundColor(getColor(R.color.purple_500));
-                        }
-                    }, 1000);
-                }
-                finalizar=true;
+                //ESPERAMOS UN SEGUNDO ANTES DE APAGARLO
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        int btn_id = getResources().getIdentifier("button" + Integer.toString(i), "id", getPackageName());
+                        Button btn_act = (Button) findViewById(btn_id);
+                        btn_act.setBackgroundColor(getColor(R.color.purple_500));
+                    }
+                }, 2000+step*numRonda);
+                numRonda = numRonda +1;
             }
         }
     };
@@ -48,12 +55,31 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_botones_tablero);
 
+        juego = new ClaseBotonesJuego();
+        solucion = new ArrayList<Integer>();
+
         Handler handler = new Handler();
-        handler.postDelayed(runnable,4000);
+        handler.postDelayed(ronda,1000);
+
+        Button btn_enter = findViewById(R.id.btn_enter);
+        btn_enter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(juego.comparar(solucion)){
+                    solucion = new ArrayList<Integer>();
+                    Handler handler = new Handler();
+                    handler.postDelayed(ronda,3000);
+                }
+                else{
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
-    public void enviarInformacion(ArrayList<Integer> resultado) {
-        solucion = resultado;
+    public void enviarInformacion(int num) {
+        Log.d("DAS",Integer.toString(num));
+        solucion.add(num);
     }
 }

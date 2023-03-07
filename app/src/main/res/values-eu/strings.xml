@@ -27,4 +27,6 @@
     <string name="noti1Contenido">Aldaketak gorde dira</string>
     <string name="noti2Titulo">Praktikatzeko ordua da!</string>
     <string name="noti2Contenido">Garuna entrenatzea oso garrantzitsua da.</string>
+    <string name="ranking">Ranking</string>
+    <string name="puntuacion">Puntuazioa:</string>
 </resources>
