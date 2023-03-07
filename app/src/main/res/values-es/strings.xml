@@ -29,4 +29,6 @@
     <string name="noti2Contenido">Entrenar el cerebro es super importante.</string>
     <string name="ranking">Ranking</string>
     <string name="puntuacion">Puntuación:</string>
+    <string name="visto">VISTO</string>
+    <string name="nuevo">NUEVO</string>
 </resources>

@@ -50,6 +50,9 @@ public class Menu extends AppCompatActivity {
                 if(position==0){
                     startActivity(new Intent(Menu.this, JuegoBotonesTablero.class));
                 }
+                else if(position==1){
+                    startActivity(new Intent(Menu.this, JuegoBotonesTablero.class));
+                }
             }
         });
 

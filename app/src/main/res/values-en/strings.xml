@@ -29,4 +29,6 @@
     <string name="noti2Contenido">Training the brain is very important.</string>
     <string name="ranking">Ranking</string>
     <string name="puntuacion">Points:</string>
+    <string name="visto">SEEN</string>
+    <string name="nuevo">NEW</string>
 </resources>

@@ -29,4 +29,6 @@
     <string name="noti2Contenido">Garuna entrenatzea oso garrantzitsua da.</string>
     <string name="ranking">Ranking</string>
     <string name="puntuacion">Puntuazioa:</string>
+    <string name="visto">IKUSITA</string>
+    <string name="nuevo">BERRIA</string>
 </resources>
