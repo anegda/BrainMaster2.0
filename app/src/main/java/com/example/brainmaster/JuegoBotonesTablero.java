@@ -3,6 +3,7 @@ package com.example.brainmaster;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
@@ -71,6 +72,12 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     handler.postDelayed(ronda,3000);
                 }
                 else{
+                    miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
+                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                    String nombre = "anegda";
+                    int puntos =juego.getPuntos();
+                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos') VALUES ('" + nombre + "'," + puntos + ")");
+                    finish();
                     finish();
                 }
             }

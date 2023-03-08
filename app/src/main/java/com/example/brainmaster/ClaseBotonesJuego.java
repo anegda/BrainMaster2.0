@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ClaseBotonesJuego {
     private ArrayList<Integer> secuencia;
-    private long puntuacion;
+    private int puntuacion;
 
     public ClaseBotonesJuego(){
         this.secuencia = new ArrayList<Integer>();
@@ -19,11 +19,15 @@ public class ClaseBotonesJuego {
 
     public boolean comparar(ArrayList<Integer> resultado){
         if(secuencia.equals(resultado)){
-            puntuacion = puntuacion+100;
+            puntuacion = puntuacion+1;
             return true;
         }
         else{
             return false;
         }
+    }
+
+    public int getPuntos(){
+        return this.puntuacion;
     }
 }

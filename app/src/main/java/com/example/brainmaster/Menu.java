@@ -3,7 +3,6 @@ package com.example.brainmaster;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -14,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import java.util.List;
 import java.util.Locale;
 
 public class Menu extends AppCompatActivity {
@@ -39,7 +37,7 @@ public class Menu extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        ListView juegos = (ListView) findViewById(R.id.lista);
+        ListView juegos = (ListView) findViewById(R.id.listaRanking);
         AdaptadorListView eladap = new AdaptadorListView(getApplicationContext(), nombres, logos, dificultad);
         juegos.setAdapter(eladap);
 
@@ -51,7 +49,7 @@ public class Menu extends AppCompatActivity {
                     startActivity(new Intent(Menu.this, JuegoBotonesTablero.class));
                 }
                 else if(position==1){
-                    startActivity(new Intent(Menu.this, JuegoBotonesTablero.class));
+                    startActivity(new Intent(Menu.this, JuegoPalabrasTablero.class));
                 }
             }
         });
