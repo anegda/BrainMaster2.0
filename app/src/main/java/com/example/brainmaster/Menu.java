@@ -51,6 +51,9 @@ public class Menu extends AppCompatActivity {
                 else if(position==1){
                     startActivity(new Intent(Menu.this, JuegoPalabrasTablero.class));
                 }
+                else if(position==2){
+                    startActivity(new Intent(Menu.this, Ranking.class));
+                }
             }
         });
 
