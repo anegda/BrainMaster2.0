@@ -16,13 +16,21 @@ public class ClasePalabrasJuego {
     private ArrayList<String> todas;
     private int puntuacion;
 
-    public ClasePalabrasJuego(Context context){
+    public ClasePalabrasJuego(Context context, String idioma){
         this.aparecidas = new ArrayList<String>();
         this.puntuacion = 0;
         this.todas = new ArrayList<String>();
 
-        //LEO EL FICHERO INCLUIDO EN LA APLICACIÓN CON LAS PALABRAS
         InputStream fich = context.getResources().openRawResource(R.raw.palabras);
+        //LEO EL FICHERO INCLUIDO EN LA APLICACIÓN CON LAS PALABRAS
+        if(idioma=="es") {
+            fich = context.getResources().openRawResource(R.raw.palabras);
+        } else if (idioma=="en") {
+            fich = context.getResources().openRawResource(R.raw.words);
+        } else if (idioma=="eu") {
+            fich = context.getResources().openRawResource(R.raw.hitzak);
+        }
+
         BufferedReader buff = new BufferedReader(new InputStreamReader(fich));
         try {
             String linea = buff.readLine();

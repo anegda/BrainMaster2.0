@@ -29,7 +29,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
             Locale locale = getResources().getConfiguration().getLocales().get(0);
             pIdioma = locale.getLanguage();
             getIntent().putExtra("idiomaAct",pIdioma);
-            juego = new ClasePalabrasJuego(this);
+            juego = new ClasePalabrasJuego(this, pIdioma);
         }
 
         super.onCreate(savedInstanceState);
