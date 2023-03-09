@@ -1,10 +1,13 @@
 package com.example.brainmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -17,6 +20,26 @@ public class Ranking extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String tema = prefs.getString("temapref","1");
+        if(tema.equals("1")) {
+            Log.d("DAS",tema+" 1");
+            setTheme(R.style.Theme_BrainMaster);
+        }
+        else if(tema.equals("2")){
+            Log.d("DAS",tema+" 2");
+            setTheme(R.style.Theme_BrainMasterSummer);
+        }
+        else if(tema.equals("3")){
+            Log.d("DAS",tema+" 3");
+            setTheme(R.style.Theme_BrainMasterPunk);
+        }
+        else{
+            Log.d("DAS",tema+" 4");
+            setTheme(R.style.Theme_BrainMaster);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
 

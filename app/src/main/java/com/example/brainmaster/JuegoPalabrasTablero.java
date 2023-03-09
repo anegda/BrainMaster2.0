@@ -2,8 +2,10 @@ package com.example.brainmaster;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -30,6 +32,26 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
             pIdioma = locale.getLanguage();
             getIntent().putExtra("idiomaAct",pIdioma);
             juego = new ClasePalabrasJuego(this, pIdioma);
+        }
+
+        //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String tema = prefs.getString("temapref","1");
+        if(tema.equals("1")) {
+            Log.d("DAS",tema+" 1");
+            setTheme(R.style.Theme_BrainMaster);
+        }
+        else if(tema.equals("2")){
+            Log.d("DAS",tema+" 2");
+            setTheme(R.style.Theme_BrainMasterSummer);
+        }
+        else if(tema.equals("3")){
+            Log.d("DAS",tema+" 3");
+            setTheme(R.style.Theme_BrainMasterPunk);
+        }
+        else{
+            Log.d("DAS",tema+" 4");
+            setTheme(R.style.Theme_BrainMaster);
         }
 
         super.onCreate(savedInstanceState);

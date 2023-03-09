@@ -58,6 +58,7 @@ public class Preferencias extends PreferenceFragmentCompat implements SharedPref
                     elManager.createNotificationChannel(elCanal);
                 }
                 elManager.notify(11, elBuilder.build());
+                getActivity().finish();
                 break;
             default:
                 break;

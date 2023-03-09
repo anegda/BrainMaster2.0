@@ -18,6 +18,11 @@
         <item>2 Summer</item>
         <item>3 Punk</item>
     </string-array>
+    <string-array name="temasNum">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
     <string name="notificación">Daily Notifications:</string>
     <string name="guardar">SAVE</string>
     <string name="activar">ACTIVATE</string>

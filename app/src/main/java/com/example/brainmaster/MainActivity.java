@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -23,6 +24,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -50,6 +52,26 @@ public class MainActivity extends AppCompatActivity {
             Locale locale = getResources().getConfiguration().getLocales().get(0);
             pIdioma = locale.getLanguage();
             getIntent().putExtra("idiomaAct",pIdioma);
+        }
+
+        //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String tema = prefs.getString("temapref","1");
+        if(tema.equals("1")) {
+            Log.d("DAS",tema+" 1");
+            setTheme(R.style.Theme_BrainMaster);
+        }
+        else if(tema.equals("2")){
+            Log.d("DAS",tema+" 2");
+            setTheme(R.style.Theme_BrainMasterSummer);
+        }
+        else if(tema.equals("3")){
+            Log.d("DAS",tema+" 3");
+            setTheme(R.style.Theme_BrainMasterPunk);
+        }
+        else{
+            Log.d("DAS",tema+" 4");
+            setTheme(R.style.Theme_BrainMaster);
         }
 
         //CREAMOS LA ACTIVIDAD

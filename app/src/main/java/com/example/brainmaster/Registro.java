@@ -3,10 +3,12 @@ package com.example.brainmaster;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,6 +38,26 @@ public class Registro extends AppCompatActivity {
             Locale locale = getResources().getConfiguration().getLocales().get(0);
             pIdioma = locale.getLanguage();
             getIntent().putExtra("idiomaAct",pIdioma);
+        }
+
+        //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String tema = prefs.getString("temapref","1");
+        if(tema.equals("1")) {
+            Log.d("DAS",tema+" 1");
+            setTheme(R.style.Theme_BrainMaster);
+        }
+        else if(tema.equals("2")){
+            Log.d("DAS",tema+" 2");
+            setTheme(R.style.Theme_BrainMasterSummer);
+        }
+        else if(tema.equals("3")){
+            Log.d("DAS",tema+" 3");
+            setTheme(R.style.Theme_BrainMasterPunk);
+        }
+        else{
+            Log.d("DAS",tema+" 4");
+            setTheme(R.style.Theme_BrainMaster);
         }
 
         //INTERFAZ

@@ -11,9 +11,9 @@
         <ListPreference
             app:dialogTitle="@string/tema"
             app:entries="@array/temas"
-            app:entryValues="{1,2,3}"
+            app:entryValues="@array/temasNum"
             app:key="temapref"
             app:title="@string/tema"
-            />
+            app:defaultValue="1"/>
     </PreferenceCategory>
 </PreferenceScreen>

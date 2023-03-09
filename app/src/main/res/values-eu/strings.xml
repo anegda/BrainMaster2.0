@@ -18,6 +18,11 @@
         <item>2 Uda</item>
         <item>3 Punk</item>
     </string-array>
+    <string-array name="temasNum">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
     <string name="notificación">Eguneroko Jakinarazpenak:</string>
     <string name="guardar">GORDE</string>
     <string name="activar">AKTIBATU</string>
