@@ -87,6 +87,20 @@ public class Menu extends AppCompatActivity {
                 startActivity(new Intent(Menu.this, Ajustes.class));
             }
         });
+
+        //BOTÓN COMPARTIR
+        ImageButton btn_compartir = (ImageButton) findViewById(R.id.share);
+        btn_compartir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //https://www.programaenlinea.net/crear-boton-compartir-android/
+                Intent compartir = new Intent(android.content.Intent.ACTION_SEND);
+                compartir.setType("text/plain");
+                compartir.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+                compartir.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.compartirContenido));
+                startActivity(Intent.createChooser(compartir, "Compartir vía"));
+            }
+        });
     }
 
     @Override
