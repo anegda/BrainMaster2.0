@@ -31,4 +31,5 @@
     <string name="puntuacion">Points:</string>
     <string name="visto">SEEN</string>
     <string name="nuevo">NEW</string>
+    <string name="configuracion">Configuration</string>
 </resources>

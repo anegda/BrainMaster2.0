@@ -31,4 +31,5 @@
     <string name="puntuacion">Puntuación:</string>
     <string name="visto">VISTO</string>
     <string name="nuevo">NUEVO</string>
+    <string name="configuracion">Configuración</string>
 </resources>
