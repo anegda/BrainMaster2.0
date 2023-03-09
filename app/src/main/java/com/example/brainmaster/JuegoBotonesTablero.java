@@ -1,34 +1,36 @@
 package com.example.brainmaster;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.res.Resources;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.Locale;
 
 public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBotonesTablero.listenerDelFragment{
-    static boolean espera;
     static ArrayList<Integer> solucion;
     static ClaseBotonesJuego juego;
+    static String pIdioma;
+
     Runnable ronda = new Runnable() {
         @Override
         public void run() {
             ArrayList<Integer> ronda = juego.getSecuencia();
             long step = 2000;
             long numRonda = 0;
+            Handler handler = new Handler();
+            pararUsoBotones();
             for (Integer i : ronda) {
-                Handler handler = new Handler();
                 //ESPERAMOS ANTES DE ENCENDERLO
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -49,15 +51,31 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                 }, 2000+step*numRonda);
                 numRonda = numRonda +1;
             }
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    reanudarUsoBotones();
+                }
+            }, 1000 + step * numRonda);
         }
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //MANTENER ELEMENTOS EN HORIZONTAL
+        if (savedInstanceState != null) {
+            pIdioma = savedInstanceState.getString("idiomaAct");
+            cambiarIdioma(pIdioma);
+        }
+        else{
+            Locale locale = getResources().getConfiguration().getLocales().get(0);
+            pIdioma = locale.getLanguage();
+            getIntent().putExtra("idiomaAct",pIdioma);
+            juego = new ClaseBotonesJuego();
+            solucion = new ArrayList<Integer>();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_botones_tablero);
-
-        juego = new ClaseBotonesJuego();
-        solucion = new ArrayList<Integer>();
 
         Handler handler = new Handler();
         handler.postDelayed(ronda,1000);
@@ -69,7 +87,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                 if(juego.comparar(solucion)){
                     solucion = new ArrayList<Integer>();
                     Handler handler = new Handler();
-                    handler.postDelayed(ronda,3000);
+                    handler.postDelayed(ronda,1000);
                 }
                 else{
                     miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
@@ -77,7 +95,6 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     String nombre = "anegda";
                     int puntos =juego.getPuntos();
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos') VALUES ('" + nombre + "'," + puntos + ")");
-                    finish();
                     finish();
                 }
             }
@@ -88,5 +105,56 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
     public void enviarInformacion(int num) {
         Log.d("DAS",Integer.toString(num));
         solucion.add(num);
+    }
+
+    public void pararUsoBotones(){
+        //QUITAMOS LA FUNCIONALIDAD
+        findViewById(R.id.button1).setEnabled(false);
+        findViewById(R.id.button2).setEnabled(false);
+        findViewById(R.id.button3).setEnabled(false);
+        findViewById(R.id.button4).setEnabled(false);
+        findViewById(R.id.button5).setEnabled(false);
+        findViewById(R.id.button6).setEnabled(false);
+        findViewById(R.id.button7).setEnabled(false);
+        findViewById(R.id.button8).setEnabled(false);
+        findViewById(R.id.button9).setEnabled(false);
+    }
+
+    public void reanudarUsoBotones(){
+        findViewById(R.id.button1).setEnabled(true);
+        findViewById(R.id.button2).setEnabled(true);
+        findViewById(R.id.button3).setEnabled(true);
+        findViewById(R.id.button4).setEnabled(true);
+        findViewById(R.id.button5).setEnabled(true);
+        findViewById(R.id.button6).setEnabled(true);
+        findViewById(R.id.button7).setEnabled(true);
+        findViewById(R.id.button8).setEnabled(true);
+        findViewById(R.id.button9).setEnabled(true);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        String idiomaAct = getIntent().getStringExtra("idiomaAct");
+        savedInstanceState.putString("idiomaAct", idiomaAct);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String idiomaAct = savedInstanceState.getString("idiomaAct");
+        pIdioma = idiomaAct;
+    }
+
+    protected void cambiarIdioma(String idioma){
+        Log.d("DAS",idioma);
+        Locale nuevaloc = new Locale(idioma);
+        Locale.setDefault(nuevaloc);
+        Configuration configuration = getBaseContext().getResources().getConfiguration();
+        configuration.setLocale(nuevaloc);
+        configuration.setLayoutDirection(nuevaloc);
+
+        Context context = getBaseContext().createConfigurationContext(configuration);
+        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
     }
 }

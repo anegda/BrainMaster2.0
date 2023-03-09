@@ -1,8 +1,6 @@
 package com.example.brainmaster;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,9 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class FragmentBotonesTablero extends Fragment {
 
@@ -68,6 +63,17 @@ public class FragmentBotonesTablero extends Fragment {
         view.findViewById(R.id.button7).setOnClickListener(clicker);
         view.findViewById(R.id.button8).setOnClickListener(clicker);
         view.findViewById(R.id.button9).setOnClickListener(clicker);
+
+        //PARA QUE EL COLOR SE MANTENGA ESTABLE
+        view.findViewById(R.id.button1).setBackgroundColor(getResources().getColor(R.color.purple_500));
+        view.findViewById(R.id.button2).setBackgroundColor(getResources().getColor(R.color.purple_500));
+        view.findViewById(R.id.button3).setBackgroundColor(getResources().getColor(R.color.purple_500));
+        view.findViewById(R.id.button4).setBackgroundColor(getResources().getColor(R.color.purple_500));
+        view.findViewById(R.id.button5).setBackgroundColor(getResources().getColor(R.color.purple_500));
+        view.findViewById(R.id.button6).setBackgroundColor(getResources().getColor(R.color.purple_500));
+        view.findViewById(R.id.button7).setBackgroundColor(getResources().getColor(R.color.purple_500));
+        view.findViewById(R.id.button8).setBackgroundColor(getResources().getColor(R.color.purple_500));
+        view.findViewById(R.id.button9).setBackgroundColor(getResources().getColor(R.color.purple_500));
     }
 
     @Override
