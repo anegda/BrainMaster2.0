@@ -28,7 +28,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         @Override
         public void run() {
             ArrayList<Integer> ronda = juego.getSecuencia();
-            long step = 2000;
+            long step = 1000;
             long numRonda = 0;
             Handler handler = new Handler();
             pararUsoBotones();
@@ -39,19 +39,23 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     public void run() {
                         int btn_id = getResources().getIdentifier("button" + Integer.toString(i), "id", getPackageName());
                         Button btn_act = (Button) findViewById(btn_id);
-                        btn_act.setBackgroundColor(Color.RED);
+                        if(btn_act!=null) {
+                            btn_act.setBackgroundColor(Color.RED);
+                        }
                     }
-                },1000+step*numRonda);
+                }, 1000 + step * numRonda);
 
                 //ESPERAMOS UN SEGUNDO ANTES DE APAGARLO
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         int btn_id = getResources().getIdentifier("button" + Integer.toString(i), "id", getPackageName());
                         Button btn_act = (Button) findViewById(btn_id);
-                        btn_act.setBackgroundColor(getColor(R.color.purple_500));
+                        if(btn_act!=null) {
+                            btn_act.setBackgroundColor(getColor(R.color.purple_500));
+                        }
                     }
-                }, 2000+step*numRonda);
-                numRonda = numRonda +1;
+                }, 1500 + step * numRonda);
+                numRonda = numRonda + 1;
             }
             handler.postDelayed(new Runnable() {
                 @Override
@@ -131,27 +135,52 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
 
     public void pararUsoBotones(){
         //QUITAMOS LA FUNCIONALIDAD
-        findViewById(R.id.button1).setEnabled(false);
-        findViewById(R.id.button2).setEnabled(false);
-        findViewById(R.id.button3).setEnabled(false);
-        findViewById(R.id.button4).setEnabled(false);
-        findViewById(R.id.button5).setEnabled(false);
-        findViewById(R.id.button6).setEnabled(false);
-        findViewById(R.id.button7).setEnabled(false);
-        findViewById(R.id.button8).setEnabled(false);
-        findViewById(R.id.button9).setEnabled(false);
+        Button btn1 = (Button) findViewById(R.id.button1);
+        Button btn2 = (Button) findViewById(R.id.button2);
+        Button btn3 = (Button) findViewById(R.id.button3);
+        Button btn4 = (Button) findViewById(R.id.button4);
+        Button btn5 = (Button) findViewById(R.id.button5);
+        Button btn6 = (Button) findViewById(R.id.button6);
+        Button btn7 = (Button) findViewById(R.id.button7);
+        Button btn8 = (Button) findViewById(R.id.button8);
+        Button btn9 = (Button) findViewById(R.id.button9);
+
+        if(btn1!=null && btn2!=null && btn3!=null && btn4!=null && btn5!=null && btn6!=null && btn7!=null && btn8!=null && btn9!=null) {
+            btn1.setEnabled(false);
+            btn2.setEnabled(false);
+            btn3.setEnabled(false);
+            btn4.setEnabled(false);
+            btn5.setEnabled(false);
+            btn6.setEnabled(false);
+            btn7.setEnabled(false);
+            btn8.setEnabled(false);
+            btn9.setEnabled(false);
+        }
     }
 
     public void reanudarUsoBotones(){
-        findViewById(R.id.button1).setEnabled(true);
-        findViewById(R.id.button2).setEnabled(true);
-        findViewById(R.id.button3).setEnabled(true);
-        findViewById(R.id.button4).setEnabled(true);
-        findViewById(R.id.button5).setEnabled(true);
-        findViewById(R.id.button6).setEnabled(true);
-        findViewById(R.id.button7).setEnabled(true);
-        findViewById(R.id.button8).setEnabled(true);
-        findViewById(R.id.button9).setEnabled(true);
+        //QUITAMOS LA FUNCIONALIDAD
+        Button btn1 = (Button) findViewById(R.id.button1);
+        Button btn2 = (Button) findViewById(R.id.button2);
+        Button btn3 = (Button) findViewById(R.id.button3);
+        Button btn4 = (Button) findViewById(R.id.button4);
+        Button btn5 = (Button) findViewById(R.id.button5);
+        Button btn6 = (Button) findViewById(R.id.button6);
+        Button btn7 = (Button) findViewById(R.id.button7);
+        Button btn8 = (Button) findViewById(R.id.button8);
+        Button btn9 = (Button) findViewById(R.id.button9);
+
+        if(btn1!=null && btn2!=null && btn3!=null && btn4!=null && btn5!=null && btn6!=null && btn7!=null && btn8!=null && btn9!=null) {
+            btn1.setEnabled(true);
+            btn2.setEnabled(true);
+            btn3.setEnabled(true);
+            btn4.setEnabled(true);
+            btn5.setEnabled(true);
+            btn6.setEnabled(true);
+            btn7.setEnabled(true);
+            btn8.setEnabled(true);
+            btn9.setEnabled(true);
+        }
     }
 
     @Override
