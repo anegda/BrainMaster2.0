@@ -3,6 +3,9 @@ package com.example.brainmaster;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -46,7 +49,7 @@ public class Ranking extends AppCompatActivity {
         miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
         SQLiteDatabase bd = GestorBD.getWritableDatabase();
         String[] campos = new String[] {"usuario","puntos"};
-        Cursor c2 = bd.query("Partidas",campos,null,null, null,null,"puntos");
+        Cursor c2 = bd.query("Partidas",campos,null,null, null,null,"puntos DESC");
         while (c2.moveToNext()){
             String usuario = c2.getString(0);
             int puntos = c2.getInt(1);
@@ -58,5 +61,12 @@ public class Ranking extends AppCompatActivity {
         ListView lalista = findViewById(R.id.listaRanking);
         lalista.setAdapter(adapter);
 
+    }
+
+    //PARA QUE NO HAYA PROBLEMAS AL ACTUALIZAR EL RANKING
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, Menu.class));
+        finish();
     }
 }

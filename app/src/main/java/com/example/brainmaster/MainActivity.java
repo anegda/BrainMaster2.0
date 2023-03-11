@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             pIdioma = locale.getLanguage();
             getIntent().putExtra("idiomaAct",pIdioma);
         }
-
+        //this.deleteDatabase("BrainMaster");
         //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String tema = prefs.getString("temapref","1");
