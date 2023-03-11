@@ -100,6 +100,11 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                 //NUEVA PALABRA
                 String nuevaPalabra = juego.getPalabra();
                 palabraText.setText(nuevaPalabra);
+
+                //ESTABLECEMOS LA NUEVA PUNTUACIÓN
+                TextView puntosText = (TextView) findViewById(R.id.puntosPText);
+                int puntuación = juego.getPuntos();
+                puntosText.setText(getString(R.string.puntuacion)+" "+Integer.toString(puntuación));
             }
         });
 
@@ -133,6 +138,11 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                 //NUEVA PALABRA
                 String nuevaPalabra = juego.getPalabra();
                 palabraText.setText(nuevaPalabra);
+
+                //ESTABLECEMOS LA NUEVA PUNTUACIÓN
+                TextView puntosText = (TextView) findViewById(R.id.puntosPText);
+                int puntuación = juego.getPuntos();
+                puntosText.setText(getString(R.string.puntuacion)+" "+Integer.toString(puntuación));
             }
         });
 
@@ -188,6 +198,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(JuegoPalabrasTablero.this, Menu.class));
                         finish();
                     }
 

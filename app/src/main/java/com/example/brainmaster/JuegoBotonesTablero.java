@@ -118,7 +118,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     //SI ESTÁ EN HORIZONTAL ACTUALIZAR EL OTRO FRAGMENT
                     int orientation = getResources().getConfiguration().orientation;
                     if(orientation == Configuration.ORIENTATION_LANDSCAPE){
-                        FragmentBotonesInfo elotro = (FragmentBotonesInfo) getSupportFragmentManager().findFragmentById(R.id.fragmentBotonesInfo);
+                        FragmentBotonesInfo elotro = (FragmentBotonesInfo) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerInfo);
                         elotro.actualizarPuntuacion(juego.getPuntos());
                     }
 
@@ -246,6 +246,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(JuegoBotonesTablero.this, Menu.class));
                         finish();
                     }
 
