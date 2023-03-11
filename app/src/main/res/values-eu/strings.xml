@@ -34,10 +34,15 @@
     <string name="noti2Contenido">Garuna entrenatzea oso garrantzitsua da.</string>
     <string name="ranking">Ranking</string>
     <string name="puntuacion">Puntuazioa:</string>
-    <string name="visto">IKUSITA</string>
+    <string name="visto">IKUSIA</string>
     <string name="nuevo">BERRIA</string>
     <string name="configuracion">Konfigurazioa</string>
     <string name="perder">Partida amaitu da!</string>
     <string name="salir">Ziur zaude irten nahi duzula?</string>
     <string name="salirM">Irteten bazara partida ez da gordeko</string>
+    <string name="reglas">Arauak</string>
+    <string name="reglasMB">"Botoi argiztatuen sekuentzia bat erakutsiko da. Errepikatu sekuentzia hori pantailako botoiak klikatuz, eta sakatu OK. "</string>
+    <string name="si">Bai</string>
+    <string name="no">Ez</string>
+    <string name="reglasMP">\"Berria\" klikatu, pantailan agertzen den hitza partida honetan lehenago ikusi ez baduzu. Klikatu \"Ikusia\", bestela</string>
 </resources>

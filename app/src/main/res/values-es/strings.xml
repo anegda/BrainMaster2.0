@@ -40,4 +40,9 @@
     <string name="perder">Partida finalizada!</string>
     <string name="salir">Seguro que desea salir?</string>
     <string name="salirM">Si sales no se guardará la partida</string>
+    <string name="reglas">Reglas</string>
+    <string name="reglasMB">Se mostrará una secuencia de botones iluminados. Repite dicha secuencia clickando los botones de la pantalla y pulsa OK.</string>
+    <string name="si">Sí</string>
+    <string name="no">No</string>
+    <string name="reglasMP">Clicka \"Nuevo\" si la palabra que aparece en pantalla no la has visto antes en esta partida. Clicka \"Visto\" en caso contrario.</string>
 </resources>

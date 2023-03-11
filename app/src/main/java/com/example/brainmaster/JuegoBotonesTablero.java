@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -114,6 +115,14 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
             @Override
             public void onClick(View view) {
                 if(juego.comparar(solucion)){
+                    //SI ESTÁ EN HORIZONTAL ACTUALIZAR EL OTRO FRAGMENT
+                    int orientation = getResources().getConfiguration().orientation;
+                    if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+                        FragmentBotonesInfo elotro = (FragmentBotonesInfo) getSupportFragmentManager().findFragmentById(R.id.fragmentBotonesInfo);
+                        elotro.actualizarPuntuacion(juego.getPuntos());
+                    }
+
+                    //NUEVA RONDA
                     solucion = new ArrayList<Integer>();
                     Handler handler = new Handler();
                     handler.postDelayed(ronda,1000);
@@ -135,6 +144,15 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     }).show();
 
                 }
+            }
+        });
+
+        //BOTÓN QUE EXPLICA LAS REGLAS
+        ImageButton btn_reglasB = findViewById(R.id.btn_reglasB);
+        btn_reglasB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(JuegoBotonesTablero.this).setIcon(R.drawable.logo).setTitle(getString(R.string.reglas)).setMessage(getString(R.string.reglasMB)).show();
             }
         });
     }
@@ -224,7 +242,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
     //DIALOG AL INTENTAR SALIR DE LA APP
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this).setIcon(R.drawable.logo).setTitle(getString(R.string.salir)).setMessage(getString(R.string.salirM)).setPositiveButton("Yes", new DialogInterface.OnClickListener()
+        new AlertDialog.Builder(this).setIcon(R.drawable.logo).setTitle(getString(R.string.salir)).setMessage(getString(R.string.salirM)).setPositiveButton(getString(R.string.si), new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -232,7 +250,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     }
 
                 })
-                .setNegativeButton("No", null)
+                .setNegativeButton(getString(R.string.no), null)
                 .show();
     }
 }

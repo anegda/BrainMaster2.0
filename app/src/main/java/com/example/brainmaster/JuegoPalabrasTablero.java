@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -60,9 +61,15 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_palabras_tablero);
 
+        //ESTABLECEMOS LA PALABRA ACTUAL
         TextView palabraText = (TextView) findViewById(R.id.palabraText);
         String palabraAct = juego.getPalabra();
         palabraText.setText(palabraAct);
+
+        //ESTABLECEMOS LA PUNTUACIÓN
+        TextView puntosText = (TextView) findViewById(R.id.puntosPText);
+        int puntuación = juego.getPuntos();
+        puntosText.setText(getString(R.string.puntuacion)+" "+Integer.toString(puntuación));
 
         //AÑADIMOS FUNCIONALIDAD AL BOTÓN NUEVO
         Button btn_nuevo = (Button) findViewById(R.id.btn_nuevo);
@@ -128,6 +135,15 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                 palabraText.setText(nuevaPalabra);
             }
         });
+
+        //BOTÓN QUE EXPLICA LAS REGLAS
+        ImageButton btn_reglasP = findViewById(R.id.btn_reglasP);
+        btn_reglasP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(JuegoPalabrasTablero.this).setIcon(R.drawable.logo).setTitle(getString(R.string.reglas)).setMessage(getString(R.string.reglasMP)).show();
+            }
+        });
     }
 
     @Override
@@ -168,7 +184,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
     //DIALOG AL INTENTAR SALIR DE LA APP
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this).setIcon(R.drawable.logo).setTitle(getString(R.string.salir)).setMessage(getString(R.string.salirM)).setPositiveButton("Yes", new DialogInterface.OnClickListener()
+        new AlertDialog.Builder(this).setIcon(R.drawable.logo).setTitle(getString(R.string.salir)).setMessage(getString(R.string.salirM)).setPositiveButton(getString(R.string.si), new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -176,7 +192,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     }
 
                 })
-                .setNegativeButton("No", null)
+                .setNegativeButton(getString(R.string.no), null)
                 .show();
     }
 }
