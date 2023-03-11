@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
@@ -116,12 +119,21 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     handler.postDelayed(ronda,1000);
                 }
                 else{
+                    //INTRODUCIMOS LA PUNTUACIÓN A LA BD
                     miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     String nombre = "anegda";
                     int puntos =juego.getPuntos();
-                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos') VALUES ('" + nombre + "'," + puntos + ")");
-                    finish();
+                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos', 'tipo') VALUES ('" + nombre + "'," + puntos + ", 'Botones')");
+
+                    //DIÁLOGO DICIENDO QUE HAS PERDIDO
+                    new AlertDialog.Builder(getApplicationContext()).setIcon(R.drawable.logo).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(JuegoBotonesTablero.this, Menu.class));
+                            finish();
+                        }
+                    }).show();
                 }
             }
         });
@@ -207,5 +219,20 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
 
         Context context = getBaseContext().createConfigurationContext(configuration);
         getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+    }
+
+    //DIALOG AL INTENTAR SALIR DE LA APP
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this).setIcon(R.drawable.logo).setTitle(getString(R.string.salir)).setMessage(getString(R.string.salirM)).setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }

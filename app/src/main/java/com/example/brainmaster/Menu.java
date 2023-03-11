@@ -69,12 +69,15 @@ public class Menu extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
                     startActivity(new Intent(Menu.this, JuegoBotonesTablero.class));
+                    finish();
                 }
                 else if(position==1){
                     startActivity(new Intent(Menu.this, JuegoPalabrasTablero.class));
+                    finish();
                 }
                 else if(position==2){
                     startActivity(new Intent(Menu.this, Ranking.class));
+                    finish();
                 }
             }
         });

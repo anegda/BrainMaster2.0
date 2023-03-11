@@ -100,17 +100,33 @@ public class Registro extends AppCompatActivity {
                 EditText fechaNacE = (EditText) findViewById(R.id.fechaNacREdit);
                 String fechaNac = fechaNacE.getText().toString();
 
-                miBD GestorBD = new miBD(Registro.this, "BrainMaster", null, 1);
-                SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                bd.execSQL("INSERT INTO Usuarios ('nombre', 'apellidos', 'usuario', 'password','email','fechaNac') VALUES ('" + nombre + "','" + apellidos + "','" + usuario + "','" + password + "','" + email + "','" + fechaNac +"')");
-                Toast.makeText(getApplicationContext(),"Usuario registrado", Toast.LENGTH_LONG).show();
-                Cursor c = bd.rawQuery("SELECT * FROM Usuarios",null);
-                Log.d("DAS",Integer.toString(c.getCount()));
+                //COMPROBAMOS QUE TODOS LOS DATOS HAN SIDO INTRODUCIDOS
+                if(nombre.equals("")||apellidos.equals("")||usuario.equals("")||password.equals("")||email.equals("")||fechaNac.equals("")){
+                    Toast.makeText(getApplicationContext(), "No has introducido todos los campos", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    miBD GestorBD = new miBD(Registro.this, "BrainMaster", null, 1);
+                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
 
-                bd.close();
-
-                //ABRIMOS EL MENU
-                startActivity(new Intent(Registro.this, Menu.class));
+                    //COMPROBAR QUE EL USUARIO ES ÚNICO
+                    String[] campos = new String[] {"Codigo"};
+                    String [] argumentos = new String[] {usuario};
+                    Cursor c2 = bd.query("Usuarios",campos,"usuario=?",argumentos, null,null,null);
+                    if(c2.getCount()>0) {
+                        Toast.makeText(getApplicationContext(), "Nombre de usuario no disponible", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        //INTRODUCIMOS EL USUARIO A LA BD
+                        bd.execSQL("INSERT INTO Usuarios ('nombre', 'apellidos', 'usuario', 'password','email','fechaNac') VALUES ('" + nombre + "','" + apellidos + "','" + usuario + "','" + password + "','" + email + "','" + fechaNac + "')");
+                        Toast.makeText(getApplicationContext(), "Usuario registrado", Toast.LENGTH_LONG).show();
+                        Cursor c = bd.rawQuery("SELECT * FROM Usuarios", null);
+                        Log.d("DAS", Integer.toString(c.getCount()));
+                        bd.close();
+                        //ABRIMOS EL MENU
+                        startActivity(new Intent(Registro.this, Menu.class));
+                        finish();
+                    }
+                }
             }
         });
     }

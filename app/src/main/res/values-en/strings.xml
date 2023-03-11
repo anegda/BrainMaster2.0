@@ -37,4 +37,7 @@
     <string name="visto">SEEN</string>
     <string name="nuevo">NEW</string>
     <string name="configuracion">Configuration</string>
+    <string name="perder">Game Over!</string>
+    <string name="salir">Are you sure you want to quit?</string>
+    <string name="salirM">If you leave the game won\'t be saved</string>
 </resources>

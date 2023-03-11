@@ -37,4 +37,7 @@
     <string name="visto">IKUSITA</string>
     <string name="nuevo">BERRIA</string>
     <string name="configuracion">Konfigurazioa</string>
+    <string name="perder">Partida amaitu da!</string>
+    <string name="salir">Ziur zaude irten nahi duzula?</string>
+    <string name="salirM">Irteten bazara partida ez da gordeko</string>
 </resources>

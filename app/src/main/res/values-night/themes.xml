@@ -13,4 +13,32 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="Theme.BrainMasterPunk" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryVariant">@color/green_osc</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/purple_punk</item>
+        <item name="colorSecondaryVariant">@color/purple_pnk</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/blue_punk</item>
+        <!-- Background color. -->
+        <item name="android:background">@color/black_punk</item>
+    </style>
+    <style name="Theme.BrainMasterSummer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/orange_lad</item>
+        <item name="colorPrimaryVariant">@color/orange</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/pink</item>
+        <item name="colorSecondaryVariant">@color/pink_claro</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/yellow</item>
+        <!-- Background color. -->
+        <item name="android:background">@color/yellow_pal</item>
+    </style>
 </resources>

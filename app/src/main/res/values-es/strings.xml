@@ -37,4 +37,7 @@
     <string name="visto">VISTO</string>
     <string name="nuevo">NUEVO</string>
     <string name="configuracion">Configuración</string>
+    <string name="perder">Partida finalizada!</string>
+    <string name="salir">Seguro que desea salir?</string>
+    <string name="salirM">Si sales no se guardará la partida</string>
 </resources>
