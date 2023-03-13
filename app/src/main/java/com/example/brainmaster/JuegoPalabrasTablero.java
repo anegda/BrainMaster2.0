@@ -92,7 +92,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo') VALUES ('" + nombre + "'," + puntos + ",'palabras')");
 
                     //DIÁLOGO DICIENDO QUE HAS PERDIDO
-                    new AlertDialog.Builder(JuegoPalabrasTablero.this).setIcon(R.drawable.logo).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(JuegoPalabrasTablero.this).setCancelable(false).setIcon(R.drawable.logo).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             startActivity(new Intent(JuegoPalabrasTablero.this, Menu.class));
@@ -136,7 +136,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo') VALUES ('" + nombre + "'," + puntos + ",'palabras')");
 
                     //DIÁLOGO DICIENDO QUE HAS PERDIDO
-                    new AlertDialog.Builder(JuegoPalabrasTablero.this).setIcon(R.drawable.logo).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(JuegoPalabrasTablero.this).setCancelable(false).setIcon(R.drawable.logo).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             startActivity(new Intent(JuegoPalabrasTablero.this, Menu.class));

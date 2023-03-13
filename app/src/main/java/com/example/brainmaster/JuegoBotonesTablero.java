@@ -31,7 +31,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         @Override
         public void run() {
             ArrayList<Integer> ronda = juego.getSecuencia();
-            long step = 1000;
+            long step = 600;
             long numRonda = 0;
             Handler handler = new Handler();
             pararUsoBotones();
@@ -104,7 +104,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         setContentView(R.layout.activity_juego_botones_tablero);
 
         Handler handler = new Handler();
-        handler.postDelayed(ronda,1000);
+        handler.postDelayed(ronda,500);
 
         Button btn_enter = findViewById(R.id.btn_enter);
         btn_enter.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +121,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     //NUEVA RONDA
                     solucion = new ArrayList<Integer>();
                     Handler handler = new Handler();
-                    handler.postDelayed(ronda,1000);
+                    handler.postDelayed(ronda,500);
                 }
                 else{
                     //OBTENEMOS EL NOMBRE DE LAS PREFERENCIAS
@@ -138,10 +138,11 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos', 'tipo') VALUES ('" + nombre + "'," + puntos + ", 'Botones')");
 
                     //DIÁLOGO DICIENDO QUE HAS PERDIDO
-                    new AlertDialog.Builder(JuegoBotonesTablero.this).setIcon(R.drawable.logo).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(JuegoBotonesTablero.this).setIcon(R.drawable.logo).setCancelable(false).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             startActivity(new Intent(JuegoBotonesTablero.this, Menu.class));
+                            finish();
                         }
                     }).show();
 
