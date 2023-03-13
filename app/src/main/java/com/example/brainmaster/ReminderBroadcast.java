@@ -14,7 +14,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
         Notification.Builder builder = new Notification.Builder(context, "notifyDaily");
         builder.setSmallIcon(R.drawable.logo)
                 .setContentTitle(context.getResources().getString(R.string.noti2Titulo))
-                .setContentText(context.getResources().getString(R.string.noti1Contenido));
+                .setContentText(context.getResources().getString(R.string.noti2Contenido));
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES. O ) {

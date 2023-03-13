@@ -36,12 +36,19 @@ public class Preferencias extends PreferenceFragmentCompat implements SharedPref
                     //https://developer.android.com/training/scheduling/alarms?hl=es-419
                     //https://www.tutorialspoint.com/how-to-create-everyday-notifications-at-certain-time-in-android
                     Intent intent = new Intent(getContext(), ReminderBroadcast.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0,intent,PendingIntent.FLAG_IMMUTABLE);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
                     AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
 
                     long timeAtButtonClick = System.currentTimeMillis();
 
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeAtButtonClick,1000*60*60*24, pendingIntent);
+                }else{
+                    //CANCELAMOS LA NOTIFICACIÓN DIARIA
+                    Intent intent = new Intent(getContext(), ReminderBroadcast.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+                    AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
+
+                    alarmManager.cancel(pendingIntent);
                 }
                 break;
             case "temapref":
