@@ -4,6 +4,13 @@
         app:key="cat_config"
         app:title="@string/configuracion"
         >
+        <ListPreference
+            app:dialogTitle="@string/idiomas"
+            app:entries="@array/idiomas"
+            app:entryValues="@array/idiomasVal"
+            app:key="idiomapref"
+            app:title="@string/idiomas"
+            app:defaultValue="es"/>
         <SwitchPreferenceCompat
             app:key="switch"
             app:title="@string/notificación"

@@ -4,15 +4,20 @@ import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceFragmentCompat;
+
+import java.util.Locale;
 
 public class Preferencias extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
     @Override
@@ -59,6 +64,21 @@ public class Preferencias extends PreferenceFragmentCompat implements SharedPref
                 }
                 elManager.notify(11, elBuilder.build());
                 startActivity(new Intent(getContext(), Menu.class));
+                getActivity().finish();
+                break;
+            case "idiomapref":
+                String idioma = sharedPreferences.getString("idiomapref","es");
+
+                Log.d("DAS",idioma);
+                Locale nuevaloc = new Locale(idioma);
+                Locale.setDefault(nuevaloc);
+                Configuration configuration = getContext().getResources().getConfiguration();
+                configuration.setLocale(nuevaloc);
+                configuration.setLayoutDirection(nuevaloc);
+
+                Context context = getContext().createConfigurationContext(configuration);
+                getContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+                startActivity(getActivity().getIntent());
                 getActivity().finish();
                 break;
             default:

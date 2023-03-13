@@ -23,11 +23,12 @@ public class ClasePalabrasJuego {
 
         InputStream fich = context.getResources().openRawResource(R.raw.palabras);
         //LEO EL FICHERO INCLUIDO EN LA APLICACIÓN CON LAS PALABRAS
-        if(idioma=="es") {
+        Log.d("DAS",idioma);
+        if(idioma.equals("es")) {
             fich = context.getResources().openRawResource(R.raw.palabras);
-        } else if (idioma=="en") {
+        } else if (idioma.equals("en")) {
             fich = context.getResources().openRawResource(R.raw.words);
-        } else if (idioma=="eu") {
+        } else if (idioma.equals("eu")) {
             fich = context.getResources().openRawResource(R.raw.hitzak);
         }
 

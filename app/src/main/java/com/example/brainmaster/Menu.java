@@ -18,22 +18,14 @@ import android.widget.ListView;
 import java.util.Locale;
 
 public class Menu extends AppCompatActivity {
-    String pIdioma;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //MANTENER IDIOMA EN HORIZONTAL
-        if (savedInstanceState != null) {
-            pIdioma = savedInstanceState.getString("idiomaAct");
-            cambiarIdioma(pIdioma);
-        }
-        else{
-            Locale locale = getResources().getConfiguration().getLocales().get(0);
-            pIdioma = locale.getLanguage();
-            getIntent().putExtra("idiomaAct",pIdioma);
-        }
+        //ESTABLECER IDIOMA USANDO PREFERENCIAS
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String idioma = prefs.getString("idiomapref","es");
+        cambiarIdioma(idioma);
 
         //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String tema = prefs.getString("temapref","1");
         if(tema.equals("1")) {
             Log.d("DAS",tema+" 1");
@@ -104,19 +96,6 @@ public class Menu extends AppCompatActivity {
                 startActivity(Intent.createChooser(compartir, "Compartir vía"));
             }
         });
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        String idiomaAct = getIntent().getStringExtra("idiomaAct");
-        savedInstanceState.putString("idiomaAct", idiomaAct);
-    }
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        String idiomaAct = savedInstanceState.getString("idiomaAct");
-        pIdioma = idiomaAct;
     }
 
     protected void cambiarIdioma(String idioma){

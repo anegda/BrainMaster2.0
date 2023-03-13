@@ -21,25 +21,21 @@ import android.widget.TextView;
 import java.util.Locale;
 
 public class JuegoPalabrasTablero extends AppCompatActivity {
-    String pIdioma;
     static ClasePalabrasJuego juego;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //ESTABLECER IDIOMA USANDO PREFERENCIAS
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String idioma = prefs.getString("idiomapref","es");
+        cambiarIdioma(idioma);
+
         //MANTENER ELEMENTOS EN HORIZONTAL
-        if (savedInstanceState != null) {
-            pIdioma = savedInstanceState.getString("idiomaAct");
-            cambiarIdioma(pIdioma);
-        }
-        else{
-            Locale locale = getResources().getConfiguration().getLocales().get(0);
-            pIdioma = locale.getLanguage();
-            getIntent().putExtra("idiomaAct",pIdioma);
-            juego = new ClasePalabrasJuego(this, pIdioma);
+        if (savedInstanceState == null) {
+            juego = new ClasePalabrasJuego(this, idioma);
         }
 
         //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String tema = prefs.getString("temapref","1");
         if(tema.equals("1")) {
             Log.d("DAS",tema+" 1");
@@ -159,8 +155,6 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        String idiomaAct = getIntent().getStringExtra("idiomaAct");
-        savedInstanceState.putString("idiomaAct", idiomaAct);
 
         //GUARDAR PALABRA ACTUAL
         TextView palabraText = (TextView) findViewById(R.id.palabraText);
@@ -170,8 +164,6 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        String idiomaAct = savedInstanceState.getString("idiomaAct");
-        pIdioma = idiomaAct;
 
         //PONGO LA PALABRA
         String palabraAct = savedInstanceState.getString("palabraAct");

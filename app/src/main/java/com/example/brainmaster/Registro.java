@@ -26,22 +26,15 @@ import java.util.Locale;
 
 public class Registro extends AppCompatActivity {
     Calendar calendario = Calendar.getInstance();
-    String pIdioma;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //MANTENER IDIOMA EN HORIZONTAL
-        if (savedInstanceState != null) {
-            pIdioma = savedInstanceState.getString("idiomaAct");
-            cambiarIdioma(pIdioma);
-        }
-        else{
-            Locale locale = getResources().getConfiguration().getLocales().get(0);
-            pIdioma = locale.getLanguage();
-            getIntent().putExtra("idiomaAct",pIdioma);
-        }
+        //ESTABLECER IDIOMA USANDO PREFERENCIAS
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String idioma = prefs.getString("idiomapref","es");
+        cambiarIdioma(idioma);
 
         //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String tema = prefs.getString("temapref","1");
         if(tema.equals("1")) {
             Log.d("DAS",tema+" 1");
@@ -135,8 +128,6 @@ public class Registro extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        String idiomaAct = getIntent().getStringExtra("idiomaAct");
-        savedInstanceState.putString("idiomaAct", idiomaAct);
 
         EditText nombreE = (EditText) findViewById(R.id.nombreREdit);
         String nombre = nombreE.getText().toString();

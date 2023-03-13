@@ -38,24 +38,14 @@ import android.widget.TextView;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    int pTema;
-    String pIdioma;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //MANTENER IDIOMA EN HORIZONTAL
-        if (savedInstanceState != null) {
-            pIdioma = savedInstanceState.getString("idiomaAct");
-            cambiarIdioma(pIdioma);
-        }
-        else{
-            Locale locale = getResources().getConfiguration().getLocales().get(0);
-            pIdioma = locale.getLanguage();
-            getIntent().putExtra("idiomaAct",pIdioma);
-        }
-        //this.deleteDatabase("BrainMaster");
-        //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
+        //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String idioma = prefs.getString("idiomapref","es");
+        cambiarIdioma(idioma);
+
+        //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
         String tema = prefs.getString("temapref","1");
         if(tema.equals("1")) {
             Log.d("DAS",tema+" 1");
@@ -116,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.setSingleChoiceItems(opciones, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        String pIdioma = null;
                         if(i==0){
                             pIdioma="en";
                         }
@@ -125,8 +116,11 @@ public class MainActivity extends AppCompatActivity {
                         else{
                             pIdioma="eu";
                         }
-                        cambiarIdioma(pIdioma);
-                        getIntent().putExtra("idiomaAct",pIdioma);
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("idiomapref",pIdioma);
+                        editor.apply();
+
                         finish();
                         startActivity(getIntent());
                     }
@@ -135,19 +129,6 @@ public class MainActivity extends AppCompatActivity {
                 ad.show();
             }
         });
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        String idiomaAct = getIntent().getStringExtra("idiomaAct");
-        savedInstanceState.putString("idiomaAct", idiomaAct);
-    }
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        String idiomaAct = savedInstanceState.getString("idiomaAct");
-        pIdioma = idiomaAct;
     }
 
     protected void cambiarIdioma(String idioma){

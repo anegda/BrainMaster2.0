@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class Ranking extends AppCompatActivity {
@@ -23,8 +26,12 @@ public class Ranking extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
+        //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String idioma = prefs.getString("idiomapref","es");
+        cambiarIdioma(idioma);
+
+        //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
         String tema = prefs.getString("temapref","1");
         if(tema.equals("1")) {
             Log.d("DAS",tema+" 1");
@@ -68,5 +75,18 @@ public class Ranking extends AppCompatActivity {
     public void onBackPressed() {
         startActivity(new Intent(this, Menu.class));
         finish();
+    }
+
+    //MANTENER EL IDIOMA
+    protected void cambiarIdioma(String idioma){
+        Log.d("DAS",idioma);
+        Locale nuevaloc = new Locale(idioma);
+        Locale.setDefault(nuevaloc);
+        Configuration configuration = getBaseContext().getResources().getConfiguration();
+        configuration.setLocale(nuevaloc);
+        configuration.setLayoutDirection(nuevaloc);
+
+        Context context = getBaseContext().createConfigurationContext(configuration);
+        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
     }
 }

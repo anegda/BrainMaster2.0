@@ -23,6 +23,16 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+    <string-array name="idiomas">
+        <item>English</item>
+        <item>Español</item>
+        <item>Euskera</item>
+    </string-array>
+    <string-array name="idiomasVal">
+        <item>en</item>
+        <item>es</item>
+        <item>eu</item>
+    </string-array>
     <string name="notificación">Eguneroko Jakinarazpenak:</string>
     <string name="guardar">GORDE</string>
     <string name="activar">AKTIBATU</string>

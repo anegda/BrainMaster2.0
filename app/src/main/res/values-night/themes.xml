@@ -17,7 +17,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/green</item>
         <item name="colorPrimaryVariant">@color/green_osc</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/purple_punk</item>
         <item name="colorSecondaryVariant">@color/purple_pnk</item>
@@ -31,7 +31,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/orange_lad</item>
         <item name="colorPrimaryVariant">@color/orange</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/pink</item>
         <item name="colorSecondaryVariant">@color/pink_claro</item>
