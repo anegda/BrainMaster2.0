@@ -67,7 +67,7 @@ public class Login extends AppCompatActivity {
                 if(c2.getCount()>0) {
                     c2.close();
                     bd.close();
-                    Toast.makeText(getApplicationContext(), "Login correcto.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.okLogin), Toast.LENGTH_LONG).show();
 
                     //ESTABLECEMOS NUESTRO NOMBRE DE USUARIO COMO NOMBRE DE RANKING EN LAS PREFERENCIAS (SE PODRÁ CAMBIAR)
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Login.this);
@@ -79,7 +79,7 @@ public class Login extends AppCompatActivity {
                     finish();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrectos.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.errorLogin), Toast.LENGTH_LONG).show();
                 }
             }
         });

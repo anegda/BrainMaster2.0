@@ -56,4 +56,9 @@
     <string name="no">Ez</string>
     <string name="reglasMP">\"Berria\" klikatu, pantailan agertzen den hitza partida honetan lehenago ikusi ez baduzu. Klikatu \"Ikusia\", bestela</string>
     <string name="nombreRanking">Sartu izen bat Ranking-ean argertzeko:</string>
+    <string name="errorLogin">Eribiltzaile edo pasahitza okerrak</string>
+    <string name="okLogin">Login zuzena</string>
+    <string name="errorCampos">Ez dituzu datu guztiak bete</string>
+    <string name="errorRegistro">Erabiltzaile izena ez dago erabilgarri</string>
+    <string name="okRegistro">Erabiltzaile erregistratua</string>
 </resources>

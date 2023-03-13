@@ -56,4 +56,9 @@
     <string name="no">No</string>
     <string name="reglasMP">Clicka \"Nuevo\" si la palabra que aparece en pantalla no la has visto antes en esta partida. Clicka \"Visto\" en caso contrario.</string>
     <string name="nombreRanking">Introduce un nombre para que aparezca en el ranking:</string>
+    <string name="errorLogin">Usuario o contraseña incorrectos</string>
+    <string name="okLogin">Login correcto</string>
+    <string name="errorCampos">No has introducido todos los campos</string>
+    <string name="errorRegistro">El nombre de usuario no está disponible</string>
+    <string name="okRegistro">Usuario registrado</string>
 </resources>
