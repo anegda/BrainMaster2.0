@@ -39,6 +39,6 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/yellow</item>
         <!-- Background color. -->
-        <item name="android:background">@color/yellow_pal</item>
+        <item name="android:background">@color/black</item>
     </style>
 </resources>

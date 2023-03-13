@@ -124,10 +124,16 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     handler.postDelayed(ronda,1000);
                 }
                 else{
+                    //OBTENEMOS EL NOMBRE DE LAS PREFERENCIAS
+                    String nombre = "-";
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(JuegoBotonesTablero.this);
+                    if(prefs.contains("nombre")){
+                        nombre = prefs.getString("nombre", null);
+                    }
+
                     //INTRODUCIMOS LA PUNTUACIÓN A LA BD
                     miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                    String nombre = "anegda";
                     int puntos =juego.getPuntos();
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos', 'tipo') VALUES ('" + nombre + "'," + puntos + ", 'Botones')");
 

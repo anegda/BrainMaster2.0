@@ -55,4 +55,5 @@
     <string name="si">Yes</string>
     <string name="no">No</string>
     <string name="reglasMP">Click \"New\" if you have not seen before the word that appears on the screen. Click \"Seen\" otherwise.</string>
+    <string name="nombreRanking">Enter the name to appear in the ranking:</string>
 </resources>

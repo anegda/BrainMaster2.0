@@ -54,4 +54,5 @@
     <string name="si">Sí</string>
     <string name="no">No</string>
     <string name="reglasMP">Clicka \"Nuevo\" si la palabra que aparece en pantalla no la has visto antes en esta partida. Clicka \"Visto\" en caso contrario.</string>
+    <string name="nombreRanking">Introduce un nombre para que aparezca en el ranking:</string>
 </resources>

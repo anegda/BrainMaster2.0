@@ -4,6 +4,11 @@
         app:key="cat_config"
         app:title="@string/configuracion"
         >
+        <EditTextPreference
+            app:key="nombre"
+            app:title="@string/nombre"
+            app:dialogTitle="@string/nombreRanking"
+            app:dialogIcon="@drawable/logo" />
         <ListPreference
             app:dialogTitle="@string/idiomas"
             app:entries="@array/idiomas"
@@ -11,10 +16,6 @@
             app:key="idiomapref"
             app:title="@string/idiomas"
             app:defaultValue="es"/>
-        <SwitchPreferenceCompat
-            app:key="switch"
-            app:title="@string/notificación"
-            app:defaultValue="false"/>
         <ListPreference
             app:dialogTitle="@string/tema"
             app:entries="@array/temas"
@@ -22,5 +23,9 @@
             app:key="temapref"
             app:title="@string/tema"
             app:defaultValue="1"/>
+        <SwitchPreferenceCompat
+            app:key="switch"
+            app:title="@string/notificación"
+            app:defaultValue="false"/>
     </PreferenceCategory>
 </PreferenceScreen>
