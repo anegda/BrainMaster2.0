@@ -103,6 +103,15 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_botones_tablero);
 
+        //SI ESTÁ EN HORIZONTAL ACTUALIZAR EL OTRO FRAGMENT
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+            FragmentBotonesInfo elotro = (FragmentBotonesInfo) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerInfo);
+            Bundle bundle = new Bundle();
+            bundle.putInt("puntuacion", juego.getPuntos());
+            elotro.setArguments(bundle);
+        }
+
         Handler handler = new Handler();
         handler.postDelayed(ronda,500);
 

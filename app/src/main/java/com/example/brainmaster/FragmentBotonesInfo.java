@@ -34,7 +34,8 @@ public class FragmentBotonesInfo extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView puntosText = (TextView) view.findViewById(R.id.puntuaciónText);
-        puntosText.setText(getString(R.string.puntuacion) +" 0");
+        int puntuacion = getArguments().getInt("puntuacion");
+        puntosText.setText(getString(R.string.puntuacion) +" "+Integer.toString(puntuacion));
     }
 
     public void actualizarPuntuacion(int puntos){
