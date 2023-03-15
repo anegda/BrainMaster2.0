@@ -21,8 +21,6 @@ import java.util.Locale;
 
 
 public class Ranking extends AppCompatActivity {
-    ArrayList<String> arraydedatos = new ArrayList<String>();
-    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +55,22 @@ public class Ranking extends AppCompatActivity {
         SQLiteDatabase bd = GestorBD.getWritableDatabase();
         String[] campos = new String[] {"usuario","puntos"};
         Cursor c2 = bd.query("Partidas",campos,null,null, null,null,"puntos DESC");
-        while (c2.moveToNext()){
+
+        ArrayList<String> usuarios_puntos = new ArrayList<String>();
+        ArrayList<Integer> perfil = new ArrayList<Integer>();
+        int i = 0;
+        while (c2.moveToNext() && i<10){
+            i++;
             String usuario = c2.getString(0);
             int puntos = c2.getInt(1);
             String info = usuario + ": " + Integer.toString(puntos);
-            arraydedatos.add(info);
+            usuarios_puntos.add(info);
+            perfil.add(R.drawable.ranking);
         }
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arraydedatos);
-        ListView lalista = findViewById(R.id.listaRanking);
-        lalista.setAdapter(adapter);
+        ListView ranking = (ListView) findViewById(R.id.listaRanking);
+        AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new Integer[0]));
+        ranking.setAdapter(eladap);
 
     }
 
