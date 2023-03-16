@@ -76,6 +76,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                 String palabraAct = (String) palabraText.getText();
 
                 boolean seguir = juego.comprobarRespuesta(false,palabraAct);
+                //SI PERDEMOS
                 if(!seguir){
                     //OBTENEMOS EL NOMBRE DE LAS PREFERENCIAS
                     String nombre = "-";
@@ -121,6 +122,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
 
                 boolean seguir = juego.comprobarRespuesta(true,palabraAct);
                 Log.d("DAS", palabraAct);
+                //SI PERDEMOS
                 if(!seguir){
                     //OBTENEMOS EL NOMBRE DE LAS PREFERENCIAS
                     String nombre = "-";
@@ -165,6 +167,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
         });
     }
 
+    //GUARDAMOS LA INFORMACIÓN SI PASAMOS A HORIZONTAL / LLAMADAS
     @Override
     protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -174,6 +177,8 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
         String palabraAct = (String) palabraText.getText();
         savedInstanceState.putString("palabraAct", palabraAct);
     }
+
+    //RECUPERAMOS LA INFORMACIÓN GUARDADA
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);

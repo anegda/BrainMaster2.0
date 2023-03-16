@@ -49,13 +49,14 @@ public class Menu extends AppCompatActivity {
         String [] nombres={getString(R.string.botones), getString(R.string.palabras), getString(R.string.ranking)};
         double [] dificultad={2, 1, 0};
 
+        //CREAMOS EL LISTVIEW PERSONALIZADO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         ListView juegos = (ListView) findViewById(R.id.listaRanking);
         AdaptadorListView eladap = new AdaptadorListView(getApplicationContext(), nombres, logos, dificultad);
         juegos.setAdapter(eladap);
 
-        //ONCLICK DE LA LISTA
+        //ONCLICK DE LA LISTA => ABRIMOS LA ACTIVIDAD CORRESPONDIENTE Y CERRAMOS ESTA
         juegos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -89,7 +90,12 @@ public class Menu extends AppCompatActivity {
         btn_compartir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //https://www.programaenlinea.net/crear-boton-compartir-android/
+                /**
+                 * Código basado en: https://www.programaenlinea.net/crear-boton-compartir-android/
+                 * Autor: NGuerrero
+                 * Modificado por Ane García para adaptar los textos mostrados.
+                 */
+
                 Intent compartir = new Intent(android.content.Intent.ACTION_SEND);
                 compartir.setType("text/plain");
                 compartir.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.app_name));

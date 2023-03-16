@@ -2,12 +2,6 @@ package com.example.brainmaster;
 
 import android.Manifest;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -15,25 +9,17 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationChannelGroup;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import java.util.Locale;
 
@@ -102,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle(getString(R.string.idiomas));
+                /**
+                 * Código basado en los apuntes de Egela: Tema 05 - Dialogs y notificaciones
+                 */
                 final CharSequence[] opciones = {"English", "Español", "Euskera"};
                 builder.setSingleChoiceItems(opciones, -1, new DialogInterface.OnClickListener() {
                     @Override
@@ -116,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                         else{
                             pIdioma="eu";
                         }
+                        //SOBREESCRIBIMOS EL IDIOMA EN LAS PREFERENCIAS
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("idiomapref",pIdioma);
@@ -131,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //MÉTODO QUE CAMBIA EL IDIOMA
     protected void cambiarIdioma(String idioma){
         Log.d("DAS",idioma);
         Locale nuevaloc = new Locale(idioma);

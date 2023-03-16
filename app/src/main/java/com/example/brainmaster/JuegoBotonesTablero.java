@@ -24,17 +24,18 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBotonesTablero.listenerDelFragment{
-    static ArrayList<Integer> solucion;
-    static ClaseBotonesJuego juego;
+    static ArrayList<Integer> solucion; //SOLUCIÓN ACTUAL PROPUESTA POR EL JUGADOR, STATIC PARA PODER ACCEDER A ELLA DESDE TODOS LOS MÉTODOS
+    static ClaseBotonesJuego juego; //PARTIDA ACTUAL, STATIC PARA PODER ACCEDER A ELLA DESDE TODOS LOS MÉTODOS
 
+    //RUNNABLE EMPLEADO PARA HACER LA ANIMACIÓN DE LA SECUENCIA DE BOTONES.
     Runnable ronda = new Runnable() {
         @Override
         public void run() {
             ArrayList<Integer> ronda = juego.getSecuencia();
-            long step = 600;
-            long numRonda = 0;
+            long step = 600;    //NECESARIO PARA QUE TODOS LOS BOTONES NO SE ENCIENDAN A LA VEZ
+            long numRonda = 0;  //NECESARIO PARA QUE TODOS LOS BOTONES NO SE ENCIENDAN A LA VEZ
             Handler handler = new Handler();
-            pararUsoBotones();
+            pararUsoBotones();  //MIENTRAS SE REALIZA LA ANIMACIÓN NO SE PUEDEN USAR LOS BOTONES
             for (Integer i : ronda) {
                 //ESPERAMOS ANTES DE ENCENDERLO
                 handler.postDelayed(new Runnable() {
@@ -43,7 +44,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                         int btn_id = getResources().getIdentifier("button" + Integer.toString(i), "id", getPackageName());
                         Button btn_act = (Button) findViewById(btn_id);
                         if(btn_act!=null) {
-                            btn_act.setBackgroundColor(Color.RED);
+                            btn_act.setBackgroundColor(Color.RED);  //CAMBIAMOS EL COLOR DEL BOTÓN SELECCIONADO
                         }
                     }
                 }, 1000 + step * numRonda);
@@ -54,12 +55,13 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                         int btn_id = getResources().getIdentifier("button" + Integer.toString(i), "id", getPackageName());
                         Button btn_act = (Button) findViewById(btn_id);
                         if(btn_act!=null) {
-                            btn_act.setBackgroundColor(getColor(R.color.purple_500));
+                            btn_act.setBackgroundColor(getColor(R.color.purple_500));  //VOLVEMOS AL COLOR NORMAL
                         }
                     }
                 }, 1500 + step * numRonda);
                 numRonda = numRonda + 1;
             }
+            //VOLVEMOS A ACTIVAR LOS BOTONES PARA QUE PUEDAN SER PULSADOS
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -112,9 +114,11 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
             elotro.setArguments(bundle);
         }
 
+        //REALIZAMOS LA PRIMERA RONDA TRAS 0.5 SEGUNDOS DE ENTRAR EN LA ACTIVIDAD
         Handler handler = new Handler();
         handler.postDelayed(ronda,500);
 
+        //REALIZAMOS LA COMPARACIÓN AGREGANDOLE UN LISTENER AL BOTON "OK"
         Button btn_enter = findViewById(R.id.btn_enter);
         btn_enter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,12 +173,14 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         });
     }
 
+    //BOTON NECESARIO PARA RECIBIR LA INFORMACIÓN DEL FRAGMENT (MÉTODO QUE SE USA EN EL LISTENER)
     @Override
     public void enviarInformacion(int num) {
         Log.d("DAS",Integer.toString(num));
         solucion.add(num);
     }
 
+    //LOS BOTONES NO SE PUEDEN PULSAR
     public void pararUsoBotones(){
         //QUITAMOS LA FUNCIONALIDAD
         Button btn1 = (Button) findViewById(R.id.button1);
@@ -200,6 +206,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         }
     }
 
+    //LOS BOTONES SÍ SE PUEDEN PULSAR
     public void reanudarUsoBotones(){
         //QUITAMOS LA FUNCIONALIDAD
         Button btn1 = (Button) findViewById(R.id.button1);
@@ -225,16 +232,19 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         }
     }
 
+    //GUARDAMOS LA INFORMACIÓN AL PASAR A HORIZONTAL / LLAMADAS
     @Override
     protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    //RECUPERAMOS LA INFORMACIÓN GUARDADA EN EL ANTERIOR MÉTODO
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    //MÉTODO PARA CAMBIAR EL IDIOMA
     protected void cambiarIdioma(String idioma){
         Log.d("DAS",idioma);
         Locale nuevaloc = new Locale(idioma);

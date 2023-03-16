@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ClasePalabrasJuego {
-    private ArrayList<String> aparecidas;
-    private ArrayList<String> posibles;
-    private ArrayList<String> todas;
-    private int puntuacion;
+    /**
+     * Clase java que incluye toda la información referente a la partida actual del juego de palabras.
+     */
+    private ArrayList<String> aparecidas; //PALABRAS QUE YA HAN APARECIDO
+    private ArrayList<String> posibles; //PALABRAS QUE PUEDEN APARECER
+    private ArrayList<String> todas; //TODAS LAS PALABRAS DE LOS FICHEROS
+    private int puntuacion; //PUNTUACIÓN DE LA PARTIDA ACTUAL
 
     public ClasePalabrasJuego(Context context, String idioma){
         this.aparecidas = new ArrayList<String>();
@@ -23,7 +26,6 @@ public class ClasePalabrasJuego {
 
         InputStream fich = context.getResources().openRawResource(R.raw.palabras);
         //LEO EL FICHERO INCLUIDO EN LA APLICACIÓN CON LAS PALABRAS
-        Log.d("DAS",idioma);
         if(idioma.equals("es")) {
             fich = context.getResources().openRawResource(R.raw.palabras);
         } else if (idioma.equals("en")) {
@@ -47,6 +49,8 @@ public class ClasePalabrasJuego {
 
         //PARA DISTINTAS PALABRAS EN CADA PARTIDA
         Collections.shuffle(this.todas);
+
+        //AL PRINCIPIO DE LA PARTIDA EL NÚMERO DE PALABRAS QUE PUEDEN SALIR ES 40 Y POSTERIORMENTE VA AUMENTANDO
         this.posibles = new ArrayList<>(this.todas.subList(0,39));
     }
 
@@ -57,9 +61,10 @@ public class ClasePalabrasJuego {
         return palabra;
     }
 
+    //COMPROBAMOS LA RESPUESTA DEL USUARIO
     public boolean comprobarRespuesta(boolean respuesta, String palabra){
+        //SI ESTÁ EN APARECIDAS Y HEMOS CLICKADO VISTO => true
         if(this.aparecidas.contains(palabra) && respuesta){
-            Log.d("DAS",String.valueOf(this.aparecidas));
             this.puntuacion++;
             //AUMENTAMOS EL NÚMERO DE PALABRAS POSIBLES
             if(this.puntuacion>40){
@@ -71,6 +76,7 @@ public class ClasePalabrasJuego {
             }
             return true;
         }
+        //SI NO ESTÁ EN APARECIDAS Y HEMOS CLICKADO NUEVO => true
         else if(!this.aparecidas.contains(palabra) && !respuesta){
             this.aparecidas.add(palabra);
             this.puntuacion++;
@@ -89,6 +95,7 @@ public class ClasePalabrasJuego {
         }
     }
 
+    //OBTENEMOS LA PUNTUACIÓN DEL USUARIO
     public int getPuntos(){
         return this.puntuacion;
     }

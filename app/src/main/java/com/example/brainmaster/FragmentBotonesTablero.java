@@ -14,7 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class FragmentBotonesTablero extends Fragment {
+    /**
+     * La gran mayoría del código se genera solo.
+     * Basado en el código de Egela: Tema 07 - Fragments
+     */
 
+    //IMPLEMENTAMOS EL LISTENER DEL FRAGMENT
     public interface  listenerDelFragment{
         void enviarInformacion(int resultado);
     }
@@ -44,6 +49,7 @@ public class FragmentBotonesTablero extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //CREAMOS EL LISTENER DE LOS BOTONES QUE LLAMA AL LISTENER DEL FRAGMENT Y SE ENCARGA DE ENVIAR LA INFORMACIÓN
         View.OnClickListener clicker = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,6 +60,7 @@ public class FragmentBotonesTablero extends Fragment {
             }
         };
 
+        //AÑADIMOS EL LISTENER A LOS BOTONES
         view.findViewById(R.id.button1).setOnClickListener(clicker);
         view.findViewById(R.id.button2).setOnClickListener(clicker);
         view.findViewById(R.id.button3).setOnClickListener(clicker);
@@ -64,7 +71,7 @@ public class FragmentBotonesTablero extends Fragment {
         view.findViewById(R.id.button8).setOnClickListener(clicker);
         view.findViewById(R.id.button9).setOnClickListener(clicker);
 
-        //PARA QUE EL COLOR SE MANTENGA ESTABLE
+        //PARA QUE EL COLOR SE MANTENGA ESTABLE AUNQUE CAMBIEMOS EL TEMA
         view.findViewById(R.id.button1).setBackgroundColor(getResources().getColor(R.color.purple_500));
         view.findViewById(R.id.button2).setBackgroundColor(getResources().getColor(R.color.purple_500));
         view.findViewById(R.id.button3).setBackgroundColor(getResources().getColor(R.color.purple_500));
@@ -76,6 +83,7 @@ public class FragmentBotonesTablero extends Fragment {
         view.findViewById(R.id.button9).setBackgroundColor(getResources().getColor(R.color.purple_500));
     }
 
+    //MÉTODO QUE ENLAZA CON LA ACTIVIDAD
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

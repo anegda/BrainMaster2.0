@@ -54,19 +54,23 @@ public class Login extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //OBTENEMOS LO ESCRITO POR EL USUARIO
                 EditText usuarioE = (EditText) findViewById(R.id.usuarioEdit);
                 String usuario = usuarioE.getText().toString();
                 EditText passwordE = (EditText) findViewById(R.id.passwordEdit);
                 String password = passwordE.getText().toString();
 
+                //LLAMAMOS A LA BD
                 miBD GestorBD = new miBD(Login.this, "BrainMaster", null, 1);
                 SQLiteDatabase bd = GestorBD.getWritableDatabase();
                 String[] campos = new String[] {"Codigo"};
                 String [] argumentos = new String[] {usuario,password};
                 Cursor c2 = bd.query("Usuarios",campos,"usuario=? AND password=?",argumentos, null,null,null);
+                //SI EXISTE EL USUARIO
                 if(c2.getCount()>0) {
                     c2.close();
                     bd.close();
+                    //CREAMOS TOAST INDICANDO QUE EL LOGIN ES CORRECTO
                     Toast.makeText(getApplicationContext(), getString(R.string.okLogin), Toast.LENGTH_LONG).show();
 
                     //ESTABLECEMOS NUESTRO NOMBRE DE USUARIO COMO NOMBRE DE RANKING EN LAS PREFERENCIAS (SE PODRÁ CAMBIAR)
@@ -75,10 +79,12 @@ public class Login extends AppCompatActivity {
                     editor.putString("nombre", usuario);
                     editor.apply();
 
+                    //VAMOS AL MENÚ
                     startActivity(new Intent(Login.this, Menu.class));
                     finish();
                 }
                 else{
+                    //TOAST DICIENDO QUE HA OCURRIDO UN ERROR
                     Toast.makeText(getApplicationContext(), getString(R.string.errorLogin), Toast.LENGTH_LONG).show();
                 }
             }
