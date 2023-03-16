@@ -70,7 +70,8 @@ public class Preferencias extends PreferenceFragmentCompat implements SharedPref
                     elManager.createNotificationChannel(elCanal);
                 }
                 elManager.notify(11, elBuilder.build());
-                startActivity(new Intent(getContext(), Menu.class));
+
+                startActivity(getActivity().getIntent());
                 getActivity().finish();
                 break;
             case "idiomapref":

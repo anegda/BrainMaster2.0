@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -65,5 +68,21 @@ public class Ajustes extends AppCompatActivity {
 
         Context context = getBaseContext().createConfigurationContext(configuration);
         getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+    }
+
+    //AL SALIR ABRIMOS LA VENTANA DE MENÚ
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this).setIcon(R.drawable.logo).setTitle(getString(R.string.salir)).setPositiveButton(getString(R.string.si), new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Ajustes.this, Menu.class));
+                        finish();
+                    }
+
+                })
+                .setNegativeButton(getString(R.string.no), null)
+                .show();
     }
 }
