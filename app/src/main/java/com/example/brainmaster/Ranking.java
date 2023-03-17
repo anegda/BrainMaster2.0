@@ -51,11 +51,14 @@ public class Ranking extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
 
+        //LLAMAMOS A LA BASE DE DATOS Y HACEMOS UN SELECT DE LAS PARTIDAS REALIZADAS ORDENADAS POR PUNTUACIÓN DESCENDENTEMENTE
         miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
         SQLiteDatabase bd = GestorBD.getWritableDatabase();
         String[] campos = new String[] {"usuario","puntos"};
         Cursor c2 = bd.query("Partidas",campos,null,null, null,null,"puntos DESC");
 
+        //OBTENEMOS LAS 10 MEJORES PARTIDAS Y CREAMOS EL LISTVIEW PERSONALIZADO
+        //CODIGO OBTENIDO DE EGELA
         ArrayList<String> usuarios_puntos = new ArrayList<String>();
         ArrayList<Integer> perfil = new ArrayList<Integer>();
         int i = 0;

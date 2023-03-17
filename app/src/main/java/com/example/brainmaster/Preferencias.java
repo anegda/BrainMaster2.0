@@ -20,6 +20,10 @@ import androidx.preference.PreferenceFragmentCompat;
 import java.util.Locale;
 
 public class Preferencias extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
+    /**
+     * Codigo basado en los apuntes de egela: Tema 08 - Almacenamiento de información local
+     **/
+
     @Override
     public void onCreatePreferences (Bundle savedInstanceState, String rootKey){
         addPreferencesFromResource(R.xml.pref_config);
@@ -31,19 +35,25 @@ public class Preferencias extends PreferenceFragmentCompat implements SharedPref
             case "switch":
                 Boolean notis = sharedPreferences.getBoolean("switch",false);
                 if(notis){
+                    /**
+                     * El uso de un AlarmManager y un BroadcastReceiver fue implementado antes de dar la clase correspondiente.
+                     * Codigo basado en: https://www.youtube.com/watch?v=nl-dheVpt8o
+                     * Autor: Lemubit Academy
+                     * Modificado por Ane García para adaptarlo a las necesidades de mi proyecto.
+                     **/
                     //NOTIFICACIÓN PERIÓDICA
-                    //https://www.youtube.com/watch?v=nl-dheVpt8o
-                    //https://developer.android.com/training/scheduling/alarms?hl=es-419
-                    //https://www.tutorialspoint.com/how-to-create-everyday-notifications-at-certain-time-in-android
                     Intent intent = new Intent(getContext(), ReminderBroadcast.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0,intent,PendingIntent.FLAG_IMMUTABLE);
                     AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
 
                     long timeAtButtonClick = System.currentTimeMillis();
 
+                    // EL USO DEL ALARM MANAGER LO OBTUVE DE LA DOCUMENTACIÓN OFICIAL
+                    // https://developer.android.com/training/scheduling/alarms?hl=es-419
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, timeAtButtonClick,1000*60*60*24, pendingIntent);
                 }else{
-                    //CANCELAMOS LA NOTIFICACIÓN DIARIA
+                    //CANCELAMOS LA NOTIFICACIÓN DIARIA, INFORMACIÓN EN LA DOCUMENTACIÓN OFICIAL
+                    // https://developer.android.com/training/scheduling/alarms?hl=es-419
                     Intent intent = new Intent(getContext(), ReminderBroadcast.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
                     AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
@@ -53,6 +63,7 @@ public class Preferencias extends PreferenceFragmentCompat implements SharedPref
                 break;
             case "temapref":
                 //NOTIFICACIÓN POR CAMBIO DE TEMA
+                //Codigo basado en los apuntes de egela: Tema 05 - Dialogs y notificaciones
                 NotificationManager elManager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
                 NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getContext(),"notifySimple");
                 elBuilder.setSmallIcon(R.drawable.logo)
@@ -75,6 +86,8 @@ public class Preferencias extends PreferenceFragmentCompat implements SharedPref
                 getActivity().finish();
                 break;
             case "idiomapref":
+                //CAMBIO DE IDIOMA
+                //CÓDIGO BASADO EN LOS APUNTES DE EGELA: Laboratorio 02 - Trabajo con interfaces gráficas e idiomas
                 String idioma = sharedPreferences.getString("idiomapref","es");
 
                 Log.d("DAS",idioma);

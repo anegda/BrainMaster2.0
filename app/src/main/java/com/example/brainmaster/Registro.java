@@ -61,12 +61,20 @@ public class Registro extends AppCompatActivity {
         DatePickerDialog.OnDateSetListener date =new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int anyo, int mes, int dia) {
-
+                //AL ELEGIR LA FECHA Y PULSAR "ok" LA ESTABLECEMOS COMO TEXTO DEL EDITTEXT
                 EditText fechaN = (EditText) findViewById(R.id.fechaNacREdit);
+                //HAY QUE +1 AL MES, VA DE (0-11)
                 fechaN.setText(Integer.toString(anyo)+"-"+Integer.toString(mes+1)+"-"+Integer.toString(dia));
+                //APROVECHAMOS PARA ESTABLECER EL FORMATO DE DATE EN SQL
             }
         };
 
+        /**
+         * Basado en el código extraído de Stack Overflow
+         * Pregunta: https://stackoverflow.com/questions/14933330/datepicker-how-to-popup-datepicker-when-click-on-edittext
+         * Autor: https://stackoverflow.com/users/7874047/ronak-thakkar
+         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+         */
         EditText fechaN = (EditText) findViewById(R.id.fechaNacREdit);
         fechaN.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -80,6 +88,7 @@ public class Registro extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //OBTENEMOS TODOS LOS DATOS DE LOS EDITTEXT
                 EditText nombreE = (EditText) findViewById(R.id.nombreREdit);
                 String nombre = nombreE.getText().toString();
                 EditText apellidosE = (EditText) findViewById(R.id.apellidoREdit);
@@ -98,6 +107,7 @@ public class Registro extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    //LLAMAMOS A LA BD
                     miBD GestorBD = new miBD(Registro.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
 
@@ -161,6 +171,7 @@ public class Registro extends AppCompatActivity {
         savedInstanceState.putString("fechaNac", fechaNac);
     }
 
+    //RECUPERAR LOS DATOS GUARDADOS
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
