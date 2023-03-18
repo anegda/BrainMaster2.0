@@ -92,6 +92,10 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     int puntos =juego.getPuntos();
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo') VALUES ('" + nombre + "'," + puntos + ",'palabras')");
 
+                    //REINICIAMOS JUEGO
+                    String idioma = prefs.getString("idiomapref","es");
+                    juego = new ClasePalabrasJuego(JuegoPalabrasTablero.this,idioma);
+
                     //DIÁLOGO DICIENDO QUE HAS PERDIDO
                     new AlertDialog.Builder(JuegoPalabrasTablero.this).setCancelable(false).setIcon(R.drawable.logo).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
@@ -136,6 +140,10 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     int puntos =juego.getPuntos();
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo') VALUES ('" + nombre + "'," + puntos + ",'palabras')");
+
+                    //REINICIAMOS JUEGO
+                    String idioma = prefs.getString("idiomapref","es");
+                    juego = new ClasePalabrasJuego(JuegoPalabrasTablero.this,idioma);
 
                     //DIÁLOGO DICIENDO QUE HAS PERDIDO
                     new AlertDialog.Builder(JuegoPalabrasTablero.this).setCancelable(false).setIcon(R.drawable.logo).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {

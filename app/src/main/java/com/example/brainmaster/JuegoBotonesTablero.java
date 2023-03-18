@@ -150,6 +150,10 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     int puntos =juego.getPuntos();
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos', 'tipo') VALUES ('" + nombre + "'," + puntos + ", 'Botones')");
 
+                    //REINICIAMOS JUEGO
+                    juego = new ClaseBotonesJuego();
+                    solucion = new ArrayList<Integer>();
+
                     //DIÁLOGO DICIENDO QUE HAS PERDIDO
                     new AlertDialog.Builder(JuegoBotonesTablero.this).setIcon(R.drawable.logo).setCancelable(false).setTitle(getString(R.string.perder)).setMessage(getString(R.string.puntuacion)+" "+Integer.toString(puntos)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
