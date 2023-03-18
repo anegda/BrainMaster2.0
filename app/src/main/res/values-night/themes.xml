@@ -2,12 +2,12 @@
     <!-- Base application theme. -->
     <style name="Theme.BrainMaster" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/rosa2</item>
+        <item name="colorPrimaryVariant">@color/rosa1</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/rosa3</item>
+        <item name="colorSecondaryVariant">@color/rosa4</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
@@ -25,7 +25,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/blue_punk</item>
         <!-- Background color. -->
-        <item name="android:background">@color/black_punk</item>
+        <item name="android:background">@color/black</item>
     </style>
     <style name="Theme.BrainMasterSummer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->

@@ -23,4 +23,13 @@
     <color name="pink_claro">#FFF2D7D5</color>
     <color name="yellow_pal">#FFFEF9E7</color>
     <color name="red_suave">#FFEC7063</color>
+
+    <color name="rosa1">#FFF48FB1</color>
+    <color name="rosa2">#FFEC407A</color>
+    <color name="rosa3">#FFF8BBD0</color>
+    <color name="rosa4">#FFF5B7B1</color>
+    <color name="rosa5">#FFF2D7D5</color>
+    <color name="rosa6">#FFFEF9E7</color>
+    <color name="rosa7">#FFEC7063</color>
+
 </resources>
