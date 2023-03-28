@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/rosa2</item>
         <item name="colorPrimaryVariant">@color/rosa1</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/rosa3</item>
         <item name="colorSecondaryVariant">@color/rosa4</item>
@@ -13,6 +13,8 @@
         <item name="android:statusBarColor">@color/rosa2</item>
         <!-- Background color. -->
         <item name="android:windowBackground">@drawable/fondoclasico</item>
+        <!-- Fuente -->
+        <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
     <style name="Theme.BrainMasterPunk" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -27,6 +29,8 @@
         <item name="android:statusBarColor">@color/blue_punk</item>
         <!-- Background color. -->
         <item name="android:windowBackground">@drawable/fondopunk</item>
+        <!-- Fuente -->
+        <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
     <style name="Theme.BrainMasterSummer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -41,6 +45,8 @@
         <item name="android:statusBarColor">@color/yellow</item>
         <!-- Background color. -->
         <item name="android:windowBackground">@drawable/fondoverano</item>
+        <!-- Fuente -->
+        <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
     <style name="newRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/ratingstars</item>
