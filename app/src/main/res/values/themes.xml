@@ -11,6 +11,8 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/rosa2</item>
+        <!-- Background color. -->
+        <item name="android:windowBackground">@drawable/fondoclasico</item>
     </style>
     <style name="Theme.BrainMasterPunk" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -24,7 +26,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/blue_punk</item>
         <!-- Background color. -->
-        <item name="android:background">@color/black_punk</item>
+        <item name="android:windowBackground">@drawable/fondopunk</item>
     </style>
     <style name="Theme.BrainMasterSummer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -38,7 +40,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/yellow</item>
         <!-- Background color. -->
-        <item name="android:background">@color/yellow_pal</item>
+        <item name="android:windowBackground">@drawable/fondoverano</item>
     </style>
     <style name="newRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/ratingstars</item>
