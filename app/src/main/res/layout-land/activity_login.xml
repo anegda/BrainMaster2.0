@@ -12,6 +12,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
         android:text="@string/usuario"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,6 +36,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="120dp"
         android:text="@string/contraseña"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
