@@ -61,4 +61,5 @@
     <string name="errorCampos">Ez dituzu datu guztiak bete</string>
     <string name="errorRegistro">Erabiltzaile izena ez dago erabilgarri</string>
     <string name="okRegistro">Erabiltzaile erregistratua</string>
+    <string name="error">ERRORE</string>
 </resources>

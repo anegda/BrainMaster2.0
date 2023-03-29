@@ -61,4 +61,5 @@
     <string name="errorCampos">No has introducido todos los campos</string>
     <string name="errorRegistro">El nombre de usuario no está disponible</string>
     <string name="okRegistro">Usuario registrado</string>
+    <string name="error">ERROR</string>
 </resources>
