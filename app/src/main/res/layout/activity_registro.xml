@@ -159,4 +159,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+    <!--
+         * Basado en el código extraído de Stack Overflow
+         * Pregunta: https://stackoverflow.com/questions/22105775/imageview-in-circular-through-xml
+         * Autor: https://stackoverflow.com/users/9193372/syscall
+         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+    -->
+    <androidx.cardview.widget.CardView
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:elevation="12dp"
+    android:id="@+id/cardView"
+    app:cardCornerRadius="40dp"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="40dp"
+    android:layout_marginEnd="8dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/fotoDePerfil"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ranking"
+                android:scaleType="centerCrop"/>
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

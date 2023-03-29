@@ -5,12 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imagenRanking"
+    <androidx.cardview.widget.CardView
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="center"
-        android:layout_weight="0" />
+        android:layout_weight="0"
+        android:elevation="12dp"
+        android:id="@+id/cardViewRanking"
+        app:cardCornerRadius="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/imagenRanking"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ranking"
+            android:scaleType="centerCrop"/>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/etiquetaRanking"
