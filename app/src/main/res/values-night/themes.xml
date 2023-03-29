@@ -4,14 +4,17 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/rosa2</item>
         <item name="colorPrimaryVariant">@color/rosa1</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/rosa3</item>
         <item name="colorSecondaryVariant">@color/rosa4</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@color/black</item>
+        <!-- Background color -->
+        <item name="android:background">@color/fondo_oscuro</item>
+        <!-- Fuente -->
+        <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
     <style name="Theme.BrainMasterPunk" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -23,9 +26,11 @@
         <item name="colorSecondaryVariant">@color/purple_pnk</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/blue_punk</item>
+        <item name="android:statusBarColor">@color/black</item>
         <!-- Background color. -->
-        <item name="android:background">@color/black</item>
+        <item name="android:background">@color/fondo_oscuro</item>
+        <!-- Fuente -->
+        <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
     <style name="Theme.BrainMasterSummer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -37,8 +42,10 @@
         <item name="colorSecondaryVariant">@color/pink_claro</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/yellow</item>
+        <item name="android:statusBarColor">@color/black</item>
         <!-- Background color. -->
-        <item name="android:background">@color/black</item>
+        <item name="android:background">@color/fondo_oscuro</item>
+        <!-- Fuente -->
+        <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
 </resources>
