@@ -12,14 +12,20 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -139,6 +145,48 @@ public class Registro extends AppCompatActivity {
                 }
             }
         });
+
+        //FOTO DE PERFIL UTILIZANDO CONTENT PROVIDERS
+        /**
+         * Basado en el código extraído de Stack Overflow
+         * Pregunta: https://stackoverflow.com/questions/38352148/get-image-from-the-gallery-and-show-in-imageview
+         * Autor: https://stackoverflow.com/users/6339485/android-nerd
+         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+         */
+        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
+        fotoPerfil.setClickable(true);
+        fotoPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(i, 1);   //ESTA DEPRECATED PERO FUNCIONA
+                    //ALTERNATIVA A ESTE MÉTODO: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
+                }catch (Exception e){
+                    Log.d("DAS","Error la imagen no se carga correctamente");
+                }
+            }
+        });
+    }
+
+    //PARA ESTABLECER IMAGEN
+    @Override
+    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
+                fotoPerfil.setImageBitmap(selectedImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(Registro.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(Registro.this,  getString(R.string.error),Toast.LENGTH_SHORT).show();
+        }
     }
 
     //MANTENER DATOS EN HORIZONTAL
