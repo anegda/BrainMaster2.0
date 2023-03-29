@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,9 +25,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -125,8 +129,23 @@ public class Registro extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
                     }
                     else {
+                        //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
+                        /**
+                         * Basado en el código extraído de Stack Overflow
+                         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+                         * Autor: https://stackoverflow.com/users/1191766/sachin10
+                         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+                         */
+                        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
+                        Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        img.compress(Bitmap.CompressFormat.PNG,100,baos);
+                        byte [] b = baos.toByteArray();
+                        String temp = Base64.getEncoder().encodeToString(b);
+                        fotoPerfil.setContentDescription(temp);
+
                         //INTRODUCIMOS EL USUARIO A LA BD
-                        bd.execSQL("INSERT INTO Usuarios ('nombre', 'apellidos', 'usuario', 'password','email','fechaNac') VALUES ('" + nombre + "','" + apellidos + "','" + usuario + "','" + password + "','" + email + "','" + fechaNac + "')");
+                        bd.execSQL("INSERT INTO Usuarios ('nombre', 'apellidos', 'usuario', 'password','email','fechaNac','img') VALUES ('" + nombre + "','" + apellidos + "','" + usuario + "','" + password + "','" + email + "','" + fechaNac + "','" + temp + "')");
                         Toast.makeText(getApplicationContext(), getString(R.string.okRegistro), Toast.LENGTH_LONG).show();
                         Cursor c = bd.rawQuery("SELECT * FROM Usuarios", null);
                         Log.d("DAS", Integer.toString(c.getCount()));
@@ -175,9 +194,10 @@ public class Registro extends AppCompatActivity {
         super.onActivityResult(reqCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             try {
-                final Uri imageUri = data.getData();
-                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                Uri imageUri = data.getData();
+                InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
                 ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
                 fotoPerfil.setImageBitmap(selectedImage);
             } catch (FileNotFoundException e) {

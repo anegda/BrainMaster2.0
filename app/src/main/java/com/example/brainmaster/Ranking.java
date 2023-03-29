@@ -60,7 +60,7 @@ public class Ranking extends AppCompatActivity {
         //OBTENEMOS LAS 10 MEJORES PARTIDAS Y CREAMOS EL LISTVIEW PERSONALIZADO
         //CODIGO OBTENIDO DE EGELA
         ArrayList<String> usuarios_puntos = new ArrayList<String>();
-        ArrayList<Integer> perfil = new ArrayList<Integer>();
+        ArrayList<String> perfil = new ArrayList<String>();
         int i = 0;
         while (c2.moveToNext() && i<10){
             i++;
@@ -68,13 +68,18 @@ public class Ranking extends AppCompatActivity {
             int puntos = c2.getInt(1);
             String info = usuario + ": " + Integer.toString(puntos);
             usuarios_puntos.add(info);
-            perfil.add(R.drawable.ranking);
+
+            //LLAMAMOS A LA BASE DE DATOS Y OBTENEMOS LAS FOTOS DE PERFIL DE LOS USUARIOS CON LAS 10 MEJORES PARTIDAS
+            String[] campos2 = new String[] {"img"};
+            String [] argumentos = new String[] {usuario};
+            Cursor c3 = bd.query("Usuarios",campos2,"usuario=?",argumentos, null,null,null);
+            c3.moveToFirst();
+            perfil.add(c3.getString(0));
         }
 
         ListView ranking = (ListView) findViewById(R.id.listaRanking);
-        AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new Integer[0]));
+        AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new String[0]));
         ranking.setAdapter(eladap);
-
     }
 
     //PARA QUE NO HAYA PROBLEMAS AL ACTUALIZAR EL RANKING

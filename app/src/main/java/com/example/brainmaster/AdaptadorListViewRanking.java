@@ -1,12 +1,16 @@
 package com.example.brainmaster;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.Base64;
 
 public class AdaptadorListViewRanking extends BaseAdapter {
     /**
@@ -15,10 +19,10 @@ public class AdaptadorListViewRanking extends BaseAdapter {
     private Context contexto;
     private LayoutInflater inflater;
     private String[] datos;
-    private Integer[] imagenes;
+    private String[] imagenes;
 
     //CREAMOS LA CONSTRUCTURA CON TODA LA INFORMACIÓN NECESARIA
-    public AdaptadorListViewRanking(Context pcontext, String[] pdatos, Integer[] pimagenes){
+    public AdaptadorListViewRanking(Context pcontext, String[] pdatos, String[] pimagenes){
         contexto = pcontext;
         datos = pdatos;
         imagenes = pimagenes;
@@ -47,9 +51,18 @@ public class AdaptadorListViewRanking extends BaseAdapter {
         view = inflater.inflate(R.layout.fila_ranking, null);
         //ESTABLECEMOS EL NOMBRE Y LA IMAGEN
         TextView nombre= (TextView) view.findViewById(R.id.etiquetaRanking);
-        ImageView img=(ImageView) view.findViewById(R.id.imagenRanking);
         nombre.setText(datos[i]);
-        img.setImageResource(imagenes[i]);
+
+        /**
+         * Basado en el código extraído de Stack Overflow
+         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+         * Autor: https://stackoverflow.com/users/1191766/sachin10
+         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+         */
+        byte [] encodeByte = Base64.getDecoder().decode(imagenes[i]);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+        ImageView img=(ImageView) view.findViewById(R.id.imagenRanking);
+        img.setImageBitmap(bitmap);
         return view;
     }
 }

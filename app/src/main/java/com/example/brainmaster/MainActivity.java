@@ -26,6 +26,8 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //SI QUEREMOS BORRAR LA BD
+        //this.deleteDatabase("BrainMaster");
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String idioma = prefs.getString("idiomapref","es");
