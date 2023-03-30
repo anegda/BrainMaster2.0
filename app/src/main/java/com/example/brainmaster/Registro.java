@@ -2,19 +2,23 @@ package com.example.brainmaster;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +28,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,25 +50,22 @@ public class Registro extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String idioma = prefs.getString("idiomapref","es");
+        String idioma = prefs.getString("idiomapref", "es");
         cambiarIdioma(idioma);
 
         //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
-        String tema = prefs.getString("temapref","1");
-        if(tema.equals("1")) {
-            Log.d("DAS",tema+" 1");
+        String tema = prefs.getString("temapref", "1");
+        if (tema.equals("1")) {
+            Log.d("DAS", tema + " 1");
             setTheme(R.style.Theme_BrainMaster);
-        }
-        else if(tema.equals("2")){
-            Log.d("DAS",tema+" 2");
+        } else if (tema.equals("2")) {
+            Log.d("DAS", tema + " 2");
             setTheme(R.style.Theme_BrainMasterSummer);
-        }
-        else if(tema.equals("3")){
-            Log.d("DAS",tema+" 3");
+        } else if (tema.equals("3")) {
+            Log.d("DAS", tema + " 3");
             setTheme(R.style.Theme_BrainMasterPunk);
-        }
-        else{
-            Log.d("DAS",tema+" 4");
+        } else {
+            Log.d("DAS", tema + " 4");
             setTheme(R.style.Theme_BrainMaster);
         }
 
@@ -68,13 +74,13 @@ public class Registro extends AppCompatActivity {
         setContentView(R.layout.activity_registro);
 
         //DIALOGO PARA LA FECHA
-        DatePickerDialog.OnDateSetListener date =new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int anyo, int mes, int dia) {
                 //AL ELEGIR LA FECHA Y PULSAR "ok" LA ESTABLECEMOS COMO TEXTO DEL EDITTEXT
                 EditText fechaN = (EditText) findViewById(R.id.fechaNacREdit);
                 //HAY QUE +1 AL MES, VA DE (0-11)
-                fechaN.setText(Integer.toString(anyo)+"-"+Integer.toString(mes+1)+"-"+Integer.toString(dia));
+                fechaN.setText(Integer.toString(anyo) + "-" + Integer.toString(mes + 1) + "-" + Integer.toString(dia));
                 //APROVECHAMOS PARA ESTABLECER EL FORMATO DE DATE EN SQL
             }
         };
@@ -86,16 +92,17 @@ public class Registro extends AppCompatActivity {
          * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
          */
         EditText fechaN = (EditText) findViewById(R.id.fechaNacREdit);
-        fechaN.setOnClickListener(new View.OnClickListener(){
+        fechaN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(Registro.this,date,calendario.get(Calendar.YEAR),calendario.get(Calendar.MONTH),calendario.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(Registro.this, date, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
         //BOTÓN
         Button btn_login = (Button) findViewById(R.id.btn_reg);
         btn_login.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onClick(View view) {
                 //OBTENEMOS TODOS LOS DATOS DE LOS EDITTEXT
@@ -107,28 +114,26 @@ public class Registro extends AppCompatActivity {
                 String usuario = usuarioE.getText().toString();
                 EditText passwordE = (EditText) findViewById(R.id.contraREdit);
                 String password = passwordE.getText().toString();
-                EditText emailE = (EditText)  findViewById(R.id.emailREdit);
+                EditText emailE = (EditText) findViewById(R.id.emailREdit);
                 String email = emailE.getText().toString();
                 EditText fechaNacE = (EditText) findViewById(R.id.fechaNacREdit);
                 String fechaNac = fechaNacE.getText().toString();
 
                 //COMPROBAMOS QUE TODOS LOS DATOS HAN SIDO INTRODUCIDOS
-                if(nombre.equals("")||apellidos.equals("")||usuario.equals("")||password.equals("")||email.equals("")||fechaNac.equals("")){
+                if (nombre.equals("") || apellidos.equals("") || usuario.equals("") || password.equals("") || email.equals("") || fechaNac.equals("")) {
                     Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     //LLAMAMOS A LA BD
                     miBD GestorBD = new miBD(Registro.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
 
                     //COMPROBAR QUE EL USUARIO ES ÚNICO
-                    String[] campos = new String[] {"Codigo"};
-                    String [] argumentos = new String[] {usuario};
-                    Cursor c2 = bd.query("Usuarios",campos,"usuario=?",argumentos, null,null,null);
-                    if(c2.getCount()>0) {
+                    String[] campos = new String[]{"Codigo"};
+                    String[] argumentos = new String[]{usuario};
+                    Cursor c2 = bd.query("Usuarios", campos, "usuario=?", argumentos, null, null, null);
+                    if (c2.getCount() > 0) {
                         Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    } else {
                         //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
                         /**
                          * Basado en el código extraído de Stack Overflow
@@ -139,9 +144,9 @@ public class Registro extends AppCompatActivity {
                         ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
                         Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        img.compress(Bitmap.CompressFormat.PNG,100,baos);
-                        byte [] b = baos.toByteArray();
-                        //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑ DE LA IMAGEN
+                        img.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        byte[] b = baos.toByteArray();
+                        //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
                         b = tratarImagen(b);
                         String temp = Base64.getEncoder().encodeToString(b);
                         fotoPerfil.setContentDescription(temp);
@@ -152,6 +157,28 @@ public class Registro extends AppCompatActivity {
                         Cursor c = bd.rawQuery("SELECT * FROM Usuarios", null);
                         Log.d("DAS", Integer.toString(c.getCount()));
                         bd.close();
+
+                        //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
+                        /**
+                         * Codigo basado en los apuntes de egela: Tema 13 - Geolocalización
+                         **/
+                        FusedLocationProviderClient proveedordelocalizacion = LocationServices.getFusedLocationProviderClient(Registro.this);
+                        proveedordelocalizacion.getLastLocation()
+                                .addOnSuccessListener(Registro.this, new OnSuccessListener<Location>() {
+                                    @Override
+                                    public void onSuccess(Location location) {
+                                        if (location != null) {
+                                            String latitud = String.valueOf(location.getLatitude());
+                                            String longitud = String.valueOf(location.getLongitude());
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(Registro.this, new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("DAS", "No se puede acceder a la ubicación");
+                                    }
+                                });
 
                         //ESTABLECEMOS NUESTRO NOMBRE DE USUARIO COMO NOMBRE DE RANKING EN LAS PREFERENCIAS (SE PODRÁ CAMBIAR)
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Registro.this);
