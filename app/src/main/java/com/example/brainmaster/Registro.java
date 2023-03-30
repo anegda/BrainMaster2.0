@@ -141,6 +141,8 @@ public class Registro extends AppCompatActivity {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         img.compress(Bitmap.CompressFormat.PNG,100,baos);
                         byte [] b = baos.toByteArray();
+                        //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑ DE LA IMAGEN
+                        b = tratarImagen(b);
                         String temp = Base64.getEncoder().encodeToString(b);
                         fotoPerfil.setContentDescription(temp);
 
@@ -207,6 +209,24 @@ public class Registro extends AppCompatActivity {
         }else {
             Toast.makeText(Registro.this,  getString(R.string.error),Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //COMPACTAR IMAGEN
+    protected byte[] tratarImagen(byte[] img){
+        /**
+         * Basado en el código extraído de Stack Overflow
+         * Pregunta: https://stackoverflow.com/questions/57107489/sqliteblobtoobigexception-row-too-big-to-fit-into-cursorwindow-while-writing-to
+         * Autor: https://stackoverflow.com/users/3694451/leo-vitor
+         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+         */
+        while(img.length > 500000){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
+            Bitmap compacto = Bitmap.createScaledBitmap(bitmap, (int)(bitmap.getWidth()*0.8), (int)(bitmap.getHeight()*0.8), true);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            compacto.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            img = stream.toByteArray();
+        }
+        return img;
     }
 
     //MANTENER DATOS EN HORIZONTAL
