@@ -18,7 +18,7 @@ public class miBD extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //CREAMOS LAS DOS TABLAS NECESARIAS PARA NUESTRO CÓDIGO
         sqLiteDatabase.execSQL("CREATE TABLE Usuarios ('Codigo' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'nombre' VARCHAR(255), 'apellidos' VARCHAR(255), 'usuario' VARCHAR(255), 'password' VARCHAR(255), 'email' VARCHAR(255), 'fechaNac' DATE, 'img' LONGBLOB)");
-        sqLiteDatabase.execSQL("CREATE TABLE Partidas ('CodigoPartida' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'usuario' VARCHAR(255), 'puntos' INTEGER, 'tipo' VARCHAR(255))");
+        sqLiteDatabase.execSQL("CREATE TABLE Partidas ('CodigoPartida' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'usuario' VARCHAR(255), 'puntos' INTEGER, 'tipo' VARCHAR(255), 'latitud' VARCHAR(255), 'longitud' VARCHAR(255))");
     }
 
     @Override

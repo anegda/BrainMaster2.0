@@ -158,28 +158,6 @@ public class Registro extends AppCompatActivity {
                         Log.d("DAS", Integer.toString(c.getCount()));
                         bd.close();
 
-                        //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
-                        /**
-                         * Codigo basado en los apuntes de egela: Tema 13 - Geolocalización
-                         **/
-                        FusedLocationProviderClient proveedordelocalizacion = LocationServices.getFusedLocationProviderClient(Registro.this);
-                        proveedordelocalizacion.getLastLocation()
-                                .addOnSuccessListener(Registro.this, new OnSuccessListener<Location>() {
-                                    @Override
-                                    public void onSuccess(Location location) {
-                                        if (location != null) {
-                                            String latitud = String.valueOf(location.getLatitude());
-                                            String longitud = String.valueOf(location.getLongitude());
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(Registro.this, new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d("DAS", "No se puede acceder a la ubicación");
-                                    }
-                                });
-
                         //ESTABLECEMOS NUESTRO NOMBRE DE USUARIO COMO NOMBRE DE RANKING EN LAS PREFERENCIAS (SE PODRÁ CAMBIAR)
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Registro.this);
                         SharedPreferences.Editor editor= prefs.edit();

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,11 +20,17 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.Locale;
 
 public class JuegoPalabrasTablero extends AppCompatActivity {
     static ClasePalabrasJuego juego;
-
+    static String latitud ="";
+    static String longitud = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
@@ -70,6 +78,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
         //AÑADIMOS FUNCIONALIDAD AL BOTÓN NUEVO
         Button btn_nuevo = (Button) findViewById(R.id.btn_nuevo);
         btn_nuevo.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onClick(View view) {
                 TextView palabraText = (TextView) findViewById(R.id.palabraText);
@@ -85,12 +94,33 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                         nombre = prefs.getString("nombre", null);
                     }
 
+                    //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
+                    /**
+                     * Codigo basado en los apuntes de egela: Tema 13 - Geolocalización
+                     **/
+                    FusedLocationProviderClient proveedordelocalizacion = LocationServices.getFusedLocationProviderClient(JuegoPalabrasTablero.this);
+                    proveedordelocalizacion.getLastLocation()
+                            .addOnSuccessListener(JuegoPalabrasTablero.this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    if (location != null) {
+                                        latitud = String.valueOf(location.getLatitude());
+                                        longitud = String.valueOf(location.getLongitude());
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(JuegoPalabrasTablero.this, new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("DAS", "No se puede acceder a la ubicación");
+                                }
+                            });
 
                     //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
                     miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     int puntos =juego.getPuntos();
-                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo') VALUES ('" + nombre + "'," + puntos + ",'palabras')");
+                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombre + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
 
                     //REINICIAMOS JUEGO
                     String idioma = prefs.getString("idiomapref","es");
@@ -119,6 +149,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
         //AÑADIMOS FUNCIONALIDAD AL BOTÓN VISTO
         Button btn_visto = (Button) findViewById(R.id.btn_visto);
         btn_visto.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onClick(View view) {
                 TextView palabraText = (TextView) findViewById(R.id.palabraText);
@@ -135,11 +166,33 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                         nombre = prefs.getString("nombre", null);
                     }
 
+                    //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
+                    /**
+                     * Codigo basado en los apuntes de egela: Tema 13 - Geolocalización
+                     **/
+                    FusedLocationProviderClient proveedordelocalizacion = LocationServices.getFusedLocationProviderClient(JuegoPalabrasTablero.this);
+                    proveedordelocalizacion.getLastLocation()
+                            .addOnSuccessListener(JuegoPalabrasTablero.this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    if (location != null) {
+                                        latitud = String.valueOf(location.getLatitude());
+                                        longitud = String.valueOf(location.getLongitude());
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(JuegoPalabrasTablero.this, new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("DAS", "No se puede acceder a la ubicación");
+                                }
+                            });
+
                     //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
                     miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     int puntos =juego.getPuntos();
-                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo') VALUES ('" + nombre + "'," + puntos + ",'palabras')");
+                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombre + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
 
                     //REINICIAMOS JUEGO
                     String idioma = prefs.getString("idiomapref","es");

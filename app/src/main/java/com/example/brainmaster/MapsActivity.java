@@ -2,6 +2,8 @@ package com.example.brainmaster;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,9 +35,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //LLAMAMOS A LA BASE DE DATOS Y HACEMOS UN SELECT DE LAS PARTIDAS REALIZADAS ORDENADAS POR PUNTUACIÓN DESCENDENTEMENTE
+        miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
+        SQLiteDatabase bd = GestorBD.getWritableDatabase();
+        String[] campos = new String[] {"usuario","puntos","latitud","longitud"};
+        Cursor c2 = bd.query("Partidas",campos,null,null, null,null,"puntos DESC");
+
+        while (c2.moveToNext()){
+            // Add a marker in Sydney and move the camera
+            String usuario = c2.getString(0);
+            int puntos = c2.getInt(1);
+            String latitud = c2.getString(2);
+            String longitud = c2.getString(3);
+            LatLng pos = new LatLng(Float.parseFloat(latitud), Float.parseFloat(longitud));
+            mMap.addMarker(new MarkerOptions().position(pos).title(usuario));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+        }
     }
 }

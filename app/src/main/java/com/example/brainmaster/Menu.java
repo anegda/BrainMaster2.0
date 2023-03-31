@@ -45,9 +45,9 @@ public class Menu extends AppCompatActivity {
         }
 
         //CREAR INTERFAZ
-        int[] logos={R.drawable.botones, R.drawable.palabras, R.drawable.trofeo};
-        String [] nombres={getString(R.string.botones), getString(R.string.palabras), getString(R.string.ranking)};
-        double [] dificultad={2, 1, 0};
+        int[] logos={R.drawable.botones, R.drawable.palabras, R.drawable.trofeo,R.drawable.mapa};
+        String [] nombres={getString(R.string.botones), getString(R.string.palabras), getString(R.string.ranking),"Mapa"};
+        double [] dificultad={2, 1, 0, 0};
 
         //CREAMOS EL LISTVIEW PERSONALIZADO
         super.onCreate(savedInstanceState);
@@ -70,6 +70,10 @@ public class Menu extends AppCompatActivity {
                 }
                 else if(position==2){
                     startActivity(new Intent(Menu.this, Ranking.class));
+                    finish();
+                }
+                else if(position==3){
+                    startActivity(new Intent(Menu.this, MapsActivity.class));
                     finish();
                 }
             }
