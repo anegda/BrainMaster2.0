@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,14 +43,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Cursor c2 = bd.query("Partidas",campos,null,null, null,null,"puntos DESC");
 
         while (c2.moveToNext()){
-            // Add a marker in Sydney and move the camera
             String usuario = c2.getString(0);
             int puntos = c2.getInt(1);
             String latitud = c2.getString(2);
             String longitud = c2.getString(3);
-            LatLng pos = new LatLng(Float.parseFloat(latitud), Float.parseFloat(longitud));
-            mMap.addMarker(new MarkerOptions().position(pos).title(usuario));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+            if(!latitud.equals("") && !longitud.equals("")){
+                LatLng pos = new LatLng(Double.parseDouble(latitud),Double.parseDouble(longitud));
+                mMap.addMarker(new MarkerOptions().position(pos).title(usuario + ": " + Integer.toString(puntos)));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+            }
         }
     }
 }

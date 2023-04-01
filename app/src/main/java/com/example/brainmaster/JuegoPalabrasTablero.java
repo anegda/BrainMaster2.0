@@ -105,7 +105,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                 public void onSuccess(Location location) {
                                     if (location != null) {
                                         latitud = String.valueOf(location.getLatitude());
-                                        longitud = String.valueOf(location.getLongitude());
+                                        longitud = String.valueOf(location.getLongitude()*-1);
                                     }
                                 }
                             })
@@ -177,7 +177,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                 public void onSuccess(Location location) {
                                     if (location != null) {
                                         latitud = String.valueOf(location.getLatitude());
-                                        longitud = String.valueOf(location.getLongitude());
+                                        longitud = String.valueOf(location.getLongitude()*-1);
                                     }
                                 }
                             })
