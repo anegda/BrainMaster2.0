@@ -12,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.brainmaster.databinding.ActivityMapsBinding;
 
@@ -35,6 +36,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        //AÑADIMOS EL ESTILO AL MAPA: https://developers.google.com/maps/documentation/android-sdk/styling?hl=es-419#string-resource
+        googleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_strings)));
 
         //LLAMAMOS A LA BASE DE DATOS Y HACEMOS UN SELECT DE LAS PARTIDAS REALIZADAS ORDENADAS POR PUNTUACIÓN DESCENDENTEMENTE
         miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
