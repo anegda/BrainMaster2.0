@@ -18,6 +18,7 @@ import android.widget.ListView;
 import java.util.Locale;
 
 public class Menu extends AppCompatActivity {
+    static String nombreUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
@@ -55,6 +56,10 @@ public class Menu extends AppCompatActivity {
         ListView juegos = (ListView) findViewById(R.id.listaRanking);
         AdaptadorListView eladap = new AdaptadorListView(getApplicationContext(), nombres, logos, dificultad);
         juegos.setAdapter(eladap);
+
+        //PONEMOS EL NOMBRE DE USUARIO (STATIC) PARA SER ACCEDIDO DESDE TODA LA APP
+        Intent i = getIntent();
+        nombreUsuario = i.getStringExtra("usuario");
 
         //ONCLICK DE LA LISTA => ABRIMOS LA ACTIVIDAD CORRESPONDIENTE Y CERRAMOS ESTA
         juegos.setOnItemClickListener(new AdapterView.OnItemClickListener() {

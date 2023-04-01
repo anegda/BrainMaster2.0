@@ -158,14 +158,10 @@ public class Registro extends AppCompatActivity {
                         Log.d("DAS", Integer.toString(c.getCount()));
                         bd.close();
 
-                        //ESTABLECEMOS NUESTRO NOMBRE DE USUARIO COMO NOMBRE DE RANKING EN LAS PREFERENCIAS (SE PODRÁ CAMBIAR)
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Registro.this);
-                        SharedPreferences.Editor editor= prefs.edit();
-                        editor.putString("nombre", usuario);
-                        editor.apply();
-
                         //ABRIMOS EL MENU
-                        startActivity(new Intent(Registro.this, Menu.class));
+                        Intent i = new Intent(Registro.this, Menu.class);
+                        i.putExtra("usuario",usuario);
+                        startActivity(i);
                         finish();
                     }
                 }

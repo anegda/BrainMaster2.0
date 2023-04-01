@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,12 +22,20 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBotonesTablero.listenerDelFragment{
     static ArrayList<Integer> solucion; //SOLUCIÓN ACTUAL PROPUESTA POR EL JUGADOR, STATIC PARA PODER ACCEDER A ELLA DESDE TODOS LOS MÉTODOS
     static ClaseBotonesJuego juego; //PARTIDA ACTUAL, STATIC PARA PODER ACCEDER A ELLA DESDE TODOS LOS MÉTODOS
+
+    static String latitud ="";
+    static String longitud ="";
 
     //RUNNABLE EMPLEADO PARA HACER LA ANIMACIÓN DE LA SECUENCIA DE BOTONES.
     Runnable ronda = new Runnable() {
@@ -121,6 +131,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         //REALIZAMOS LA COMPARACIÓN AGREGANDOLE UN LISTENER AL BOTON "OK"
         Button btn_enter = findViewById(R.id.btn_enter);
         btn_enter.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onClick(View view) {
                 if(juego.comparar(solucion)){
@@ -137,18 +148,36 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     handler.postDelayed(ronda,500);
                 }
                 else{
-                    //OBTENEMOS EL NOMBRE DE LAS PREFERENCIAS
-                    String nombre = "-";
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(JuegoBotonesTablero.this);
-                    if(prefs.contains("nombre")){
-                        nombre = prefs.getString("nombre", null);
-                    }
+                    //OBTENEMOS EL NOMBRE GUARDADO COMO VARIABLE STATIC DE LA ACTIVITY MENU
+                    String nombreU = Menu.nombreUsuario;
+
+                    //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
+                    /**
+                     * Codigo basado en los apuntes de egela: Tema 13 - Geolocalización
+                     **/
+                    FusedLocationProviderClient proveedordelocalizacion = LocationServices.getFusedLocationProviderClient(JuegoBotonesTablero.this);
+                    proveedordelocalizacion.getLastLocation()
+                            .addOnSuccessListener(JuegoBotonesTablero.this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    if (location != null) {
+                                        latitud = String.valueOf(location.getLatitude());
+                                        longitud = String.valueOf(location.getLongitude()*-1);
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(JuegoBotonesTablero.this, new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("DAS", "No se puede acceder a la ubicación");
+                                }
+                            });
 
                     //INTRODUCIMOS LA PUNTUACIÓN A LA BD
                     miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     int puntos =juego.getPuntos();
-                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos', 'tipo') VALUES ('" + nombre + "'," + puntos + ", 'Botones')");
+                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'botones','"+latitud+"','"+longitud+"')");
 
                     //REINICIAMOS JUEGO
                     juego = new ClaseBotonesJuego();

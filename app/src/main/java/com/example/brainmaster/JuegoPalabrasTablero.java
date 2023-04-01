@@ -87,12 +87,8 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                 boolean seguir = juego.comprobarRespuesta(false,palabraAct);
                 //SI PERDEMOS
                 if(!seguir){
-                    //OBTENEMOS EL NOMBRE DE LAS PREFERENCIAS
-                    String nombre = "-";
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(JuegoPalabrasTablero.this);
-                    if(prefs.contains("nombre")){
-                        nombre = prefs.getString("nombre", null);
-                    }
+                    //OBTENEMOS EL NOMBRE GUARDADO COMO VARIABLE STATIC DE LA ACTIVITY MENU
+                    String nombreU = Menu.nombreUsuario;
 
                     //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
                     /**
@@ -120,7 +116,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     int puntos =juego.getPuntos();
-                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombre + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
+                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
 
                     //REINICIAMOS JUEGO
                     String idioma = prefs.getString("idiomapref","es");
@@ -156,15 +152,10 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                 String palabraAct = (String) palabraText.getText();
 
                 boolean seguir = juego.comprobarRespuesta(true,palabraAct);
-                Log.d("DAS", palabraAct);
                 //SI PERDEMOS
                 if(!seguir){
-                    //OBTENEMOS EL NOMBRE DE LAS PREFERENCIAS
-                    String nombre = "-";
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(JuegoPalabrasTablero.this);
-                    if(prefs.contains("nombre")){
-                        nombre = prefs.getString("nombre", null);
-                    }
+                    //OBTENEMOS EL NOMBRE GUARDADO COMO VARIABLE STATIC DE LA ACTIVITY MENU
+                    String nombreU = Menu.nombreUsuario;
 
                     //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
                     /**
@@ -192,7 +183,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     int puntos =juego.getPuntos();
-                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombre + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
+                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
 
                     //REINICIAMOS JUEGO
                     String idioma = prefs.getString("idiomapref","es");

@@ -62,26 +62,7 @@ public class Preferencias extends PreferenceFragmentCompat implements SharedPref
                 }
                 break;
             case "temapref":
-                //NOTIFICACIÓN POR CAMBIO DE TEMA
-                //Codigo basado en los apuntes de egela: Tema 05 - Dialogs y notificaciones
-                NotificationManager elManager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
-                NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getContext(),"notifySimple");
-                elBuilder.setSmallIcon(R.drawable.logo)
-                        .setContentTitle(getString(R.string.noti1Titulo))
-                        .setContentText(getString(R.string.noti1Contenido))
-                        .setVibrate(new long[] {0,500,100,1000})
-                        .setAutoCancel(true);
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    NotificationChannel elCanal = new NotificationChannel("notifySimple","Canal notificación simple",NotificationManager.IMPORTANCE_DEFAULT);
-                    elCanal.setDescription("Canal notificación simple");
-                    elCanal.enableLights(true);
-                    elCanal.setLightColor(Color.RED);
-                    elCanal.setVibrationPattern(new long[]{0, 500, 100, 1000});
-                    elCanal.enableVibration(true);
-                    elManager.createNotificationChannel(elCanal);
-                }
-                elManager.notify(11, elBuilder.build());
-
+                //ACTUALIZAMOS LA PESTAÑA
                 startActivity(getActivity().getIntent());
                 getActivity().finish();
                 break;
