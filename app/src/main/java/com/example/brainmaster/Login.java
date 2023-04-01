@@ -73,14 +73,10 @@ public class Login extends AppCompatActivity {
                     //CREAMOS TOAST INDICANDO QUE EL LOGIN ES CORRECTO
                     Toast.makeText(getApplicationContext(), getString(R.string.okLogin), Toast.LENGTH_LONG).show();
 
-                    //ESTABLECEMOS NUESTRO NOMBRE DE USUARIO COMO NOMBRE DE RANKING EN LAS PREFERENCIAS (SE PODRÁ CAMBIAR)
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Login.this);
-                    SharedPreferences.Editor editor= prefs.edit();
-                    editor.putString("nombre", usuario);
-                    editor.apply();
-
                     //VAMOS AL MENÚ
-                    startActivity(new Intent(Login.this, Menu.class));
+                    Intent i = new Intent(Login.this, Menu.class);
+                    i.putExtra("usuario",usuario);
+                    startActivity(i);
                     finish();
                 }
                 else{
