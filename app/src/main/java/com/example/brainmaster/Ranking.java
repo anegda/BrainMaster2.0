@@ -3,9 +3,7 @@ package com.example.brainmaster;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,7 +11,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -51,35 +48,62 @@ public class Ranking extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
 
-        //LLAMAMOS A LA BASE DE DATOS Y HACEMOS UN SELECT DE LAS PARTIDAS REALIZADAS ORDENADAS POR PUNTUACIÓN DESCENDENTEMENTE
+        //OBTENEMOS LAS 5 MEJORES PARTIDAS DE CADA TIPO DE JUEGO Y CREAMOS LOS LISTVIEWS PERSONALIZADOS
+        //SELECT PARTIDAS PALABRAS
         miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
         SQLiteDatabase bd = GestorBD.getWritableDatabase();
         String[] campos = new String[] {"usuario","puntos"};
-        Cursor c2 = bd.query("Partidas",campos,null,null, null,null,"puntos DESC");
+        String [] argumentos = new String[] {"palabras"};
+        Cursor c = bd.query("Partidas",campos,"tipo=?",argumentos, null,null,"puntos DESC");
 
-        //OBTENEMOS LAS 10 MEJORES PARTIDAS Y CREAMOS EL LISTVIEW PERSONALIZADO
-        //CODIGO OBTENIDO DE EGELA
         ArrayList<String> usuarios_puntos = new ArrayList<String>();
         ArrayList<String> perfil = new ArrayList<String>();
         int i = 0;
-        while (c2.moveToNext() && i<10){
+        while (c.moveToNext() && i<5){
             i++;
-            String usuario = c2.getString(0);
-            int puntos = c2.getInt(1);
+            String usuario = c.getString(0);
+            int puntos = c.getInt(1);
             String info = usuario + ": " + Integer.toString(puntos);
             usuarios_puntos.add(info);
 
             //LLAMAMOS A LA BASE DE DATOS Y OBTENEMOS LAS FOTOS DE PERFIL DE LOS USUARIOS CON LAS 10 MEJORES PARTIDAS
             String[] campos2 = new String[] {"img"};
-            String [] argumentos = new String[] {usuario};
-            Cursor c3 = bd.query("Usuarios",campos2,"usuario=?",argumentos, null,null,null);
-            c3.moveToFirst();
-            perfil.add(c3.getString(0));
+            String [] argumentos2 = new String[] {usuario};
+            Cursor c2 = bd.query("Usuarios",campos2,"usuario=?",argumentos2, null,null,null);
+            c2.moveToFirst();
+            perfil.add(c2.getString(0));
         }
 
-        ListView ranking = (ListView) findViewById(R.id.listaRanking);
+        ListView ranking = (ListView) findViewById(R.id.listaRankingBotones);
         AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new String[0]));
         ranking.setAdapter(eladap);
+
+        //SELECT PARTIDAS BOTONES
+        String[] campos3 = new String[] {"usuario","puntos"};
+        String [] argumentos3 = new String[] {"palabras"};
+        Cursor c3 = bd.query("Partidas",campos3,"tipo=?",argumentos3, null,null,"puntos DESC");
+
+        ArrayList<String> usuarios_puntos2 = new ArrayList<String>();
+        ArrayList<String> perfil2 = new ArrayList<String>();
+        int i2 = 0;
+        while (c3.moveToNext() && i2<5){
+            i2++;
+            String usuario2 = c3.getString(0);
+            int puntos2 = c3.getInt(1);
+            String info = usuario2 + ": " + Integer.toString(puntos2);
+            usuarios_puntos2.add(info);
+
+            //LLAMAMOS A LA BASE DE DATOS Y OBTENEMOS LAS FOTOS DE PERFIL DE LOS USUARIOS CON LAS 10 MEJORES PARTIDAS
+            String[] campos4 = new String[] {"img"};
+            String [] argumentos4 = new String[] {usuario2};
+            Cursor c4 = bd.query("Usuarios",campos4,"usuario=?",argumentos4, null,null,null);
+            c4.moveToFirst();
+            perfil2.add(c4.getString(0));
+        }
+
+        ListView ranking2 = (ListView) findViewById(R.id.listaRankingPalabras);
+        AdaptadorListViewRanking eladap2 = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new String[0]));
+        ranking2.setAdapter(eladap2);
     }
 
     //PARA QUE NO HAYA PROBLEMAS AL ACTUALIZAR EL RANKING

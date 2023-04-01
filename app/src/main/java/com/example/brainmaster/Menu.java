@@ -1,6 +1,5 @@
 package com.example.brainmaster;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
@@ -53,7 +52,7 @@ public class Menu extends AppCompatActivity {
         //CREAMOS EL LISTVIEW PERSONALIZADO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        ListView juegos = (ListView) findViewById(R.id.listaRanking);
+        ListView juegos = (ListView) findViewById(R.id.listaMenu);
         AdaptadorListView eladap = new AdaptadorListView(getApplicationContext(), nombres, logos, dificultad);
         juegos.setAdapter(eladap);
 
