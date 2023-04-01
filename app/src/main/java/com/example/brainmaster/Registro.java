@@ -306,5 +306,6 @@ public class Registro extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }

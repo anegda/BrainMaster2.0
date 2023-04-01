@@ -173,11 +173,12 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                                 }
                             });
 
-                    //INTRODUCIMOS LA PUNTUACIÓN A LA BD
+                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
                     miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     int puntos =juego.getPuntos();
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'botones','"+latitud+"','"+longitud+"')");
+                    bd.close();
 
                     //REINICIAMOS JUEGO
                     juego = new ClaseBotonesJuego();

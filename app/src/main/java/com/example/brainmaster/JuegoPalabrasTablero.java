@@ -117,6 +117,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     int puntos =juego.getPuntos();
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
+                    bd.close();
 
                     //REINICIAMOS JUEGO
                     String idioma = prefs.getString("idiomapref","es");
@@ -184,6 +185,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
                     int puntos =juego.getPuntos();
                     bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
+                    bd.close();
 
                     //REINICIAMOS JUEGO
                     String idioma = prefs.getString("idiomapref","es");

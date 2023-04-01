@@ -72,15 +72,17 @@ public class Ranking extends AppCompatActivity {
             Cursor c2 = bd.query("Usuarios",campos2,"usuario=?",argumentos2, null,null,null);
             c2.moveToFirst();
             perfil.add(c2.getString(0));
+            c2.close();
         }
+        c.close();
 
-        ListView ranking = (ListView) findViewById(R.id.listaRankingBotones);
+        ListView ranking = (ListView) findViewById(R.id.listaRankingPalabras);
         AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new String[0]));
         ranking.setAdapter(eladap);
 
         //SELECT PARTIDAS BOTONES
         String[] campos3 = new String[] {"usuario","puntos"};
-        String [] argumentos3 = new String[] {"palabras"};
+        String [] argumentos3 = new String[] {"botones"};
         Cursor c3 = bd.query("Partidas",campos3,"tipo=?",argumentos3, null,null,"puntos DESC");
 
         ArrayList<String> usuarios_puntos2 = new ArrayList<String>();
@@ -99,10 +101,13 @@ public class Ranking extends AppCompatActivity {
             Cursor c4 = bd.query("Usuarios",campos4,"usuario=?",argumentos4, null,null,null);
             c4.moveToFirst();
             perfil2.add(c4.getString(0));
+            c4.close();
         }
+        c3.close();
+        bd.close();
 
-        ListView ranking2 = (ListView) findViewById(R.id.listaRankingPalabras);
-        AdaptadorListViewRanking eladap2 = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new String[0]));
+        ListView ranking2 = (ListView) findViewById(R.id.listaRankingBotones);
+        AdaptadorListViewRanking eladap2 = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos2.toArray(new String[0]), perfil2.toArray(new String[0]));
         ranking2.setAdapter(eladap2);
     }
 

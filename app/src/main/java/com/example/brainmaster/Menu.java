@@ -58,7 +58,9 @@ public class Menu extends AppCompatActivity {
 
         //PONEMOS EL NOMBRE DE USUARIO (STATIC) PARA SER ACCEDIDO DESDE TODA LA APP
         Intent i = getIntent();
-        nombreUsuario = i.getStringExtra("usuario");
+        if(i.hasExtra("usuario")) {
+            nombreUsuario = i.getStringExtra("usuario");
+        }
 
         //ONCLICK DE LA LISTA => ABRIMOS LA ACTIVIDAD CORRESPONDIENTE Y CERRAMOS ESTA
         juegos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
