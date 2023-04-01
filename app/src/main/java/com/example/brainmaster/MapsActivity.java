@@ -2,6 +2,7 @@ package com.example.brainmaster;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -57,5 +58,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
             }
         }
+    }
+
+    //VOLVEMOS A MENU SI PULSAMOS ATRAS
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, Menu.class));
     }
 }

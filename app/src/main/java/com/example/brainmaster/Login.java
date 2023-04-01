@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -123,5 +125,11 @@ public class Login extends AppCompatActivity {
 
         Context context = getBaseContext().createConfigurationContext(configuration);
         getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+    }
+
+    //VOLVEMOS A MAINACTIVITY SI PULSAMOS ATRAS
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

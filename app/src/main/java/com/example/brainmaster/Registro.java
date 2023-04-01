@@ -301,4 +301,10 @@ public class Registro extends AppCompatActivity {
         Context context = getBaseContext().createConfigurationContext(configuration);
         getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
     }
+
+    //VOLVEMOS A MAINACTIVITY SI PULSAMOS ATRAS
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
+    }
 }
