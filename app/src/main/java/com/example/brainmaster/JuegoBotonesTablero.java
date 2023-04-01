@@ -151,6 +151,9 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     //OBTENEMOS EL NOMBRE GUARDADO COMO VARIABLE STATIC DE LA ACTIVITY MENU
                     String nombreU = Menu.nombreUsuario;
 
+                    //OBTENEMOS LA PUNTUACIÓN
+                    int puntos =juego.getPuntos();
+
                     //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
                     /**
                      * Codigo basado en los apuntes de egela: Tema 13 - Geolocalización
@@ -162,7 +165,19 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                                 public void onSuccess(Location location) {
                                     if (location != null) {
                                         latitud = String.valueOf(location.getLatitude());
-                                        longitud = String.valueOf(location.getLongitude()*-1);
+                                        longitud = String.valueOf(location.getLongitude());
+
+                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
+                                        miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
+                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'botones','"+latitud+"','"+longitud+"')");
+                                        bd.close();
+                                    }else{
+                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
+                                        miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
+                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'botones','','')");
+                                        bd.close();
                                     }
                                 }
                             })
@@ -170,15 +185,13 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.d("DAS", "No se puede acceder a la ubicación");
+                                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
+                                    miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
+                                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'botones','','')");
+                                    bd.close();
                                 }
                             });
-
-                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
-                    miBD GestorBD = new miBD(JuegoBotonesTablero.this, "BrainMaster", null, 1);
-                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                    int puntos =juego.getPuntos();
-                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'botones','"+latitud+"','"+longitud+"')");
-                    bd.close();
 
                     //REINICIAMOS JUEGO
                     juego = new ClaseBotonesJuego();

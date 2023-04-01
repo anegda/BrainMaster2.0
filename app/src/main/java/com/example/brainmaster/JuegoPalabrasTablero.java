@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.LocaleDisplayNames;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,8 +30,8 @@ import java.util.Locale;
 
 public class JuegoPalabrasTablero extends AppCompatActivity {
     static ClasePalabrasJuego juego;
-    static String latitud ="";
-    static String longitud = "";
+    static String latitud;
+    static String longitud;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
@@ -90,6 +91,9 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     //OBTENEMOS EL NOMBRE GUARDADO COMO VARIABLE STATIC DE LA ACTIVITY MENU
                     String nombreU = Menu.nombreUsuario;
 
+                    //OBTENEMOS LA PUNTUACIÓN
+                    int puntos =juego.getPuntos();
+
                     //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
                     /**
                      * Codigo basado en los apuntes de egela: Tema 13 - Geolocalización
@@ -101,7 +105,19 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                 public void onSuccess(Location location) {
                                     if (location != null) {
                                         latitud = String.valueOf(location.getLatitude());
-                                        longitud = String.valueOf(location.getLongitude()*-1);
+                                        longitud = String.valueOf(location.getLongitude());
+
+                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
+                                        miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
+                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
+                                        bd.close();
+                                    }else{
+                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
+                                        miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
+                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','','')");
+                                        bd.close();
                                     }
                                 }
                             })
@@ -109,15 +125,13 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.d("DAS", "No se puede acceder a la ubicación");
+                                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
+                                    miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
+                                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','','')");
+                                    bd.close();
                                 }
                             });
-
-                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
-                    miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
-                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                    int puntos =juego.getPuntos();
-                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
-                    bd.close();
 
                     //REINICIAMOS JUEGO
                     String idioma = prefs.getString("idiomapref","es");
@@ -158,6 +172,9 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                     //OBTENEMOS EL NOMBRE GUARDADO COMO VARIABLE STATIC DE LA ACTIVITY MENU
                     String nombreU = Menu.nombreUsuario;
 
+                    //OBTENEMOS LA PUNTUACIÓN
+                    int puntos =juego.getPuntos();
+
                     //OBTENER UBICACIÓN ACTUAL (POSTERIORMENTE HACER UN MAPA DE REGISTROS)
                     /**
                      * Codigo basado en los apuntes de egela: Tema 13 - Geolocalización
@@ -169,7 +186,19 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                 public void onSuccess(Location location) {
                                     if (location != null) {
                                         latitud = String.valueOf(location.getLatitude());
-                                        longitud = String.valueOf(location.getLongitude()*-1);
+                                        longitud = String.valueOf(location.getLongitude());
+
+                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
+                                        miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
+                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
+                                        bd.close();
+                                    }else{
+                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
+                                        miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
+                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','','')");
+                                        bd.close();
                                     }
                                 }
                             })
@@ -177,15 +206,13 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.d("DAS", "No se puede acceder a la ubicación");
+                                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
+                                    miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
+                                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','','')");
+                                    bd.close();
                                 }
                             });
-
-                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
-                    miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
-                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                    int puntos =juego.getPuntos();
-                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
-                    bd.close();
 
                     //REINICIAMOS JUEGO
                     String idioma = prefs.getString("idiomapref","es");
