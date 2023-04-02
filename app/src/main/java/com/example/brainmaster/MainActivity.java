@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //SI QUEREMOS BORRAR LA BD
         //this.deleteDatabase("BrainMaster");
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
 
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

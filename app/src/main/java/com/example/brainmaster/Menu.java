@@ -1,6 +1,8 @@
 package com.example.brainmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 
 import android.content.Context;
@@ -9,10 +11,13 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
 
@@ -43,6 +48,12 @@ public class Menu extends AppCompatActivity {
             Log.d("DAS",tema+" 4");
             setTheme(R.style.Theme_BrainMaster);
         }
+
+        //NAVIGATION DRAWER
+        final DrawerLayout elmenudesplegable = findViewById(R.id.drawer_layout);
+        NavigationView elnavigation = findViewById(R.id.elnavigationview);
+        getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_dialog_info);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //CREAR INTERFAZ
         int[] logos={R.drawable.botones, R.drawable.palabras, R.drawable.trofeo,R.drawable.mapa};
@@ -125,5 +136,28 @@ public class Menu extends AppCompatActivity {
 
         Context context = getBaseContext().createConfigurationContext(configuration);
         getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+    }
+
+    //NAVIGATION DRAWER
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                DrawerLayout elmenudesplegable = findViewById(R.id.drawer_layout);
+                elmenudesplegable.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //SI PULSAMOS LA FLECHA ATRÁS
+    @Override
+    public void onBackPressed() {
+        DrawerLayout elmenudesplegable = findViewById(R.id.drawer_layout);
+        if (elmenudesplegable.isDrawerOpen(GravityCompat.START)) {
+            elmenudesplegable.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

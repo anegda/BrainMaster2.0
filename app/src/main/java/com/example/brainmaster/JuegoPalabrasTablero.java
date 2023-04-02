@@ -34,6 +34,9 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
     static String longitud;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
+
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String idioma = prefs.getString("idiomapref","es");

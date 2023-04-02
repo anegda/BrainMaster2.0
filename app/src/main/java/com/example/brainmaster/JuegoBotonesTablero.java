@@ -82,6 +82,9 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
+
         //MANTENER ELEMENTOS EN HORIZONTAL
         if (savedInstanceState == null) {
             juego = new ClaseBotonesJuego();
