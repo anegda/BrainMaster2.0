@@ -19,9 +19,6 @@ public class Ajustes extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //QUITAMOS LA ACTION BAR
-        getSupportActionBar().hide();
-
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String idioma = prefs.getString("idiomapref","es");
@@ -49,6 +46,9 @@ public class Ajustes extends AppCompatActivity {
         //CREAR INTERFAZ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajustes);
+
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
 
     }
 

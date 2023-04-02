@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //SI QUEREMOS BORRAR LA BD
         //this.deleteDatabase("BrainMaster");
-        //QUITAMOS LA ACTION BAR
-        getSupportActionBar().hide();
 
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -58,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         //CREAMOS LA ACTIVIDAD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
 
         //PERMISOS
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)!= PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

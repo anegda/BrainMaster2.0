@@ -62,11 +62,6 @@ public class Preferencias extends PreferenceFragmentCompat implements SharedPref
                 }
                 break;
             case "temapref":
-                //NOTIFICACIÓN POR CAMBIO DE TEMA
-                //Codigo basado en los apuntes de egela: Tema 05 - Dialogs y notificaciones
-                NotificationManager elManager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
-                NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getContext(),"notifySimple");
-                elBuilder.setSmallIcon(R.drawable.logo);
                 startActivity(getActivity().getIntent());
                 getActivity().finish();
                 break;

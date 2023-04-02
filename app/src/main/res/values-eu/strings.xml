@@ -62,4 +62,8 @@
     <string name="errorRegistro">Erabiltzaile izena ez dago erabilgarri</string>
     <string name="okRegistro">Erabiltzaile erregistratua</string>
     <string name="error">ERRORE</string>
+    <string name="pref">Lehentasunak</string>
+    <string name="perfil">Profil</string>
+    <string name="otros">Besteak</string>
+    <string name="contactos">Kontaktuak</string>
 </resources>

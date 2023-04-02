@@ -21,9 +21,6 @@ public class Ranking extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //QUITAMOS LA ACTION BAR
-        getSupportActionBar().hide();
-
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String idioma = prefs.getString("idiomapref","es");
@@ -50,6 +47,9 @@ public class Ranking extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
+
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
 
         //OBTENEMOS LAS 5 MEJORES PARTIDAS DE CADA TIPO DE JUEGO Y CREAMOS LOS LISTVIEWS PERSONALIZADOS
         //SELECT PARTIDAS PALABRAS

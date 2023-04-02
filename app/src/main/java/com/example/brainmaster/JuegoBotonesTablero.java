@@ -82,9 +82,6 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //QUITAMOS LA ACTION BAR
-        getSupportActionBar().hide();
-
         //MANTENER ELEMENTOS EN HORIZONTAL
         if (savedInstanceState == null) {
             juego = new ClaseBotonesJuego();
@@ -117,6 +114,9 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_botones_tablero);
+
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
 
         //SI ESTÁ EN HORIZONTAL ACTUALIZAR EL OTRO FRAGMENT
         int orientation = getResources().getConfiguration().orientation;

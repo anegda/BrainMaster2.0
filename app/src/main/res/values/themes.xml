@@ -38,7 +38,7 @@
         <item name="colorPrimaryVariant">@color/orange</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/pink</item>
+        <item name="colorSecondary">@color/black</item>
         <item name="colorSecondaryVariant">@color/pink_claro</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->

@@ -34,9 +34,6 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
     static String longitud;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //QUITAMOS LA ACTION BAR
-        getSupportActionBar().hide();
-
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String idioma = prefs.getString("idiomapref","es");
@@ -68,6 +65,9 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego_palabras_tablero);
+
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
 
         //ESTABLECEMOS LA PALABRA ACTUAL
         TextView palabraText = (TextView) findViewById(R.id.palabraText);

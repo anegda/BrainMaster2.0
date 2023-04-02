@@ -24,9 +24,6 @@ import java.util.Locale;
 public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //QUITAMOS LA ACTION BAR
-        getSupportActionBar().hide();
-
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String idioma = prefs.getString("idiomapref","es");
@@ -54,6 +51,9 @@ public class Login extends AppCompatActivity {
         //INTERFAZ Y LOGIN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
 
         Button btn_login = (Button) findViewById(R.id.btn_login);
         btn_login.setOnClickListener(new View.OnClickListener() {

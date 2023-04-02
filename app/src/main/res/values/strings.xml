@@ -61,5 +61,8 @@
     <string name="errorRegistro">El nombre de usuario no está disponible</string>
     <string name="okRegistro">Usuario registrado</string>
     <string name="error">ERROR</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="pref">Preferencias</string>
+    <string name="perfil">Perfil</string>
+    <string name="otros">Otros</string>
+    <string name="contactos">Contactos</string>
 </resources>

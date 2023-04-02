@@ -1,5 +1,6 @@
 package com.example.brainmaster;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -49,12 +50,6 @@ public class Menu extends AppCompatActivity {
             setTheme(R.style.Theme_BrainMaster);
         }
 
-        //NAVIGATION DRAWER
-        final DrawerLayout elmenudesplegable = findViewById(R.id.drawer_layout);
-        NavigationView elnavigation = findViewById(R.id.elnavigationview);
-        getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_dialog_info);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         //CREAR INTERFAZ
         int[] logos={R.drawable.botones, R.drawable.palabras, R.drawable.trofeo,R.drawable.mapa};
         String [] nombres={getString(R.string.botones), getString(R.string.palabras), getString(R.string.ranking),"Mapa"};
@@ -72,6 +67,44 @@ public class Menu extends AppCompatActivity {
         if(i.hasExtra("usuario")) {
             nombreUsuario = i.getStringExtra("usuario");
         }
+
+        //NAVIGATION DRAWER
+        DrawerLayout elmenudesplegable = findViewById(R.id.drawer_layout);
+        NavigationView elnavigation = findViewById(R.id.elnavigationview);
+        getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_sort_by_size);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        elnavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.preferencias:
+                        startActivity(new Intent(Menu.this, Ajustes.class));
+                        finish();
+                        break;
+                    case R.id.perfil:
+                        startActivity(new Intent(Menu.this, Registro.class));
+                        finish();
+                        break;
+                    case R.id.compartir:
+                        /**
+                         * Código basado en: https://www.programaenlinea.net/crear-boton-compartir-android/
+                         * Autor: NGuerrero
+                         * Modificado por Ane García para adaptar los textos mostrados.
+                         */
+
+                        Intent compartir = new Intent(android.content.Intent.ACTION_SEND);
+                        compartir.setType("text/plain");
+                        compartir.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+                        compartir.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.compartirContenido));
+                        startActivity(Intent.createChooser(compartir, "Compartir vía"));
+                        break;
+                    case R.id.contactos:
+                        break;
+                }
+                elmenudesplegable.closeDrawers();
+                return false;
+            }
+        });
 
         //ONCLICK DE LA LISTA => ABRIMOS LA ACTIVIDAD CORRESPONDIENTE Y CERRAMOS ESTA
         juegos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -93,35 +126,6 @@ public class Menu extends AppCompatActivity {
                     startActivity(new Intent(Menu.this, MapsActivity.class));
                     finish();
                 }
-            }
-        });
-
-        //BOTÓN DE AJUSTES
-        ImageButton btn_ajustes = (ImageButton) findViewById(R.id.ajustes);
-        btn_ajustes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Menu.this, Ajustes.class));
-                finish();
-            }
-        });
-
-        //BOTÓN COMPARTIR
-        ImageButton btn_compartir = (ImageButton) findViewById(R.id.share);
-        btn_compartir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /**
-                 * Código basado en: https://www.programaenlinea.net/crear-boton-compartir-android/
-                 * Autor: NGuerrero
-                 * Modificado por Ane García para adaptar los textos mostrados.
-                 */
-
-                Intent compartir = new Intent(android.content.Intent.ACTION_SEND);
-                compartir.setType("text/plain");
-                compartir.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                compartir.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.compartirContenido));
-                startActivity(Intent.createChooser(compartir, "Compartir vía"));
             }
         });
     }

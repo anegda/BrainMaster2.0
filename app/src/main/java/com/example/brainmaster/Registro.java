@@ -48,9 +48,6 @@ public class Registro extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //QUITAMOS LA ACTION BAR
-        getSupportActionBar().hide();
-
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String idioma = prefs.getString("idiomapref", "es");
@@ -75,6 +72,9 @@ public class Registro extends AppCompatActivity {
         //INTERFAZ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
+
+        //QUITAMOS LA ACTION BAR
+        getSupportActionBar().hide();
 
         //DIALOGO PARA LA FECHA
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
