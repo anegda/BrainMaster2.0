@@ -18,6 +18,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -170,8 +171,16 @@ public class Perfil extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try{
-                    Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(i, 1);   //ESTA DEPRECATED PERO FUNCIONA
+                    Intent i1 = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                    Intent i2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+                    chooser.putExtra(Intent.EXTRA_INTENT, i1);
+
+                    Intent[] intentArray = { i2 };
+                    chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+                    startActivityForResult(chooser, 1); //ESTA DEPRECATED PERO FUNCIONA
                     //ALTERNATIVA A ESTE MÉTODO: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
                 }catch (Exception e){
                     Log.d("DAS","Error la imagen no se carga correctamente");
@@ -187,11 +196,16 @@ public class Perfil extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             try {
                 Uri imageUri = data.getData();
-                InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-
-                ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfilE);
-                fotoPerfil.setImageBitmap(selectedImage);
+                if(imageUri==null){
+                    Bitmap foto = (Bitmap) data.getExtras().get("data");
+                    ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfilE);
+                    fotoPerfil.setImageBitmap(foto);
+                }else {
+                    InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfilE);
+                    fotoPerfil.setImageBitmap(selectedImage);
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(Perfil.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
