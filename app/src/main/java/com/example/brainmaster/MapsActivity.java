@@ -45,7 +45,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
         SQLiteDatabase bd = GestorBD.getWritableDatabase();
         String[] campos = new String[] {"usuario","puntos","tipo","latitud","longitud"};
-        Cursor c2 = bd.query("Partidas",campos,null,null, null,null,"puntos DESC");
+        String [] argumentos = new String[] {Menu.nombreUsuario};
+        Cursor c2 = bd.query("Partidas",campos,"usuario=?",argumentos, null,null,"puntos DESC");
 
         while (c2.moveToNext()){
             String usuario = c2.getString(0);
@@ -56,11 +57,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(!latitud.equals("") && !longitud.equals("")){
                 LatLng pos = new LatLng(Double.parseDouble(latitud),Double.parseDouble(longitud));
                 if(tipo.equals("palabras")){
-                    mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "("+tipo+"): " + Integer.toString(puntos)).icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA)));
+                    mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "(palabras): " + Integer.toString(puntos)).icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA)));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
                 }
                 else{
-                    mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "("+tipo+"): " + Integer.toString(puntos)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+                    mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "(botones): " + Integer.toString(puntos)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
                 }
             }
