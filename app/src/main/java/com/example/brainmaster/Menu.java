@@ -52,7 +52,7 @@ public class Menu extends AppCompatActivity {
 
         //CREAR INTERFAZ
         int[] logos={R.drawable.botones, R.drawable.palabras, R.drawable.trofeo,R.drawable.mapa};
-        String [] nombres={getString(R.string.botones), getString(R.string.palabras), getString(R.string.ranking),"Mapa"};
+        String [] nombres={getString(R.string.botones), getString(R.string.palabras), getString(R.string.ranking),getString(R.string.mapa)};
         double [] dificultad={2, 1, 0, 0};
 
         //CREAMOS EL LISTVIEW PERSONALIZADO
