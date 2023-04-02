@@ -82,7 +82,7 @@ public class Menu extends AppCompatActivity {
                         finish();
                         break;
                     case R.id.perfil:
-                        startActivity(new Intent(Menu.this, Registro.class));
+                        startActivity(new Intent(Menu.this, Perfil.class));
                         finish();
                         break;
                     case R.id.compartir:

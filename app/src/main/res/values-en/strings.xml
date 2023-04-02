@@ -66,4 +66,5 @@
     <string name="perfil">Profile</string>
     <string name="otros">Others</string>
     <string name="contactos">Contacts</string>
+    <string name="editar">EDIT</string>
 </resources>

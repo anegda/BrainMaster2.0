@@ -16,7 +16,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,21 +26,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class Registro extends AppCompatActivity {
+public class Perfil extends AppCompatActivity {
     Calendar calendario = Calendar.getInstance();
 
     @Override
@@ -69,102 +61,98 @@ public class Registro extends AppCompatActivity {
 
         //INTERFAZ
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro);
+        setContentView(R.layout.activity_perfil);
+
+        //RELLENAMOS LOS CAMPOS
+        miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
+        SQLiteDatabase bd = GestorBD.getWritableDatabase();
+        String[] campos = new String[] {"nombre", "apellidos", "usuario", "email", "img"};
+        String[] argumentos = new String[]{Menu.nombreUsuario};
+        Cursor c = bd.query("Usuarios",campos,"usuario=?",argumentos, null,null,null);
+        c.moveToFirst();
+
+        String nombre = c.getString(0);
+        EditText nombreE = (EditText) findViewById(R.id.nombreEEdit);
+        nombreE.setText(nombre);
+        nombreE.setEnabled(false);
+
+        String apellidos = c.getString(1);
+        EditText apellidosE = (EditText) findViewById(R.id.apellidoEEdit);
+        apellidosE.setText(apellidos);
+        apellidosE.setEnabled(false);
+
+        String usuario = c.getString(2);
+        EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
+        usuarioE.setText(usuario);
+        usuarioE.setEnabled(false);
+
+        String email = c.getString(3);
+        EditText emailE = (EditText)  findViewById(R.id.emailEEdit);
+        emailE.setText(email);
+        emailE.setEnabled(false);
+
+        /**
+         * Basado en el código extraído de Stack Overflow
+         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+         * Autor: https://stackoverflow.com/users/1191766/sachin10
+         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+         */
+        String img = c.getString(4);
+        byte [] encodeByte = Base64.getDecoder().decode(img);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+        ImageView imgView=(ImageView) findViewById(R.id.fotoDePerfilE);
+        imgView.setImageBitmap(bitmap);
 
         //QUITAMOS LA ACTION BAR
         getSupportActionBar().hide();
 
-        //DIALOGO PARA LA FECHA
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int anyo, int mes, int dia) {
-                //AL ELEGIR LA FECHA Y PULSAR "ok" LA ESTABLECEMOS COMO TEXTO DEL EDITTEXT
-                EditText fechaN = (EditText) findViewById(R.id.fechaNacREdit);
-                //HAY QUE +1 AL MES, VA DE (0-11)
-                fechaN.setText(Integer.toString(anyo) + "-" + Integer.toString(mes + 1) + "-" + Integer.toString(dia));
-                //APROVECHAMOS PARA ESTABLECER EL FORMATO DE DATE EN SQL
-            }
-        };
-
-        /**
-         * Basado en el código extraído de Stack Overflow
-         * Pregunta: https://stackoverflow.com/questions/14933330/datepicker-how-to-popup-datepicker-when-click-on-edittext
-         * Autor: https://stackoverflow.com/users/7874047/ronak-thakkar
-         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
-         */
-        EditText fechaN = (EditText) findViewById(R.id.fechaNacREdit);
-        fechaN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(Registro.this, date, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
         //BOTÓN
-        Button btn_login = (Button) findViewById(R.id.btn_reg);
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("MissingPermission")
+        Button btn_editar = (Button) findViewById(R.id.btn_editar);
+        btn_editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //OBTENEMOS TODOS LOS DATOS DE LOS EDITTEXT
-                EditText nombreE = (EditText) findViewById(R.id.nombreREdit);
-                String nombre = nombreE.getText().toString();
-                EditText apellidosE = (EditText) findViewById(R.id.apellidoREdit);
-                String apellidos = apellidosE.getText().toString();
-                EditText usuarioE = (EditText) findViewById(R.id.usuarioREdit);
-                String usuario = usuarioE.getText().toString();
-                EditText passwordE = (EditText) findViewById(R.id.contraREdit);
+                //OBTENEMOS LOS DATOS DE LOS EDITTEXT
+
+                EditText passwordE = (EditText) findViewById(R.id.contraEEdit);
                 String password = passwordE.getText().toString();
-                EditText emailE = (EditText) findViewById(R.id.emailREdit);
-                String email = emailE.getText().toString();
-                EditText fechaNacE = (EditText) findViewById(R.id.fechaNacREdit);
-                String fechaNac = fechaNacE.getText().toString();
+
+                EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
+                String usuario = usuarioE.getText().toString();
 
                 //COMPROBAMOS QUE TODOS LOS DATOS HAN SIDO INTRODUCIDOS
-                if (nombre.equals("") || apellidos.equals("") || usuario.equals("") || password.equals("") || email.equals("") || fechaNac.equals("")) {
+                if (password.equals("")) {
                     Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
                 } else {
                     //LLAMAMOS A LA BD
-                    miBD GestorBD = new miBD(Registro.this, "BrainMaster", null, 1);
+                    miBD GestorBD = new miBD(Perfil.this, "BrainMaster", null, 1);
                     SQLiteDatabase bd = GestorBD.getWritableDatabase();
 
-                    //COMPROBAR QUE EL USUARIO ES ÚNICO
-                    String[] campos = new String[]{"Codigo"};
-                    String[] argumentos = new String[]{usuario};
-                    Cursor c2 = bd.query("Usuarios", campos, "usuario=?", argumentos, null, null, null);
-                    if (c2.getCount() > 0) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
-                    } else {
-                        //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
-                        /**
-                         * Basado en el código extraído de Stack Overflow
-                         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
-                         * Autor: https://stackoverflow.com/users/1191766/sachin10
-                         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
-                         */
-                        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
-                        Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        img.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                        byte[] b = baos.toByteArray();
-                        //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
-                        b = tratarImagen(b);
-                        String temp = Base64.getEncoder().encodeToString(b);
-                        fotoPerfil.setContentDescription(temp);
+                    //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
+                    /**
+                     * Basado en el código extraído de Stack Overflow
+                     * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+                     * Autor: https://stackoverflow.com/users/1191766/sachin10
+                     * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+                     */
+                    ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfilE);
+                    Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    img.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    byte[] b = baos.toByteArray();
+                    //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
+                    b = tratarImagen(b);
+                    String temp = Base64.getEncoder().encodeToString(b);
+                    fotoPerfil.setContentDescription(temp);
 
-                        //INTRODUCIMOS EL USUARIO A LA BD
-                        bd.execSQL("INSERT INTO Usuarios ('nombre', 'apellidos', 'usuario', 'password','email','fechaNac','img') VALUES ('" + nombre + "','" + apellidos + "','" + usuario + "','" + password + "','" + email + "','" + fechaNac + "','" + temp + "')");
-                        Toast.makeText(getApplicationContext(), getString(R.string.okRegistro), Toast.LENGTH_LONG).show();
-                        Cursor c = bd.rawQuery("SELECT * FROM Usuarios", null);
-                        Log.d("DAS", Integer.toString(c.getCount()));
-                        bd.close();
+                    //INTRODUCIMOS EL USUARIO A LA BD
+                    bd.execSQL("UPDATE Usuarios SET 'img' = '" + temp + "', 'password' = '"+password+"' WHERE usuario='"+usuario+"'");
+                    Log.d("DAS", Integer.toString(c.getCount()));
+                    bd.close();
 
-                        //ABRIMOS EL MENU
-                        Intent i = new Intent(Registro.this, Menu.class);
-                        i.putExtra("usuario",usuario);
-                        startActivity(i);
-                        finish();
-                    }
+                    //ABRIMOS EL MENU
+                    Intent i = new Intent(Perfil.this, Menu.class);
+                    startActivity(i);
+                    finish();
                 }
             }
         });
@@ -176,7 +164,7 @@ public class Registro extends AppCompatActivity {
          * Autor: https://stackoverflow.com/users/6339485/android-nerd
          * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
          */
-        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
+        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfilE);
         fotoPerfil.setClickable(true);
         fotoPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,14 +190,14 @@ public class Registro extends AppCompatActivity {
                 InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
-                ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
+                ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfilE);
                 fotoPerfil.setImageBitmap(selectedImage);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(Registro.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Perfil.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
             }
         }else {
-            Toast.makeText(Registro.this,  getString(R.string.error),Toast.LENGTH_SHORT).show();
+            Toast.makeText(Perfil.this,  getString(R.string.error),Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -236,29 +224,36 @@ public class Registro extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        EditText nombreE = (EditText) findViewById(R.id.nombreREdit);
+        EditText nombreE = (EditText) findViewById(R.id.nombreEEdit);
         String nombre = nombreE.getText().toString();
         savedInstanceState.putString("nombre", nombre);
 
-        EditText apellidosE = (EditText) findViewById(R.id.apellidoREdit);
+        EditText apellidosE = (EditText) findViewById(R.id.apellidoEEdit);
         String apellidos = apellidosE.getText().toString();
         savedInstanceState.putString("apellidos", apellidos);
 
-        EditText usuarioE = (EditText) findViewById(R.id.usuarioREdit);
+        EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
         String usuario = usuarioE.getText().toString();
         savedInstanceState.putString("usuario", usuario);
 
-        EditText passwordE = (EditText) findViewById(R.id.contraREdit);
+        EditText passwordE = (EditText) findViewById(R.id.contraEEdit);
         String password = passwordE.getText().toString();
         savedInstanceState.putString("password", password);
 
-        EditText emailE = (EditText)  findViewById(R.id.emailREdit);
+        EditText emailE = (EditText)  findViewById(R.id.emailEEdit);
         String email = emailE.getText().toString();
         savedInstanceState.putString("email", email);
 
-        EditText fechaNacE = (EditText) findViewById(R.id.fechaNacREdit);
-        String fechaNac = fechaNacE.getText().toString();
-        savedInstanceState.putString("fechaNac", fechaNac);
+        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfilE);
+        Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        img.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
+        b = tratarImagen(b);
+        String temp = Base64.getEncoder().encodeToString(b);
+        savedInstanceState.putString("img", temp);
+
     }
 
     //RECUPERAR LOS DATOS GUARDADOS
@@ -267,28 +262,30 @@ public class Registro extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
 
         String nombre = savedInstanceState.getString("nombre");
-        EditText nombreE = (EditText) findViewById(R.id.nombreREdit);
+        EditText nombreE = (EditText) findViewById(R.id.nombreEEdit);
         nombreE.setText(nombre);
 
         String apellidos = savedInstanceState.getString("apellidos");
-        EditText apellidosE = (EditText) findViewById(R.id.apellidoREdit);
+        EditText apellidosE = (EditText) findViewById(R.id.apellidoEEdit);
         apellidosE.setText(apellidos);
 
         String usuario = savedInstanceState.getString("usuario");
-        EditText usuarioE = (EditText) findViewById(R.id.usuarioREdit);
+        EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
         usuarioE.setText(usuario);
 
         String password = savedInstanceState.getString("password");
-        EditText passwordE = (EditText) findViewById(R.id.contraREdit);
+        EditText passwordE = (EditText) findViewById(R.id.contraEEdit);
         passwordE.setText(password);
 
         String email = savedInstanceState.getString("email");
-        EditText emailE = (EditText)  findViewById(R.id.emailREdit);
+        EditText emailE = (EditText)  findViewById(R.id.emailEEdit);
         emailE.setText(email);
 
-        String fechaNac = savedInstanceState.getString("fechaNac");
-        EditText fechaNacE = (EditText) findViewById(R.id.fechaNacREdit);
-        fechaNacE.setText(fechaNac);
+        String img = savedInstanceState.getString("img");
+        byte [] encodeByte = Base64.getDecoder().decode(img);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+        ImageView imgView=(ImageView) findViewById(R.id.fotoDePerfilE);
+        imgView.setImageBitmap(bitmap);
     }
 
     //CAMBIAR IDIOMA
