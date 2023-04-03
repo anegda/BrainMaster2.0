@@ -12,7 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/black</item>
         <!-- Background color -->
-        <item name="android:background">@color/fondo_oscuro</item>
+        <item name="android:windowBackground">@color/fondo_oscuro</item>
         <!-- Fuente -->
         <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
@@ -28,7 +28,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/black</item>
         <!-- Background color. -->
-        <item name="android:background">@color/fondo_oscuro</item>
+        <item name="android:windowBackground">@color/fondo_oscuro</item>
         <!-- Fuente -->
         <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
@@ -44,7 +44,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/black</item>
         <!-- Background color. -->
-        <item name="android:background">@color/fondo_oscuro</item>
+        <item name="android:windowBackground">@color/fondo_oscuro</item>
         <!-- Fuente -->
         <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
