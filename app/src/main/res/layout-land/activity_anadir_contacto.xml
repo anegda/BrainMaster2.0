@@ -54,7 +54,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/emailRText"
+        android:id="@+id/emailAText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
@@ -66,7 +66,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/emailREdit"
+        android:id="@+id/emailAEdit"
         android:layout_width="240dp"
         android:layout_height="48dp"
         android:layout_marginStart="25dp"

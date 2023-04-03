@@ -141,6 +141,7 @@ public class Contactos extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Contactos.this, AnadirContacto.class));
+                finish();
             }
         });
     }

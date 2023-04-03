@@ -317,7 +317,7 @@ public class Perfil extends AppCompatActivity {
     //VOLVEMOS A MAINACTIVITY SI PULSAMOS ATRAS
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, Menu.class));
         finish();
     }
 }
