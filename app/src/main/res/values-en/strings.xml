@@ -68,4 +68,7 @@
     <string name="contactos">Contacts</string>
     <string name="editar">EDIT</string>
     <string name="mapa">Map</string>
+    <string name="añadir">ADD</string>
+    <string name="registrado">Registered</string>
+    <string name="noRegistrado">Not registered</string>
 </resources>

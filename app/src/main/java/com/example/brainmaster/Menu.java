@@ -99,6 +99,8 @@ public class Menu extends AppCompatActivity {
                         startActivity(Intent.createChooser(compartir, "Compartir vía"));
                         break;
                     case R.id.contactos:
+                        startActivity(new Intent(Menu.this, Contactos.class));
+                        finish();
                         break;
                 }
                 elmenudesplegable.closeDrawers();

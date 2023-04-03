@@ -36,7 +36,7 @@
     <string name="guardar">GUARDAR</string>
     <string name="activar">ACTIVAR</string>
     <string name="compartir">Compartir:</string>
-    <string name="compartirContenido">Descarga ahora BrainMaster para entrenar a tu cererbro.</string>
+    <string name="compartirContenido">Descarga ahora BrainMaster para entrenar a tu cerebro.</string>
     <string name="noti1Titulo">Ha actualizado la configuración</string>
     <string name="noti1Contenido">Se han guardado los cambios</string>
     <string name="noti2Titulo">Es la hora de practicar!</string>
@@ -67,4 +67,7 @@
     <string name="contactos">Contactos</string>
     <string name="editar">EDITAR</string>
     <string name="mapa">Mapa</string>
+    <string name="añadir">AÑADIR</string>
+    <string name="registrado">Registrado</string>
+    <string name="noRegistrado">No registrado</string>
 </resources>
