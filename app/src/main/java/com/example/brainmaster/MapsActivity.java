@@ -3,8 +3,12 @@ package com.example.brainmaster;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -20,6 +24,8 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.brainmaster.databinding.ActivityMapsBinding;
 
+import java.util.Locale;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -27,6 +33,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //ESTABLECER IDIOMA USANDO PREFERENCIAS
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String idioma = prefs.getString("idiomapref","es");
+        cambiarIdioma(idioma);
+
+        //ESTABLECER TEMA UTILIZANDO PREFERENCIAS
+        String tema = prefs.getString("temapref","1");
+        if(tema.equals("1")) {
+            Log.d("DAS",tema+" 1");
+            setTheme(R.style.Theme_BrainMaster);
+        }
+        else if(tema.equals("2")){
+            Log.d("DAS",tema+" 2");
+            setTheme(R.style.Theme_BrainMasterSummer);
+        }
+        else if(tema.equals("3")){
+            Log.d("DAS",tema+" 3");
+            setTheme(R.style.Theme_BrainMasterPunk);
+        }
+        else{
+            Log.d("DAS",tema+" 4");
+            setTheme(R.style.Theme_BrainMaster);
+        }
 
         super.onCreate(savedInstanceState);
 
@@ -67,6 +96,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         }
+    }
+
+    //CAMBIAR IDIOMA
+    protected void cambiarIdioma(String idioma){
+        Log.d("DAS",idioma);
+        Locale nuevaloc = new Locale(idioma);
+        Locale.setDefault(nuevaloc);
+        Configuration configuration = getBaseContext().getResources().getConfiguration();
+        configuration.setLocale(nuevaloc);
+        configuration.setLayoutDirection(nuevaloc);
+
+        Context context = getBaseContext().createConfigurationContext(configuration);
+        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
     }
 
     //VOLVEMOS A MENU SI PULSAMOS ATRAS
