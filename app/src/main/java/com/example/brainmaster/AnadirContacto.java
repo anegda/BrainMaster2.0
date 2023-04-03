@@ -78,10 +78,8 @@ public class AnadirContacto extends AppCompatActivity {
                  * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
                  */
 
-                //GUARDAMOS EN NUESTRA CUENTA
+                //GUARDAMOS EN NUESTRO DISPOSITIVO
                 ContentValues p=new ContentValues();
-                p.put(ContactsContract.RawContacts.ACCOUNT_TYPE, "com.google");
-                p.put(ContactsContract.RawContacts.ACCOUNT_NAME, "email");
                 Uri rowcontect= getContentResolver().insert(ContactsContract.RawContacts.CONTENT_URI, p);
                 long rawcontectid= ContentUris.parseId(rowcontect);
 
