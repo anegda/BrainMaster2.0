@@ -26,7 +26,6 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //prueba
         //SI QUEREMOS BORRAR LA BD
         //this.deleteDatabase("BrainMaster");
 
