@@ -16,6 +16,7 @@
         <!-- Fuente -->
         <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
+
     <style name="Theme.BrainMasterPunk" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/green</item>
@@ -32,6 +33,7 @@
         <!-- Fuente -->
         <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
+
     <style name="Theme.BrainMasterSummer" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/orange_lad</item>
@@ -48,9 +50,25 @@
         <!-- Fuente -->
         <item name="android:fontFamily">@font/cuprum_bold</item>
     </style>
+
     <style name="newRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/ratingstars</item>
         <item name="android:minHeight">30dip</item>
         <item name="android:maxHeight">30dip</item>
+    </style>
+
+    <style name="Theme.BrainMaster.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">
+        <!-- Radius of the outer bound of widgets to make the rounded corners -->
+        <item name="appWidgetRadius">16dp</item>
+        <!--
+        Radius of the inner view's bound of widgets to make the rounded corners.
+        It needs to be 8dp or less than the value of appWidgetRadius
+        -->
+        <item name="appWidgetInnerRadius">8dp</item>
+    </style>
+
+    <style name="Theme.BrainMaster.AppWidgetContainer" parent="Theme.BrainMaster.AppWidgetContainerParent">
+        <!-- Apply padding to avoid the content of the widget colliding with the rounded corners -->
+        <item name="appWidgetPadding">16dp</item>
     </style>
 </resources>
