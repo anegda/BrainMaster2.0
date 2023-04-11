@@ -1,22 +1,15 @@
 package com.example.brainmaster;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,17 +20,26 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.ByteArrayInputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Locale;
@@ -125,15 +127,46 @@ public class Registro extends AppCompatActivity {
                 if (nombre.equals("") || apellidos.equals("") || usuario.equals("") || password.equals("") || email.equals("") || fechaNac.equals("")) {
                     Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
                 } else {
-                    //LLAMAMOS A LA BD
-                    miBD GestorBD = new miBD(Registro.this, "BrainMaster", null, 1);
-                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
+                    //BASE DE DATOS REMOTA
+                    boolean existe = false;
+                    String direccion = "http://http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/usuarios.php";
+                    HttpURLConnection urlConnection = null;
+                    try {
+                        URL destino = new URL(direccion);
+                        urlConnection = (HttpURLConnection) destino.openConnection();
+                        urlConnection.setConnectTimeout(5000);
+                        urlConnection.setReadTimeout(5000);
+                        urlConnection.setRequestMethod("POST");
+                        urlConnection.setDoOutput(true);
+                        urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                        String parametros = "numFuncion=3&usuario="+usuario;
+                        PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
+                        out.print(parametros);
+                        out.close();
 
-                    //COMPROBAR QUE EL USUARIO ES ÚNICO
-                    String[] campos = new String[]{"Codigo"};
-                    String[] argumentos = new String[]{usuario};
-                    Cursor c2 = bd.query("Usuarios", campos, "usuario=?", argumentos, null, null, null);
-                    if (c2.getCount() > 0) {
+                        int statusCode = urlConnection.getResponseCode();
+                        if(statusCode==200){
+                            BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                            BufferedReader bufferedReader = new BufferedReader (new InputStreamReader(inputStream, "UTF-8"));
+                            String line, result="";
+                            while ((line = bufferedReader.readLine()) != null){
+                                result += line;
+                            }
+                            inputStream.close();
+                            JSONParser parser = new JSONParser();
+                            JSONObject json = (JSONObject) parser.parse(result);
+                            String nom = (String) json.get("nombre");
+                            if (nom!=null){
+                                existe = true;
+                            }
+                            String dir = (String) json.get("Direccion");
+                        }
+
+                    } catch (ParseException | JSONException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    if (existe) {
                         Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
                     } else {
                         //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
@@ -153,18 +186,36 @@ public class Registro extends AppCompatActivity {
                         String temp = Base64.getEncoder().encodeToString(b);
                         fotoPerfil.setContentDescription(temp);
 
-                        //INTRODUCIMOS EL USUARIO A LA BD
-                        bd.execSQL("INSERT INTO Usuarios ('nombre', 'apellidos', 'usuario', 'password','email','fechaNac','img') VALUES ('" + nombre + "','" + apellidos + "','" + usuario + "','" + password + "','" + email + "','" + fechaNac + "','" + temp + "')");
-                        Toast.makeText(getApplicationContext(), getString(R.string.okRegistro), Toast.LENGTH_LONG).show();
-                        Cursor c = bd.rawQuery("SELECT * FROM Usuarios", null);
-                        Log.d("DAS", Integer.toString(c.getCount()));
-                        bd.close();
+                        //INTRODUCIMOS EL USUARIO A LA BD REMOTA
+                        String direccion2 = "http://http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/usuarios.php";
+                        HttpURLConnection urlConnection2 = null;
+                        try {
+                            URL destino2 = new URL(direccion2);
+                            urlConnection2 = (HttpURLConnection) destino2.openConnection();
+                            urlConnection2.setConnectTimeout(5000);
+                            urlConnection2.setReadTimeout(5000);
+                            urlConnection2.setRequestMethod("POST");
+                            urlConnection2.setDoOutput(true);
+                            urlConnection2.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                            String parametros2 = "numFuncion=1&nombre="+nombre+"&apellidos="+apellidos+"&usuario="+usuario+"&password="+password+"&email="+email+"&fechaNac="+fechaNac+"&img="+temp;
+                            PrintWriter out2 = new PrintWriter(urlConnection.getOutputStream());
+                            out2.print(parametros2);
+                            out2.close();
 
-                        //ABRIMOS EL MENU
-                        Intent i = new Intent(Registro.this, Menu.class);
-                        i.putExtra("usuario",usuario);
-                        startActivity(i);
-                        finish();
+                            int statusCode = urlConnection.getResponseCode();
+                            if(statusCode==200){
+                                //ABRIMOS EL MENU
+                                Intent i = new Intent(Registro.this, Menu.class);
+                                i.putExtra("usuario",usuario);
+                                startActivity(i);
+                                finish();
+                            }else{
+                                Log.d("DAS", String.valueOf(statusCode));
+                            }
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
