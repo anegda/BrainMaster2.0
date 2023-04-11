@@ -26,7 +26,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCacmkWWXPV6Uy88KVFM5HgwWe8EyS6mOA" />
+            android:value="$(MAPS_API_KEY)" />
 
         <activity
             android:name=".Contactos"
