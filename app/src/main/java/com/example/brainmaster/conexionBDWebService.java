@@ -43,21 +43,23 @@ public class conexionBDWebService extends Worker {
         switch (opcion){
             case 1:
                 resultado = insertarUsuarios();
+                return Result.success();
             case 2:
-                resultado = selectNombreUsuario();
-                outputData = new Data.Builder().putBoolean("existe", resultado).build();
+                outputData = selectNombreUsuario();
+                if(outputData==null) {
+                    outputData = new Data.Builder().putBoolean("existe", false).build();
+                    Log.d("DAS", String.valueOf(outputData));
+                }
+                return Result.success(outputData);
             case 3:
                 resultado = selectNombreUsuarioContraseña();
                 Log.d("DAS", String.valueOf(resultado));
                 outputData = new Data.Builder().putBoolean("correcto",resultado).build();
+                return Result.success(outputData);
+            default:
+                break;
         }
-        if(resultado){
-            return Result.success(outputData);
-        }
-        else{
-            return Result.failure();
-        }
-
+        return Result.failure();
     }
 
     public boolean insertarUsuarios(){
@@ -85,17 +87,19 @@ public class conexionBDWebService extends Worker {
                 return false;
             }
         } catch (IOException e) {
-            Log.d("DAS","ERROR");
+            Log.d("DAS","ERROR INSERT");
             throw new RuntimeException(e);
         }
     }
 
-    public boolean selectNombreUsuario(){
+    public Data selectNombreUsuario(){
         String direccion = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/selectNombreUsuario.php";
         HttpURLConnection urlConnection = null;
         Data datos = this.getInputData();
         String usuario = datos.getString("usuario");
         try {
+            Data outputData = null;
+
             String parametros = "?usuario="+usuario;
             URL destino = new URL(direccion+parametros);
             urlConnection = (HttpURLConnection) destino.openConnection();
@@ -109,19 +113,38 @@ public class conexionBDWebService extends Worker {
                     result += line;
                 }
                 inputStream.close();
-                JSONParser parser = new JSONParser();
-                JSONObject json = (JSONObject) parser.parse(result);
-                String nom = (String) json.get("nombre");
-                if (nom!=null){
-                    return true;
+                if(!result.equals("No records matching your query were found.")) {
+                    JSONParser parser = new JSONParser();
+                    JSONObject json = (JSONObject) parser.parse(result);
+                    String nom = (String) json.get("nombre");
+                    String ap = (String) json.get("apellidos");
+                    String u = (String) json.get("usuario");
+                    String p = (String) json.get("password");
+                    String em = (String) json.get("email");
+                    String fN = (String) json.get("fechaNac");
+                    String i = (String) json.get("img");
+
+                    if(nom!=null){
+                        outputData = new Data.Builder()
+                                .putBoolean("existe", true)
+                                .putString("nombre",nom)
+                                .putString("apellidos",ap)
+                                .putString("usuario",u)
+                                .putString("password",p)
+                                .putString("email",em)
+                                .putString("fechaNac",fN)
+                                .putString("img",i)
+                                .build();
+                    }
+                    return outputData;
                 }
-                return false;
+                return outputData;
             }else{
-                return false;
+                return outputData;
             }
 
-        } catch (ParseException | IOException e) {
-            Log.d("DAS","ERROR");
+        } catch (IOException | ParseException e) {
+            Log.d("DAS","ERROR SELECT");
             throw new RuntimeException(e);
         }
     }
@@ -146,20 +169,44 @@ public class conexionBDWebService extends Worker {
                     result += line;
                 }
                 inputStream.close();
-                JSONParser parser = new JSONParser();
-                JSONObject json = (JSONObject) parser.parse(result);
-                String nom = (String) json.get("nombre");
-                if (nom!=null){
-                    return true;
-                }else {
-                    return false;
+                if(!result.equals("No records matching your query were found.")) {
+                    JSONParser parser = new JSONParser();
+                    JSONObject json = (JSONObject) parser.parse(result);
+                    String nom = (String) json.get("nombre");
+                    if (nom != null) {
+                        return true;
+                    }
                 }
+            }
+            return false;
+        } catch (ParseException | IOException e) {
+            Log.d("DAS","ERROR SELECT*");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean actualizarUsuario(){
+        //INTRODUCIMOS EL USUARIO A LA BD REMOTA
+        String direccion2 = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/actualizarUsuario.php";
+        HttpURLConnection urlConnection2 = null;
+        Data datos = this.getInputData();
+        String usuario = datos.getString("usuario");
+        String password = datos.getString("password");
+        String temp = datos.getString("img");
+        try {
+            String parametros2 = "?usuario="+usuario+"&password="+password+"&img="+temp;
+            URL destino2 = new URL(direccion2+parametros2);
+            urlConnection2 = (HttpURLConnection) destino2.openConnection();
+
+            int statusCode = urlConnection2.getResponseCode();
+            if(statusCode==200 || statusCode==500){
+                //ABRIMOS EL MENU
+                return true;
             }else{
                 return false;
             }
-
-        } catch (ParseException | IOException e) {
-            Log.d("DAS","ERROR");
+        } catch (IOException e) {
+            Log.d("DAS","ERROR UPDATE");
             throw new RuntimeException(e);
         }
     }

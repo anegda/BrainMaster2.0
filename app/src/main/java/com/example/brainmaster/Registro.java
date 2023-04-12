@@ -144,7 +144,9 @@ public class Registro extends AppCompatActivity {
                         public void onChanged(WorkInfo workInfo) {
                             if(workInfo!=null && workInfo.getState().isFinished()){
                                 Data outputData = workInfo.getOutputData();
-                                existe[0] = outputData.getBoolean("existe", false);
+                                if(outputData!=null){
+                                    existe[0] = outputData.getBoolean("existe", false);
+                                }
                             }
                         }
                     });
