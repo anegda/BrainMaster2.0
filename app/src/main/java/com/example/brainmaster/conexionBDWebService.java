@@ -60,6 +60,12 @@ public class conexionBDWebService extends Worker {
                     outputData = new Data.Builder().build();
                 }
                 return Result.success(outputData);
+            case 7:
+                outputData = selectPartidaUsuario();
+                if(outputData==null){
+                    outputData = new Data.Builder().build();
+                }
+                return Result.success(outputData);
             default:
                 break;
         }
@@ -271,6 +277,38 @@ public class conexionBDWebService extends Worker {
             return outputData;
         } catch (IOException e) {
             Log.d("DAS","ERROR SELECT PARTIDAS TIPO");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Data selectPartidaUsuario(){
+        String direccion = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/selectPartidasUsuario.php";
+        HttpURLConnection urlConnection = null;
+        Data datos = this.getInputData();
+        String usuario = datos.getString("usuario");
+        try {
+            Data outputData = null;
+
+            String parametros = "?usuario="+usuario;
+            URL destino = new URL(direccion+parametros);
+            urlConnection = (HttpURLConnection) destino.openConnection();
+
+            int statusCode = urlConnection.getResponseCode();
+            if(statusCode==200){
+                BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader bufferedReader = new BufferedReader (new InputStreamReader(inputStream, "UTF-8"));
+                String line, result="";
+                while ((line = bufferedReader.readLine()) != null){
+                    result += line;
+                }
+                inputStream.close();
+                if(!result.equals("No records matching your query were found.")) {
+                    outputData = new Data.Builder().putString("result", result).build();
+                }
+            }
+            return outputData;
+        } catch (IOException e) {
+            Log.d("DAS","ERROR SELECT PARTIDAS USUARIO");
             throw new RuntimeException(e);
         }
     }

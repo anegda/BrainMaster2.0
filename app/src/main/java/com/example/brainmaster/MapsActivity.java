@@ -3,7 +3,12 @@ package com.example.brainmaster;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +16,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +32,14 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.brainmaster.databinding.ActivityMapsBinding;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -71,31 +87,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        //LLAMAMOS A LA BASE DE DATOS Y HACEMOS UN SELECT DE LAS PARTIDAS REALIZADAS ORDENADAS POR PUNTUACIÓN DESCENDENTEMENTE
-        miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
-        SQLiteDatabase bd = GestorBD.getWritableDatabase();
-        String[] campos = new String[] {"usuario","puntos","tipo","latitud","longitud"};
-        String [] argumentos = new String[] {Menu.nombreUsuario};
-        Cursor c2 = bd.query("Partidas",campos,"usuario=?",argumentos, null,null,"puntos DESC");
+        //LLAMAMOS A LA BD REMOTA Y HACEMOS UN SELECT DE LAS PARTIDAS REALIZADAS
+        Data datos = new Data.Builder()
+                .putInt("funcion",7)
+                .putString("usuario", Menu.nombreUsuario).build();
+        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+        WorkManager.getInstance(MapsActivity.this).getWorkInfoByIdLiveData(otwr.getId()).observe(MapsActivity.this, new Observer<WorkInfo>() {
+            @Override
+            public void onChanged(WorkInfo workInfo) {
+                if(workInfo!=null && workInfo.getState().isFinished()){
+                    Data outputData = workInfo.getOutputData();
+                    if(outputData!=null){
+                        String result = outputData.getString("result");
+                        JSONParser parser = new JSONParser();
+                        try {
+                            JSONArray jsonArray = (JSONArray) parser.parse(result);
 
-        while (c2.moveToNext()){
-            String usuario = c2.getString(0);
-            int puntos = c2.getInt(1);
-            String tipo = c2.getString(2);
-            String latitud = c2.getString(3);
-            String longitud = c2.getString(4);
-            if(!latitud.equals("") && !longitud.equals("")){
-                LatLng pos = new LatLng(Double.parseDouble(latitud),Double.parseDouble(longitud));
-                if(tipo.equals("palabras")){
-                    mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "(palabras): " + Integer.toString(puntos)).icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA)));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
-                }
-                else{
-                    mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "(botones): " + Integer.toString(puntos)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+                            for(int i=0; i < jsonArray.size() && i < 5; i++){
+                                JSONObject obj = (JSONObject) jsonArray.get(i);
+                                String usuario = (String) obj.get("usuario");
+                                String puntos = (String) obj.get("puntos");
+                                String tipo = (String) obj.get("tipo");
+                                String latitud = (String) obj.get("latitud");
+                                String longitud = (String) obj.get("longitud");
+
+                                if(!latitud.equals("") && !longitud.equals("")){
+                                    LatLng pos = new LatLng(Double.parseDouble(latitud),Double.parseDouble(longitud));
+                                    if(tipo.equals("palabras")){
+                                        mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "(palabras): " + puntos).icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA)));
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+                                    }
+                                    else{
+                                        mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "(botones): " + puntos).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+                                    }
+                                }
+
+                            }
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 }
             }
-        }
+        });
+        WorkManager.getInstance(MapsActivity.this).enqueue(otwr);
     }
 
     //CAMBIAR IDIOMA
