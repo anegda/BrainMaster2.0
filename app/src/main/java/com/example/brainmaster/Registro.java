@@ -22,7 +22,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -127,46 +132,23 @@ public class Registro extends AppCompatActivity {
                 if (nombre.equals("") || apellidos.equals("") || usuario.equals("") || password.equals("") || email.equals("") || fechaNac.equals("")) {
                     Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
                 } else {
-                    //BASE DE DATOS REMOTA
-                    boolean existe = false;
-                    String direccion = "http://http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/usuarios.php";
-                    HttpURLConnection urlConnection = null;
-                    try {
-                        URL destino = new URL(direccion);
-                        urlConnection = (HttpURLConnection) destino.openConnection();
-                        urlConnection.setConnectTimeout(5000);
-                        urlConnection.setReadTimeout(5000);
-                        urlConnection.setRequestMethod("POST");
-                        urlConnection.setDoOutput(true);
-                        urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                        String parametros = "numFuncion=3&usuario="+usuario;
-                        PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
-                        out.print(parametros);
-                        out.close();
-
-                        int statusCode = urlConnection.getResponseCode();
-                        if(statusCode==200){
-                            BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
-                            BufferedReader bufferedReader = new BufferedReader (new InputStreamReader(inputStream, "UTF-8"));
-                            String line, result="";
-                            while ((line = bufferedReader.readLine()) != null){
-                                result += line;
+                    //SELECT EN BASE DE DATOS REMOTA PARA COMPROBAR SI EL USUARIO ESTÁ DISPONIBLE
+                    final boolean[] existe = {false};
+                    Data datos0 = new Data.Builder()
+                            .putInt("funcion",2)
+                            .putString("usuario", usuario).build();
+                    OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
+                    WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Registro.this, new Observer<WorkInfo>() {
+                        @Override
+                        public void onChanged(WorkInfo workInfo) {
+                            if(workInfo!=null && workInfo.getState().isFinished()){
+                                Data outputData = workInfo.getOutputData();
+                                existe[0] = outputData.getBoolean("existe", false);
                             }
-                            inputStream.close();
-                            JSONParser parser = new JSONParser();
-                            JSONObject json = (JSONObject) parser.parse(result);
-                            String nom = (String) json.get("nombre");
-                            if (nom!=null){
-                                existe = true;
-                            }
-                            String dir = (String) json.get("Direccion");
                         }
+                    });
 
-                    } catch (ParseException | JSONException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    if (existe) {
+                    if (existe[0]) {
                         Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
                     } else {
                         //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
@@ -186,36 +168,30 @@ public class Registro extends AppCompatActivity {
                         String temp = Base64.getEncoder().encodeToString(b);
                         fotoPerfil.setContentDescription(temp);
 
-                        //INTRODUCIMOS EL USUARIO A LA BD REMOTA
-                        String direccion2 = "http://http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/usuarios.php";
-                        HttpURLConnection urlConnection2 = null;
-                        try {
-                            URL destino2 = new URL(direccion2);
-                            urlConnection2 = (HttpURLConnection) destino2.openConnection();
-                            urlConnection2.setConnectTimeout(5000);
-                            urlConnection2.setReadTimeout(5000);
-                            urlConnection2.setRequestMethod("POST");
-                            urlConnection2.setDoOutput(true);
-                            urlConnection2.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                            String parametros2 = "numFuncion=1&nombre="+nombre+"&apellidos="+apellidos+"&usuario="+usuario+"&password="+password+"&email="+email+"&fechaNac="+fechaNac+"&img="+temp;
-                            PrintWriter out2 = new PrintWriter(urlConnection.getOutputStream());
-                            out2.print(parametros2);
-                            out2.close();
-
-                            int statusCode = urlConnection.getResponseCode();
-                            if(statusCode==200){
-                                //ABRIMOS EL MENU
-                                Intent i = new Intent(Registro.this, Menu.class);
-                                i.putExtra("usuario",usuario);
-                                startActivity(i);
-                                finish();
-                            }else{
-                                Log.d("DAS", String.valueOf(statusCode));
-                            }
-
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        //INSERT EN BD REMOTA
+                        Data datos = new Data.Builder()
+                                .putInt("funcion",1)
+                                .putString("nombre", nombre)
+                                .putString("apellidos", apellidos)
+                                .putString("usuario", usuario)
+                                .putString("password", password)
+                                .putString("email", email)
+                                .putString("fechaNac", fechaNac)
+                                .putString("img", temp)
+                                .build();
+                        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                        WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Registro.this, new Observer<WorkInfo>() {
+                                    @Override
+                                    public void onChanged(WorkInfo workInfo) {
+                                        if(workInfo!=null && workInfo.getState().isFinished()){
+                                            Intent i = new Intent(Registro.this, Menu.class);
+                                            i.putExtra("usuario",usuario);
+                                            startActivity(i);
+                                            finish();
+                                        }
+                                    }
+                                });
+                        WorkManager.getInstance(Registro.this).enqueue(otwr);
                     }
                 }
             }
@@ -286,7 +262,7 @@ public class Registro extends AppCompatActivity {
          * Autor: https://stackoverflow.com/users/3694451/leo-vitor
          * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
          */
-        while(img.length > 500000){
+        while(img.length > 5000){
             Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
             Bitmap compacto = Bitmap.createScaledBitmap(bitmap, (int)(bitmap.getWidth()*0.8), (int)(bitmap.getHeight()*0.8), true);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
