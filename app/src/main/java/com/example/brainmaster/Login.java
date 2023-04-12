@@ -2,7 +2,12 @@ package com.example.brainmaster;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,6 +18,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -65,29 +71,44 @@ public class Login extends AppCompatActivity {
                 EditText passwordE = (EditText) findViewById(R.id.passwordEdit);
                 String password = passwordE.getText().toString();
 
-                //LLAMAMOS A LA BD
-                miBD GestorBD = new miBD(Login.this, "BrainMaster", null, 1);
-                SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                String[] campos = new String[] {"Codigo"};
-                String [] argumentos = new String[] {usuario,password};
-                Cursor c2 = bd.query("Usuarios",campos,"usuario=? AND password=?",argumentos, null,null,null);
-                //SI EXISTE EL USUARIO
-                if(c2.getCount()>0) {
-                    c2.close();
-                    bd.close();
-                    //CREAMOS TOAST INDICANDO QUE EL LOGIN ES CORRECTO
-                    Toast.makeText(getApplicationContext(), getString(R.string.okLogin), Toast.LENGTH_LONG).show();
+                //LLAMAMOS A LA BD REMOTA
+                final boolean[] correcto = {false};
+                Data datos0 = new Data.Builder()
+                        .putInt("funcion",3)
+                        .putString("usuario", usuario)
+                        .putString("password", password).build();
+                OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
+                WorkManager.getInstance(Login.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Login.this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        if(workInfo!=null && workInfo.getState().isFinished()){
+                            Data outputData = workInfo.getOutputData();
+                            correcto[0] = outputData.getBoolean("correcto", false);
+                        }
+                    }
+                });
+                WorkManager.getInstance(Login.this).enqueue(otwr0);
 
-                    //VAMOS AL MENÚ
-                    Intent i = new Intent(Login.this, Menu.class);
-                    i.putExtra("usuario",usuario);
-                    startActivity(i);
-                    finish();
-                }
-                else{
-                    //TOAST DICIENDO QUE HA OCURRIDO UN ERROR
-                    Toast.makeText(getApplicationContext(), getString(R.string.errorLogin), Toast.LENGTH_LONG).show();
-                }
+                //ESPERAMOS UN POCO PARA RECIBIR LA RESPUESTA
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if(correcto[0]) {
+                            //CREAMOS TOAST INDICANDO QUE EL LOGIN ES CORRECTO
+                            Toast.makeText(getApplicationContext(), getString(R.string.okLogin), Toast.LENGTH_LONG).show();
+
+                            //VAMOS AL MENÚ
+                            Intent i = new Intent(Login.this, Menu.class);
+                            i.putExtra("usuario",usuario);
+                            startActivity(i);
+                            finish();
+                        }
+                        else{
+                            //TOAST DICIENDO QUE HA OCURRIDO UN ERROR
+                            Toast.makeText(getApplicationContext(), getString(R.string.errorLogin), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                },1000);
             }
         });
     }

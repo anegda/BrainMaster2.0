@@ -145,7 +145,6 @@ public class Registro extends AppCompatActivity {
                             if(workInfo!=null && workInfo.getState().isFinished()){
                                 Data outputData = workInfo.getOutputData();
                                 existe[0] = outputData.getBoolean("existe", false);
-                                Log.d("DAS", String.valueOf(existe[0]));
                             }
                         }
                     });

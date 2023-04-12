@@ -45,8 +45,11 @@ public class conexionBDWebService extends Worker {
                 resultado = insertarUsuarios();
             case 2:
                 resultado = selectNombreUsuario();
-                Log.d("DAS", "RESULTADO: "+String.valueOf(resultado));
                 outputData = new Data.Builder().putBoolean("existe", resultado).build();
+            case 3:
+                resultado = selectNombreUsuarioContraseña();
+                Log.d("DAS", String.valueOf(resultado));
+                outputData = new Data.Builder().putBoolean("correcto",resultado).build();
         }
         if(resultado){
             return Result.success(outputData);
@@ -59,7 +62,6 @@ public class conexionBDWebService extends Worker {
 
     public boolean insertarUsuarios(){
         //INTRODUCIMOS EL USUARIO A LA BD REMOTA
-        Log.d("DAS", "INSERTANDO USUARIO");
         String direccion2 = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/insertarUsuarios.php";
         HttpURLConnection urlConnection2 = null;
         Data datos = this.getInputData();
@@ -83,25 +85,23 @@ public class conexionBDWebService extends Worker {
                 return false;
             }
         } catch (IOException e) {
+            Log.d("DAS","ERROR");
             throw new RuntimeException(e);
         }
     }
 
     public boolean selectNombreUsuario(){
-        Log.d("DAS", "ENTRA EN SELECT");
         String direccion = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/selectNombreUsuario.php";
         HttpURLConnection urlConnection = null;
         Data datos = this.getInputData();
-        Log.d("DAS", String.valueOf(datos));
         String usuario = datos.getString("usuario");
         try {
             String parametros = "?usuario="+usuario;
-            Log.d("DAS", direccion+parametros);
             URL destino = new URL(direccion+parametros);
             urlConnection = (HttpURLConnection) destino.openConnection();
 
             int statusCode = urlConnection.getResponseCode();
-            if(statusCode==200 || statusCode==500){
+            if(statusCode==200){
                 BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
                 BufferedReader bufferedReader = new BufferedReader (new InputStreamReader(inputStream, "UTF-8"));
                 String line, result="";
@@ -116,6 +116,44 @@ public class conexionBDWebService extends Worker {
                     return true;
                 }
                 return false;
+            }else{
+                return false;
+            }
+
+        } catch (ParseException | IOException e) {
+            Log.d("DAS","ERROR");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean selectNombreUsuarioContraseña(){
+        String direccion = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/selectNombreUsuarioContraseña.php";
+        HttpURLConnection urlConnection = null;
+        Data datos = this.getInputData();
+        String usuario = datos.getString("usuario");
+        String password = datos.getString("password");
+        try {
+            String parametros = "?usuario="+usuario+"&password="+password;
+            URL destino = new URL(direccion+parametros);
+            urlConnection = (HttpURLConnection) destino.openConnection();
+
+            int statusCode = urlConnection.getResponseCode();
+            if(statusCode==200){
+                BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader bufferedReader = new BufferedReader (new InputStreamReader(inputStream, "UTF-8"));
+                String line, result="";
+                while ((line = bufferedReader.readLine()) != null){
+                    result += line;
+                }
+                inputStream.close();
+                JSONParser parser = new JSONParser();
+                JSONObject json = (JSONObject) parser.parse(result);
+                String nom = (String) json.get("nombre");
+                if (nom!=null){
+                    return true;
+                }else {
+                    return false;
+                }
             }else{
                 return false;
             }
