@@ -2,7 +2,12 @@ package com.example.brainmaster;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -65,44 +70,56 @@ public class Perfil extends AppCompatActivity {
         setContentView(R.layout.activity_perfil);
 
         //RELLENAMOS LOS CAMPOS
-        miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
-        SQLiteDatabase bd = GestorBD.getWritableDatabase();
-        String[] campos = new String[] {"nombre", "apellidos", "usuario", "email", "img"};
-        String[] argumentos = new String[]{Menu.nombreUsuario};
-        Cursor c = bd.query("Usuarios",campos,"usuario=?",argumentos, null,null,null);
-        c.moveToFirst();
+        Data datos0 = new Data.Builder()
+                .putInt("funcion",2)
+                .putString("usuario", Menu.nombreUsuario).build();
+        OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
+        WorkManager.getInstance(Perfil.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Perfil.this, new Observer<WorkInfo>() {
+            @Override
+            public void onChanged(WorkInfo workInfo) {
+                if(workInfo!=null && workInfo.getState().isFinished()){
+                    Data outputData = workInfo.getOutputData();
+                    if(outputData!=null){
+                        String nombre = outputData.getString("nombre");
+                        EditText nombreE = (EditText) findViewById(R.id.nombreEEdit);
+                        nombreE.setText(nombre);
+                        nombreE.setEnabled(false);
 
-        String nombre = c.getString(0);
-        EditText nombreE = (EditText) findViewById(R.id.nombreEEdit);
-        nombreE.setText(nombre);
-        nombreE.setEnabled(false);
+                        String apellidos = outputData.getString("apellidos");
+                        EditText apellidosE = (EditText) findViewById(R.id.apellidoEEdit);
+                        apellidosE.setText(apellidos);
+                        apellidosE.setEnabled(false);
 
-        String apellidos = c.getString(1);
-        EditText apellidosE = (EditText) findViewById(R.id.apellidoEEdit);
-        apellidosE.setText(apellidos);
-        apellidosE.setEnabled(false);
+                        String usuario = outputData.getString("usuario");
+                        EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
+                        usuarioE.setText(usuario);
+                        usuarioE.setEnabled(false);
 
-        String usuario = c.getString(2);
-        EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
-        usuarioE.setText(usuario);
-        usuarioE.setEnabled(false);
+                        String password = outputData.getString("password");
+                        EditText passwordE = (EditText)  findViewById(R.id.contraEEdit);
+                        passwordE.setText(password);
 
-        String email = c.getString(3);
-        EditText emailE = (EditText)  findViewById(R.id.emailEEdit);
-        emailE.setText(email);
-        emailE.setEnabled(false);
+                        String email = outputData.getString("email");
+                        EditText emailE = (EditText)  findViewById(R.id.emailEEdit);
+                        emailE.setText(email);
+                        emailE.setEnabled(false);
 
-        /**
-         * Basado en el código extraído de Stack Overflow
-         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
-         * Autor: https://stackoverflow.com/users/1191766/sachin10
-         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
-         */
-        String img = c.getString(4);
-        byte [] encodeByte = Base64.getDecoder().decode(img);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-        ImageView imgView=(ImageView) findViewById(R.id.fotoDePerfilE);
-        imgView.setImageBitmap(bitmap);
+                        /**
+                         * Basado en el código extraído de Stack Overflow
+                         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+                         * Autor: https://stackoverflow.com/users/1191766/sachin10
+                         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+                         */
+                        //String img = outputData.getString("img");
+                        //byte [] encodeByte = Base64.getDecoder().decode(img);
+                        //Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                        //ImageView imgView=(ImageView) findViewById(R.id.fotoDePerfilE);
+                        //imgView.setImageBitmap(bitmap);
+                    }
+                }
+            }
+        });
+        WorkManager.getInstance(Perfil.this).enqueue(otwr0);
 
         //QUITAMOS LA ACTION BAR
         getSupportActionBar().hide();
@@ -124,10 +141,6 @@ public class Perfil extends AppCompatActivity {
                 if (password.equals("")) {
                     Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
                 } else {
-                    //LLAMAMOS A LA BD
-                    miBD GestorBD = new miBD(Perfil.this, "BrainMaster", null, 1);
-                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
-
                     //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
                     /**
                      * Basado en el código extraído de Stack Overflow
@@ -145,15 +158,29 @@ public class Perfil extends AppCompatActivity {
                     String temp = Base64.getEncoder().encodeToString(b);
                     fotoPerfil.setContentDescription(temp);
 
-                    //INTRODUCIMOS EL USUARIO A LA BD
-                    bd.execSQL("UPDATE Usuarios SET 'img' = '" + temp + "', 'password' = '"+password+"' WHERE usuario='"+usuario+"'");
-                    Log.d("DAS", Integer.toString(c.getCount()));
-                    bd.close();
+                    //ACTUALIZAMOS EL USUARIO EN LA BD
+                    Data datos0 = new Data.Builder()
+                            .putInt("funcion",4)
+                            .putString("usuario", usuario)
+                            .putString("password", password)
+                            .putString("img", temp).build();
+                    OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
+                    WorkManager.getInstance(Perfil.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Perfil.this, new Observer<WorkInfo>() {
+                        @Override
+                        public void onChanged(WorkInfo workInfo) {
+                            if(workInfo!=null && workInfo.getState().isFinished()){
+                                Data outputData = workInfo.getOutputData();
+                                if(outputData!=null){
+                                    //ABRIMOS EL MENU
+                                    Intent i = new Intent(Perfil.this, Menu.class);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            }
+                        }
+                    });
+                    WorkManager.getInstance(Perfil.this).enqueue(otwr0);
 
-                    //ABRIMOS EL MENU
-                    Intent i = new Intent(Perfil.this, Menu.class);
-                    startActivity(i);
-                    finish();
                 }
             }
         });
@@ -223,7 +250,7 @@ public class Perfil extends AppCompatActivity {
          * Autor: https://stackoverflow.com/users/3694451/leo-vitor
          * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
          */
-        while(img.length > 500000){
+        while(img.length > 5000){
             Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
             Bitmap compacto = Bitmap.createScaledBitmap(bitmap, (int)(bitmap.getWidth()*0.8), (int)(bitmap.getHeight()*0.8), true);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();

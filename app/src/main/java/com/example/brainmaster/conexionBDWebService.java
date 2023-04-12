@@ -56,6 +56,9 @@ public class conexionBDWebService extends Worker {
                 Log.d("DAS", String.valueOf(resultado));
                 outputData = new Data.Builder().putBoolean("correcto",resultado).build();
                 return Result.success(outputData);
+            case 4:
+                actualizarUsuario();
+                return Result.success();
             default:
                 break;
         }
