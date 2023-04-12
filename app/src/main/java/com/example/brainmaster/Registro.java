@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -144,55 +145,63 @@ public class Registro extends AppCompatActivity {
                             if(workInfo!=null && workInfo.getState().isFinished()){
                                 Data outputData = workInfo.getOutputData();
                                 existe[0] = outputData.getBoolean("existe", false);
+                                Log.d("DAS", String.valueOf(existe[0]));
                             }
                         }
                     });
+                    WorkManager.getInstance(Registro.this).enqueue(otwr0);
 
-                    if (existe[0]) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
-                    } else {
-                        //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
-                        /**
-                         * Basado en el código extraído de Stack Overflow
-                         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
-                         * Autor: https://stackoverflow.com/users/1191766/sachin10
-                         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
-                         */
-                        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
-                        Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        img.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                        byte[] b = baos.toByteArray();
-                        //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
-                        b = tratarImagen(b);
-                        String temp = Base64.getEncoder().encodeToString(b);
-                        fotoPerfil.setContentDescription(temp);
+                    //ESPERAMOS UNOS SEGUNDOS ANTES DE COMPROBAR
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            if (existe[0]) {
+                                Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
+                            } else {
+                                //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
+                                /**
+                                 * Basado en el código extraído de Stack Overflow
+                                 * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+                                 * Autor: https://stackoverflow.com/users/1191766/sachin10
+                                 * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+                                 */
+                                ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
+                                Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                img.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                byte[] b = baos.toByteArray();
+                                //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
+                                b = tratarImagen(b);
+                                String temp = Base64.getEncoder().encodeToString(b);
+                                fotoPerfil.setContentDescription(temp);
 
-                        //INSERT EN BD REMOTA
-                        Data datos = new Data.Builder()
-                                .putInt("funcion",1)
-                                .putString("nombre", nombre)
-                                .putString("apellidos", apellidos)
-                                .putString("usuario", usuario)
-                                .putString("password", password)
-                                .putString("email", email)
-                                .putString("fechaNac", fechaNac)
-                                .putString("img", temp)
-                                .build();
-                        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
-                        WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Registro.this, new Observer<WorkInfo>() {
+                                //INSERT EN BD REMOTA
+                                Data datos = new Data.Builder()
+                                        .putInt("funcion", 1)
+                                        .putString("nombre", nombre)
+                                        .putString("apellidos", apellidos)
+                                        .putString("usuario", usuario)
+                                        .putString("password", password)
+                                        .putString("email", email)
+                                        .putString("fechaNac", fechaNac)
+                                        .putString("img", temp)
+                                        .build();
+                                OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                                WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Registro.this, new Observer<WorkInfo>() {
                                     @Override
                                     public void onChanged(WorkInfo workInfo) {
-                                        if(workInfo!=null && workInfo.getState().isFinished()){
+                                        if (workInfo != null && workInfo.getState().isFinished()) {
                                             Intent i = new Intent(Registro.this, Menu.class);
-                                            i.putExtra("usuario",usuario);
+                                            i.putExtra("usuario", usuario);
                                             startActivity(i);
                                             finish();
                                         }
                                     }
                                 });
-                        WorkManager.getInstance(Registro.this).enqueue(otwr);
-                    }
+                                WorkManager.getInstance(Registro.this).enqueue(otwr);
+                            }
+                        }
+                    },1000);
                 }
             }
         });

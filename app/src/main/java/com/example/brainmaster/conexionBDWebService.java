@@ -10,7 +10,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -45,6 +45,7 @@ public class conexionBDWebService extends Worker {
                 resultado = insertarUsuarios();
             case 2:
                 resultado = selectNombreUsuario();
+                Log.d("DAS", "RESULTADO: "+String.valueOf(resultado));
                 outputData = new Data.Builder().putBoolean("existe", resultado).build();
         }
         if(resultado){
@@ -58,6 +59,7 @@ public class conexionBDWebService extends Worker {
 
     public boolean insertarUsuarios(){
         //INTRODUCIMOS EL USUARIO A LA BD REMOTA
+        Log.d("DAS", "INSERTANDO USUARIO");
         String direccion2 = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/insertarUsuarios.php";
         HttpURLConnection urlConnection2 = null;
         Data datos = this.getInputData();
@@ -86,9 +88,11 @@ public class conexionBDWebService extends Worker {
     }
 
     public boolean selectNombreUsuario(){
+        Log.d("DAS", "ENTRA EN SELECT");
         String direccion = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/selectNombreUsuario.php";
         HttpURLConnection urlConnection = null;
         Data datos = this.getInputData();
+        Log.d("DAS", String.valueOf(datos));
         String usuario = datos.getString("usuario");
         try {
             String parametros = "?usuario="+usuario;
@@ -108,16 +112,16 @@ public class conexionBDWebService extends Worker {
                 JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject) parser.parse(result);
                 String nom = (String) json.get("nombre");
-                Log.d("DAS",nom);
                 if (nom!=null){
-                    Log.d("DAS", nom);
+                    return true;
                 }
-                return true;
+                return false;
             }else{
                 return false;
             }
 
-        } catch (ParseException | JSONException | IOException e) {
+        } catch (ParseException | IOException e) {
+            Log.d("DAS","ERROR");
             throw new RuntimeException(e);
         }
     }
