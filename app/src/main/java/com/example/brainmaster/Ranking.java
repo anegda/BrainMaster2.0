@@ -1,7 +1,12 @@
 package com.example.brainmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,11 +14,21 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Locale;
 
 
@@ -52,66 +67,99 @@ public class Ranking extends AppCompatActivity {
         getSupportActionBar().hide();
 
         //OBTENEMOS LAS 5 MEJORES PARTIDAS DE CADA TIPO DE JUEGO Y CREAMOS LOS LISTVIEWS PERSONALIZADOS
-        //SELECT PARTIDAS PALABRAS
-        miBD GestorBD = new miBD(this, "BrainMaster", null, 1);
-        SQLiteDatabase bd = GestorBD.getWritableDatabase();
-        String[] campos = new String[] {"usuario","puntos"};
-        String [] argumentos = new String[] {"palabras"};
-        Cursor c = bd.query("Partidas",campos,"tipo=?",argumentos, null,null,"puntos DESC");
+        //SELECT PARTIDAS PALABRAS EN BD REMOTA
+        Data datos0 = new Data.Builder()
+                .putInt("funcion",6)
+                .putString("tipo", "palabras").build();
+        OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
+        WorkManager.getInstance(Ranking.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Ranking.this, new Observer<WorkInfo>() {
+            @Override
+            public void onChanged(WorkInfo workInfo) {
+                if(workInfo!=null && workInfo.getState().isFinished()){
+                    Data outputData = workInfo.getOutputData();
+                    if(outputData!=null){
+                        String result = outputData.getString("result");
+                        JSONParser parser = new JSONParser();
+                        try {
+                            JSONArray jsonArray = (JSONArray) parser.parse(result);
+                            ArrayList<String> usuarios_puntos = new ArrayList<String>();
+                            ArrayList<String> perfil = new ArrayList<String>();
 
-        ArrayList<String> usuarios_puntos = new ArrayList<String>();
-        ArrayList<String> perfil = new ArrayList<String>();
-        int i = 0;
-        while (c.moveToNext() && i<5){
-            i++;
-            String usuario = c.getString(0);
-            int puntos = c.getInt(1);
-            String info = usuario + ": " + Integer.toString(puntos);
-            usuarios_puntos.add(info);
+                            for(int i=0; i < jsonArray.size() && i < 5; i++){
+                                JSONObject obj = (JSONObject) jsonArray.get(i);
+                                String usuario = (String) obj.get("usuario");
+                                String puntos = (String) obj.get("puntos");
+                                usuarios_puntos.add(usuario+": "+puntos);
 
-            //LLAMAMOS A LA BASE DE DATOS Y OBTENEMOS LAS FOTOS DE PERFIL DE LOS USUARIOS CON LAS 10 MEJORES PARTIDAS
-            String[] campos2 = new String[] {"img"};
-            String [] argumentos2 = new String[] {usuario};
-            Cursor c2 = bd.query("Usuarios",campos2,"usuario=?",argumentos2, null,null,null);
-            c2.moveToFirst();
-            perfil.add(c2.getString(0));
-            c2.close();
-        }
-        c.close();
+                                Bitmap img =  BitmapFactory.decodeResource(getResources(), R.drawable.ranking);
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                img.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                byte[] b = baos.toByteArray();
+                                //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
+                                b = tratarImagen(b);
+                                String temp = Base64.getEncoder().encodeToString(b);
 
-        ListView ranking = (ListView) findViewById(R.id.listaRankingPalabras);
-        AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new String[0]));
-        ranking.setAdapter(eladap);
+                                perfil.add(temp);
+                            }
+
+                            ListView ranking = (ListView) findViewById(R.id.listaRankingPalabras);
+                            AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new String[0]));
+                            ranking.setAdapter(eladap);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+        });
+        WorkManager.getInstance(Ranking.this).enqueue(otwr0);
 
         //SELECT PARTIDAS BOTONES
-        String[] campos3 = new String[] {"usuario","puntos"};
-        String [] argumentos3 = new String[] {"botones"};
-        Cursor c3 = bd.query("Partidas",campos3,"tipo=?",argumentos3, null,null,"puntos DESC");
+        Data datos = new Data.Builder()
+                .putInt("funcion",6)
+                .putString("tipo", "botones").build();
+        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+        WorkManager.getInstance(Ranking.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Ranking.this, new Observer<WorkInfo>() {
+            @Override
+            public void onChanged(WorkInfo workInfo) {
+                if(workInfo!=null && workInfo.getState().isFinished()){
+                    Data outputData = workInfo.getOutputData();
+                    if(outputData!=null){
+                        String result = outputData.getString("result");
+                        JSONParser parser = new JSONParser();
+                        try {
+                            JSONArray jsonArray = (JSONArray) parser.parse(result);
+                            ArrayList<String> usuarios_puntos = new ArrayList<String>();
+                            ArrayList<String> perfil = new ArrayList<String>();
 
-        ArrayList<String> usuarios_puntos2 = new ArrayList<String>();
-        ArrayList<String> perfil2 = new ArrayList<String>();
-        int i2 = 0;
-        while (c3.moveToNext() && i2<5){
-            i2++;
-            String usuario2 = c3.getString(0);
-            int puntos2 = c3.getInt(1);
-            String info = usuario2 + ": " + Integer.toString(puntos2);
-            usuarios_puntos2.add(info);
+                            for(int i=0; i < jsonArray.size() && i < 5; i++){
+                                JSONObject obj = (JSONObject) jsonArray.get(i);
+                                String usuario = (String) obj.get("usuario");
+                                String puntos = (String) obj.get("puntos");
+                                usuarios_puntos.add(usuario+": "+puntos);
 
-            //LLAMAMOS A LA BASE DE DATOS Y OBTENEMOS LAS FOTOS DE PERFIL DE LOS USUARIOS CON LAS 10 MEJORES PARTIDAS
-            String[] campos4 = new String[] {"img"};
-            String [] argumentos4 = new String[] {usuario2};
-            Cursor c4 = bd.query("Usuarios",campos4,"usuario=?",argumentos4, null,null,null);
-            c4.moveToFirst();
-            perfil2.add(c4.getString(0));
-            c4.close();
-        }
-        c3.close();
-        bd.close();
+                                Bitmap img =  BitmapFactory.decodeResource(getResources(), R.drawable.ranking);
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                img.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                byte[] b = baos.toByteArray();
+                                //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
+                                b = tratarImagen(b);
+                                String temp = Base64.getEncoder().encodeToString(b);
 
-        ListView ranking2 = (ListView) findViewById(R.id.listaRankingBotones);
-        AdaptadorListViewRanking eladap2 = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos2.toArray(new String[0]), perfil2.toArray(new String[0]));
-        ranking2.setAdapter(eladap2);
+                                perfil.add(temp);
+                            }
+
+                            ListView ranking = (ListView) findViewById(R.id.listaRankingBotones);
+                            AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuarios_puntos.toArray(new String[0]), perfil.toArray(new String[0]));
+                            ranking.setAdapter(eladap);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+        });
+        WorkManager.getInstance(Ranking.this).enqueue(otwr);
     }
 
     //PARA QUE NO HAYA PROBLEMAS AL ACTUALIZAR EL RANKING
@@ -132,5 +180,23 @@ public class Ranking extends AppCompatActivity {
 
         Context context = getBaseContext().createConfigurationContext(configuration);
         getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+    }
+
+    //HASTA SOLUCIONAR LO DE LAS FOTOS
+    protected byte[] tratarImagen(byte[] img){
+        /**
+         * Basado en el código extraído de Stack Overflow
+         * Pregunta: https://stackoverflow.com/questions/57107489/sqliteblobtoobigexception-row-too-big-to-fit-into-cursorwindow-while-writing-to
+         * Autor: https://stackoverflow.com/users/3694451/leo-vitor
+         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+         */
+        while(img.length > 50000){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
+            Bitmap compacto = Bitmap.createScaledBitmap(bitmap, (int)(bitmap.getWidth()*0.8), (int)(bitmap.getHeight()*0.8), true);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            compacto.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            img = stream.toByteArray();
+        }
+        return img;
     }
 }

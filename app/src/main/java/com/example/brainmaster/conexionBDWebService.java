@@ -8,6 +8,7 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -41,12 +42,10 @@ public class conexionBDWebService extends Worker {
                 outputData = selectNombreUsuario();
                 if(outputData==null) {
                     outputData = new Data.Builder().putBoolean("existe", false).build();
-                    Log.d("DAS", String.valueOf(outputData));
                 }
                 return Result.success(outputData);
             case 3:
                 resultado = selectNombreUsuarioContraseña();
-                Log.d("DAS", String.valueOf(resultado));
                 outputData = new Data.Builder().putBoolean("correcto",resultado).build();
                 return Result.success(outputData);
             case 4:
@@ -55,6 +54,12 @@ public class conexionBDWebService extends Worker {
             case 5:
                 insertarPartida();
                 return Result.success();
+            case 6:
+                outputData = selectPartidaTipo();
+                if(outputData==null){
+                    outputData = new Data.Builder().build();
+                }
+                return Result.success(outputData);
             default:
                 break;
         }
@@ -234,6 +239,38 @@ public class conexionBDWebService extends Worker {
             }
         } catch (IOException e) {
             Log.d("DAS","ERROR INSERT PARTIDAS");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Data selectPartidaTipo(){
+        String direccion = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/selectPartidasTipo.php";
+        HttpURLConnection urlConnection = null;
+        Data datos = this.getInputData();
+        String tipo = datos.getString("tipo");
+        try {
+            Data outputData = null;
+
+            String parametros = "?tipo="+tipo;
+            URL destino = new URL(direccion+parametros);
+            urlConnection = (HttpURLConnection) destino.openConnection();
+
+            int statusCode = urlConnection.getResponseCode();
+            if(statusCode==200){
+                BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader bufferedReader = new BufferedReader (new InputStreamReader(inputStream, "UTF-8"));
+                String line, result="";
+                while ((line = bufferedReader.readLine()) != null){
+                    result += line;
+                }
+                inputStream.close();
+                if(!result.equals("No records matching your query were found.")) {
+                    outputData = new Data.Builder().putString("result", result).build();
+                }
+            }
+            return outputData;
+        } catch (IOException e) {
+            Log.d("DAS","ERROR SELECT PARTIDAS TIPO");
             throw new RuntimeException(e);
         }
     }
