@@ -2,7 +2,12 @@ package com.example.brainmaster;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -110,17 +115,45 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                         latitud = String.valueOf(location.getLatitude());
                                         longitud = String.valueOf(location.getLongitude());
 
-                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
-                                        miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
-                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
-                                        bd.close();
+                                        //INSERT EN BD REMOTA
+                                        Data datos = new Data.Builder()
+                                                .putInt("funcion", 5)
+                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putInt("puntos", puntos)
+                                                .putString("tipo", "palabras")
+                                                .putString("latitud", latitud)
+                                                .putString("longitud", longitud)
+                                                .build();
+                                        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                                        WorkManager.getInstance(JuegoPalabrasTablero.this).getWorkInfoByIdLiveData(otwr.getId()).observe(JuegoPalabrasTablero.this, new Observer<WorkInfo>() {
+                                            @Override
+                                            public void onChanged(WorkInfo workInfo) {
+                                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                                    Log.d("DAS", "INTRODUCIDO");
+                                                }
+                                            }
+                                        });
+                                        WorkManager.getInstance(JuegoPalabrasTablero.this).enqueue(otwr);
                                     }else{
-                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
-                                        miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
-                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','','')");
-                                        bd.close();
+                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
+                                        Data datos = new Data.Builder()
+                                                .putInt("funcion", 5)
+                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putInt("puntos", puntos)
+                                                .putString("tipo", "palabras")
+                                                .putString("latitud", "")
+                                                .putString("longitud", "")
+                                                .build();
+                                        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                                        WorkManager.getInstance(JuegoPalabrasTablero.this).getWorkInfoByIdLiveData(otwr.getId()).observe(JuegoPalabrasTablero.this, new Observer<WorkInfo>() {
+                                            @Override
+                                            public void onChanged(WorkInfo workInfo) {
+                                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                                    Log.d("DAS", "INTRODUCIDO");
+                                                }
+                                            }
+                                        });
+                                        WorkManager.getInstance(JuegoPalabrasTablero.this).enqueue(otwr);
                                     }
                                 }
                             })
@@ -128,11 +161,25 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.d("DAS", "No se puede acceder a la ubicación");
-                                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
-                                    miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
-                                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','','')");
-                                    bd.close();
+                                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
+                                    Data datos = new Data.Builder()
+                                            .putInt("funcion", 5)
+                                            .putString("usuario", Menu.nombreUsuario)
+                                            .putInt("puntos", puntos)
+                                            .putString("tipo", "palabras")
+                                            .putString("latitud", "")
+                                            .putString("longitud", "")
+                                            .build();
+                                    OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                                    WorkManager.getInstance(JuegoPalabrasTablero.this).getWorkInfoByIdLiveData(otwr.getId()).observe(JuegoPalabrasTablero.this, new Observer<WorkInfo>() {
+                                        @Override
+                                        public void onChanged(WorkInfo workInfo) {
+                                            if (workInfo != null && workInfo.getState().isFinished()) {
+                                                Log.d("DAS", "INTRODUCIDO");
+                                            }
+                                        }
+                                    });
+                                    WorkManager.getInstance(JuegoPalabrasTablero.this).enqueue(otwr);
                                 }
                             });
 
@@ -191,17 +238,45 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                         latitud = String.valueOf(location.getLatitude());
                                         longitud = String.valueOf(location.getLongitude());
 
-                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD
-                                        miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
-                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','"+latitud+"','"+longitud+"')");
-                                        bd.close();
+                                        //INSERT EN BD REMOTA
+                                        Data datos = new Data.Builder()
+                                                .putInt("funcion", 5)
+                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putInt("puntos", puntos)
+                                                .putString("tipo", "palabras")
+                                                .putString("latitud", latitud)
+                                                .putString("longitud", longitud)
+                                                .build();
+                                        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                                        WorkManager.getInstance(JuegoPalabrasTablero.this).getWorkInfoByIdLiveData(otwr.getId()).observe(JuegoPalabrasTablero.this, new Observer<WorkInfo>() {
+                                            @Override
+                                            public void onChanged(WorkInfo workInfo) {
+                                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                                    Log.d("DAS", "INTRODUCIDO");
+                                                }
+                                            }
+                                        });
+                                        WorkManager.getInstance(JuegoPalabrasTablero.this).enqueue(otwr);
                                     }else{
-                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
-                                        miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
-                                        SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                                        bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','','')");
-                                        bd.close();
+                                        //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
+                                        Data datos = new Data.Builder()
+                                                .putInt("funcion", 5)
+                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putInt("puntos", puntos)
+                                                .putString("tipo", "palabras")
+                                                .putString("latitud", "")
+                                                .putString("longitud", "")
+                                                .build();
+                                        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                                        WorkManager.getInstance(JuegoPalabrasTablero.this).getWorkInfoByIdLiveData(otwr.getId()).observe(JuegoPalabrasTablero.this, new Observer<WorkInfo>() {
+                                            @Override
+                                            public void onChanged(WorkInfo workInfo) {
+                                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                                    Log.d("DAS", "INTRODUCIDO");
+                                                }
+                                            }
+                                        });
+                                        WorkManager.getInstance(JuegoPalabrasTablero.this).enqueue(otwr);
                                     }
                                 }
                             })
@@ -209,11 +284,25 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.d("DAS", "No se puede acceder a la ubicación");
-                                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD (SIN UBICACIÓN)
-                                    miBD GestorBD = new miBD(JuegoPalabrasTablero.this, "BrainMaster", null, 1);
-                                    SQLiteDatabase bd = GestorBD.getWritableDatabase();
-                                    bd.execSQL("INSERT INTO Partidas ('usuario', 'puntos','tipo','latitud','longitud') VALUES ('" + nombreU + "'," + puntos + ",'palabras','','')");
-                                    bd.close();
+                                    //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
+                                    Data datos = new Data.Builder()
+                                            .putInt("funcion", 5)
+                                            .putString("usuario", Menu.nombreUsuario)
+                                            .putInt("puntos", puntos)
+                                            .putString("tipo", "palabras")
+                                            .putString("latitud", "")
+                                            .putString("longitud", "")
+                                            .build();
+                                    OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                                    WorkManager.getInstance(JuegoPalabrasTablero.this).getWorkInfoByIdLiveData(otwr.getId()).observe(JuegoPalabrasTablero.this, new Observer<WorkInfo>() {
+                                        @Override
+                                        public void onChanged(WorkInfo workInfo) {
+                                            if (workInfo != null && workInfo.getState().isFinished()) {
+                                                Log.d("DAS", "INTRODUCIDO");
+                                            }
+                                        }
+                                    });
+                                    WorkManager.getInstance(JuegoPalabrasTablero.this).enqueue(otwr);
                                 }
                             });
 

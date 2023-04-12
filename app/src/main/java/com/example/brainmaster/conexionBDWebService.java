@@ -1,7 +1,6 @@
 package com.example.brainmaster;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,7 +8,6 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -18,13 +16,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class conexionBDWebService extends Worker {
     public conexionBDWebService(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -58,6 +51,9 @@ public class conexionBDWebService extends Worker {
                 return Result.success(outputData);
             case 4:
                 actualizarUsuario();
+                return Result.success();
+            case 5:
+                insertarPartida();
                 return Result.success();
             default:
                 break;
@@ -189,7 +185,7 @@ public class conexionBDWebService extends Worker {
     }
 
     public boolean actualizarUsuario(){
-        //INTRODUCIMOS EL USUARIO A LA BD REMOTA
+        //ACTUALIZAMOS EL USUARIO EN LA BD REMOTA
         String direccion2 = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/actualizarUsuario.php";
         HttpURLConnection urlConnection2 = null;
         Data datos = this.getInputData();
@@ -210,6 +206,34 @@ public class conexionBDWebService extends Worker {
             }
         } catch (IOException e) {
             Log.d("DAS","ERROR UPDATE");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean insertarPartida(){
+        //INTRODUCIMOS LA PARTIDA EN LA BD REMOTA
+        String direccion2 = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/insertarPartidas.php";
+        HttpURLConnection urlConnection2 = null;
+        Data datos = this.getInputData();
+        String usuario = datos.getString("usuario");
+        int puntos = datos.getInt("puntos",0);
+        String tipo = datos.getString("tipo");
+        String latitud = datos.getString("latitud");
+        String longitud = datos.getString("longitud");
+        try {
+            String parametros2 = "?usuario="+usuario+"&puntos="+puntos+"&tipo="+tipo+"&latitud="+latitud+"&longitud="+longitud;
+            URL destino2 = new URL(direccion2+parametros2);
+            urlConnection2 = (HttpURLConnection) destino2.openConnection();
+
+            int statusCode = urlConnection2.getResponseCode();
+            Log.d("DAS", String.valueOf(statusCode));
+            if(statusCode==200 || statusCode==500){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (IOException e) {
+            Log.d("DAS","ERROR INSERT PARTIDAS");
             throw new RuntimeException(e);
         }
     }
