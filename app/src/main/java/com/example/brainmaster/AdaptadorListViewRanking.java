@@ -19,12 +19,14 @@ public class AdaptadorListViewRanking extends BaseAdapter {
     private Context contexto;
     private LayoutInflater inflater;
     private String[] datos;
+    private String[] puntos;
     private String[] imagenes;
 
     //CREAMOS LA CONSTRUCTURA CON TODA LA INFORMACIÓN NECESARIA
-    public AdaptadorListViewRanking(Context pcontext, String[] pdatos, String[] pimagenes){
+    public AdaptadorListViewRanking(Context pcontext, String[] pdatos, String[] ppuntos,String[] pimagenes){
         contexto = pcontext;
         datos = pdatos;
+        puntos = ppuntos;
         imagenes = pimagenes;
         inflater = (LayoutInflater) contexto.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -51,7 +53,7 @@ public class AdaptadorListViewRanking extends BaseAdapter {
         view = inflater.inflate(R.layout.fila_ranking, null);
         //ESTABLECEMOS EL NOMBRE Y LA IMAGEN
         TextView nombre= (TextView) view.findViewById(R.id.etiquetaRanking);
-        nombre.setText(datos[i]);
+        nombre.setText(datos[i]+": "+puntos[i]);
 
         /**
          * Basado en el código extraído de Stack Overflow

@@ -160,6 +160,7 @@ public class conexionBDWebService extends Worker {
                                 .putString("fechaNac",fN)
                                 .build();
                         Perfil.fotoDePerfil = i;
+                        Ranking.diccUsuarioPerfil.put(u, i);
                     }
                     return outputData;
                 }
