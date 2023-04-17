@@ -102,8 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         JSONParser parser = new JSONParser();
                         try {
                             JSONArray jsonArray = (JSONArray) parser.parse(result);
-
-                            for(int i=0; i < jsonArray.size() && i < 5; i++){
+                            for(int i=0; i < jsonArray.size(); i++){
                                 JSONObject obj = (JSONObject) jsonArray.get(i);
                                 String usuario = (String) obj.get("usuario");
                                 String puntos = (String) obj.get("puntos");
