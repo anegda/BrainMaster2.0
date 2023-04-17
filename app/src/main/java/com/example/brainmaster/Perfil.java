@@ -96,10 +96,6 @@ public class Perfil extends AppCompatActivity {
                         usuarioE.setText(usuario);
                         usuarioE.setEnabled(false);
 
-                        String password = outputData.getString("password");
-                        EditText passwordE = (EditText)  findViewById(R.id.contraEEdit);
-                        passwordE.setText(password);
-
                         String email = outputData.getString("email");
                         EditText emailE = (EditText)  findViewById(R.id.emailEEdit);
                         emailE.setText(email);
