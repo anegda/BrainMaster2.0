@@ -42,6 +42,7 @@ import java.util.Locale;
 public class Perfil extends AppCompatActivity {
     Calendar calendario = Calendar.getInstance();
 
+    static String fotoDePerfil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
@@ -110,11 +111,10 @@ public class Perfil extends AppCompatActivity {
                          * Autor: https://stackoverflow.com/users/1191766/sachin10
                          * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
                          */
-                        //String img = outputData.getString("img");
-                        //byte [] encodeByte = Base64.getDecoder().decode(img);
-                        //Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-                        //ImageView imgView=(ImageView) findViewById(R.id.fotoDePerfilE);
-                        //imgView.setImageBitmap(bitmap);
+                        byte [] encodeByte = Base64.getDecoder().decode(fotoDePerfil);
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                        ImageView imgView=(ImageView) findViewById(R.id.fotoDePerfilE);
+                        imgView.setImageBitmap(bitmap);
                     }
                 }
             }
@@ -155,15 +155,13 @@ public class Perfil extends AppCompatActivity {
                     byte[] b = baos.toByteArray();
                     //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
                     b = tratarImagen(b);
-                    String temp = Base64.getEncoder().encodeToString(b);
-                    fotoPerfil.setContentDescription(temp);
+                    fotoDePerfil = Base64.getEncoder().encodeToString(b);
 
                     //ACTUALIZAMOS EL USUARIO EN LA BD
                     Data datos0 = new Data.Builder()
                             .putInt("funcion",4)
                             .putString("usuario", usuario)
-                            .putString("password", password)
-                            .putString("img", temp).build();
+                            .putString("password", password).build();
                     OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
                     WorkManager.getInstance(Perfil.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Perfil.this, new Observer<WorkInfo>() {
                         @Override
@@ -250,7 +248,7 @@ public class Perfil extends AppCompatActivity {
          * Autor: https://stackoverflow.com/users/3694451/leo-vitor
          * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
          */
-        while(img.length > 5000){
+        while(img.length > 50000){
             Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
             Bitmap compacto = Bitmap.createScaledBitmap(bitmap, (int)(bitmap.getWidth()*0.8), (int)(bitmap.getHeight()*0.8), true);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();

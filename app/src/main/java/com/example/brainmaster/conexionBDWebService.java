@@ -17,6 +17,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -83,11 +84,25 @@ public class conexionBDWebService extends Worker {
         String password = datos.getString("password");
         String email = datos.getString("email");
         String fechaNac = datos.getString("fechaNac");
-        String temp = datos.getString("img");
+        String temp = Registro.fotoDePerfil;
         try {
-            String parametros2 = "?nombre="+nombre+"&apellidos="+apellidos+"&usuario="+usuario+"&password="+password+"&email="+email+"&fechaNac="+fechaNac+"&img="+temp;
-            URL destino2 = new URL(direccion2+parametros2);
+            //String parametros2 = "?nombre="+nombre+"&apellidos="+apellidos+"&usuario="+usuario+"&password="+password+"&email="+email+"&fechaNac="+fechaNac+"&img="+temp;
+            URL destino2 = new URL(direccion2);
             urlConnection2 = (HttpURLConnection) destino2.openConnection();
+            urlConnection2.setRequestMethod("POST");
+            urlConnection2.setDoOutput(true);
+            urlConnection2.setRequestProperty("Content-Type", "application/json");
+            JSONObject parametrosJSON = new JSONObject();
+            parametrosJSON.put("nombre", nombre);
+            parametrosJSON.put("apellidos", apellidos);
+            parametrosJSON.put("usuario", usuario);
+            parametrosJSON.put("password", password);
+            parametrosJSON.put("email", email);
+            parametrosJSON.put("fechaNac", fechaNac);
+            parametrosJSON.put("img", temp);
+            PrintWriter out = new PrintWriter(urlConnection2.getOutputStream());
+            out.print(parametrosJSON.toString());
+            out.close();
 
             int statusCode = urlConnection2.getResponseCode();
             if(statusCode==200 || statusCode==500){
@@ -143,8 +158,8 @@ public class conexionBDWebService extends Worker {
                                 .putString("password",p)
                                 .putString("email",em)
                                 .putString("fechaNac",fN)
-                                .putString("img",i)
                                 .build();
+                        Perfil.fotoDePerfil = i;
                     }
                     return outputData;
                 }
@@ -202,11 +217,21 @@ public class conexionBDWebService extends Worker {
         Data datos = this.getInputData();
         String usuario = datos.getString("usuario");
         String password = datos.getString("password");
-        String temp = datos.getString("img");
+        String temp = Perfil.fotoDePerfil;
         try {
-            String parametros2 = "?usuario="+usuario+"&password="+password+"&img="+temp;
-            URL destino2 = new URL(direccion2+parametros2);
+            //String parametros2 = "?usuario="+usuario+"&password="+password+"&img="+temp;
+            URL destino2 = new URL(direccion2);
             urlConnection2 = (HttpURLConnection) destino2.openConnection();
+            urlConnection2.setRequestMethod("POST");
+            urlConnection2.setDoOutput(true);
+            urlConnection2.setRequestProperty("Content-Type", "application/json");
+            JSONObject parametrosJSON = new JSONObject();
+            parametrosJSON.put("usuario", usuario);
+            parametrosJSON.put("password", password);
+            parametrosJSON.put("img", temp);
+            PrintWriter out = new PrintWriter(urlConnection2.getOutputStream());
+            out.print(parametrosJSON.toString());
+            out.close();
 
             int statusCode = urlConnection2.getResponseCode();
             if(statusCode==200 || statusCode==500){

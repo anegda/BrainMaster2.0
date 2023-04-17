@@ -53,6 +53,8 @@ import java.util.Locale;
 public class Registro extends AppCompatActivity {
     Calendar calendario = Calendar.getInstance();
 
+    //FOTO DE PERFIL
+    static String fotoDePerfil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
@@ -173,8 +175,7 @@ public class Registro extends AppCompatActivity {
                                 byte[] b = baos.toByteArray();
                                 //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
                                 b = tratarImagen(b);
-                                String temp = Base64.getEncoder().encodeToString(b);
-                                fotoPerfil.setContentDescription(temp);
+                                fotoDePerfil = Base64.getEncoder().encodeToString(b);
 
                                 //INSERT EN BD REMOTA
                                 Data datos = new Data.Builder()
@@ -185,7 +186,6 @@ public class Registro extends AppCompatActivity {
                                         .putString("password", password)
                                         .putString("email", email)
                                         .putString("fechaNac", fechaNac)
-                                        .putString("img", temp)
                                         .build();
                                 OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
                                 WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Registro.this, new Observer<WorkInfo>() {
@@ -272,7 +272,7 @@ public class Registro extends AppCompatActivity {
          * Autor: https://stackoverflow.com/users/3694451/leo-vitor
          * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
          */
-        while(img.length > 5000){
+        while(img.length > 50000){
             Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
             Bitmap compacto = Bitmap.createScaledBitmap(bitmap, (int)(bitmap.getWidth()*0.8), (int)(bitmap.getHeight()*0.8), true);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
