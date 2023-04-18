@@ -4,7 +4,22 @@ import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,14 +29,13 @@ import java.util.Calendar;
  */
 public class Widget extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        // Construct the RemoteViews object
-        @SuppressLint("RemoteViewLayout") RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
-
+    void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
         Calendar calendario = Calendar.getInstance();
         SimpleDateFormat formato = new SimpleDateFormat("HH:mm:ss");
         String horaconformato = formato.format(calendario.getTime());
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        Log.d("DAS", horaconformato);
+        views.setTextViewText(R.id.etiquetaWidget, horaconformato);
     }
 
     @Override
