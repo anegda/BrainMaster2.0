@@ -67,6 +67,9 @@ public class conexionBDWebService extends Worker {
                     outputData = new Data.Builder().build();
                 }
                 return Result.success(outputData);
+            case 8:
+                insertarToken();
+                return Result.success();
             default:
                 break;
         }
@@ -335,6 +338,30 @@ public class conexionBDWebService extends Worker {
             return outputData;
         } catch (IOException e) {
             Log.d("DAS","ERROR SELECT PARTIDAS USUARIO");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean insertarToken(){
+        //INTRODUCIMOS LA PARTIDA EN LA BD REMOTA
+        String direccion2 = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/agarcia794/WEB/insertarTokens.php";
+        HttpURLConnection urlConnection2 = null;
+        Data datos = this.getInputData();
+        String token = datos.getString("token");
+        try {
+            String parametros2 = "?token="+token;
+            URL destino2 = new URL(direccion2+parametros2);
+            urlConnection2 = (HttpURLConnection) destino2.openConnection();
+
+            int statusCode = urlConnection2.getResponseCode();
+            Log.d("DAS", String.valueOf(statusCode));
+            if(statusCode==200 || statusCode==500){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (IOException e) {
+            Log.d("DAS","ERROR INSERT TOKEN");
             throw new RuntimeException(e);
         }
     }

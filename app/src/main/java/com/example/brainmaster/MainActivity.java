@@ -8,7 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -79,6 +84,20 @@ public class MainActivity extends AppCompatActivity {
                         }
                         String token = task.getResult();
                         Log.d("DAS",token);
+                        Data datos = new Data.Builder()
+                                .putInt("funcion", 8)
+                                .putString("token", token)
+                                .build();
+                        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                        WorkManager.getInstance(MainActivity.this).getWorkInfoByIdLiveData(otwr.getId()).observe(MainActivity.this, new Observer<WorkInfo>() {
+                            @Override
+                            public void onChanged(WorkInfo workInfo) {
+                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                }
+                            }
+                        });
+                        WorkManager.getInstance(MainActivity.this).enqueue(otwr);
+
                     }
                 });
 
