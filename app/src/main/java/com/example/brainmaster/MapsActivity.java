@@ -113,11 +113,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 if(!latitud.equals("") && !longitud.equals("")){
                                     LatLng pos = new LatLng(Double.parseDouble(latitud),Double.parseDouble(longitud));
                                     if(tipo.equals("palabras")){
-                                        mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "(palabras): " + puntos).icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA)));
+                                        mMap.addMarker(new MarkerOptions().position(pos).title(usuario + ": " + puntos).icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA)));
                                         mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
                                     }
                                     else{
-                                        mMap.addMarker(new MarkerOptions().position(pos).title(usuario + "(botones): " + puntos).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                                        mMap.addMarker(new MarkerOptions().position(pos).title(usuario + ": " + puntos).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
                                         mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
                                     }
                                 }
