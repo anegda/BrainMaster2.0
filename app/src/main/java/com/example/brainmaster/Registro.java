@@ -136,7 +136,6 @@ public class Registro extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
                 } else {
                     //SELECT EN BASE DE DATOS REMOTA PARA COMPROBAR SI EL USUARIO ESTÁ DISPONIBLE
-                    final boolean[] existe = {false};
                     Data datos0 = new Data.Builder()
                             .putInt("funcion",2)
                             .putString("usuario", usuario).build();
@@ -147,62 +146,55 @@ public class Registro extends AppCompatActivity {
                             if(workInfo!=null && workInfo.getState().isFinished()){
                                 Data outputData = workInfo.getOutputData();
                                 if(outputData!=null){
-                                    existe[0] = outputData.getBoolean("existe", false);
+                                    boolean existe = outputData.getBoolean("existe", false);
+                                    if (existe) {
+                                        Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
+                                        /**
+                                         * Basado en el código extraído de Stack Overflow
+                                         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+                                         * Autor: https://stackoverflow.com/users/1191766/sachin10
+                                         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+                                         */
+                                        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
+                                        Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
+                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                        img.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                        byte[] b = baos.toByteArray();
+                                        //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
+                                        b = tratarImagen(b);
+                                        fotoDePerfil = Base64.getEncoder().encodeToString(b);
+
+                                        //INSERT EN BD REMOTA
+                                        Data datos = new Data.Builder()
+                                                .putInt("funcion", 1)
+                                                .putString("nombre", nombre)
+                                                .putString("apellidos", apellidos)
+                                                .putString("usuario", usuario)
+                                                .putString("password", password)
+                                                .putString("email", email)
+                                                .putString("fechaNac", fechaNac)
+                                                .build();
+                                        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                                        WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Registro.this, new Observer<WorkInfo>() {
+                                            @Override
+                                            public void onChanged(WorkInfo workInfo) {
+                                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                                    Intent i = new Intent(Registro.this, Menu.class);
+                                                    i.putExtra("usuario", usuario);
+                                                    startActivity(i);
+                                                    finish();
+                                                }
+                                            }
+                                        });
+                                        WorkManager.getInstance(Registro.this).enqueue(otwr);
+                                    }
                                 }
                             }
                         }
                     });
                     WorkManager.getInstance(Registro.this).enqueue(otwr0);
-
-                    //ESPERAMOS UNOS SEGUNDOS ANTES DE COMPROBAR
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            if (existe[0]) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
-                            } else {
-                                //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
-                                /**
-                                 * Basado en el código extraído de Stack Overflow
-                                 * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
-                                 * Autor: https://stackoverflow.com/users/1191766/sachin10
-                                 * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
-                                 */
-                                ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
-                                Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                img.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                                byte[] b = baos.toByteArray();
-                                //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
-                                b = tratarImagen(b);
-                                fotoDePerfil = Base64.getEncoder().encodeToString(b);
-
-                                //INSERT EN BD REMOTA
-                                Data datos = new Data.Builder()
-                                        .putInt("funcion", 1)
-                                        .putString("nombre", nombre)
-                                        .putString("apellidos", apellidos)
-                                        .putString("usuario", usuario)
-                                        .putString("password", password)
-                                        .putString("email", email)
-                                        .putString("fechaNac", fechaNac)
-                                        .build();
-                                OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
-                                WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Registro.this, new Observer<WorkInfo>() {
-                                    @Override
-                                    public void onChanged(WorkInfo workInfo) {
-                                        if (workInfo != null && workInfo.getState().isFinished()) {
-                                            Intent i = new Intent(Registro.this, Menu.class);
-                                            i.putExtra("usuario", usuario);
-                                            startActivity(i);
-                                            finish();
-                                        }
-                                    }
-                                });
-                                WorkManager.getInstance(Registro.this).enqueue(otwr);
-                            }
-                        }
-                    },1000);
                 }
             }
         });
