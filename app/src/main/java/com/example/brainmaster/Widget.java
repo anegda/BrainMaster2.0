@@ -1,9 +1,12 @@
 package com.example.brainmaster;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -29,13 +32,15 @@ import java.util.Calendar;
  */
 public class Widget extends AppWidgetProvider {
 
-    void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
         Calendar calendario = Calendar.getInstance();
         SimpleDateFormat formato = new SimpleDateFormat("HH:mm:ss");
         String horaconformato = formato.format(calendario.getTime());
         Log.d("DAS", horaconformato);
         views.setTextViewText(R.id.etiquetaWidget, horaconformato);
+
+        appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
@@ -48,11 +53,20 @@ public class Widget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 7475, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        Calendar calendar = Calendar.getInstance();
+        long triggerAtMillis = calendar.getTimeInMillis();
+        am.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, 60*1000, pi);
     }
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 7475, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        am.cancel(pi);
     }
+
 }
