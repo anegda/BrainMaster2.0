@@ -109,6 +109,12 @@ public class Ranking extends AppCompatActivity {
                                     @Override
                                     public void onChanged(WorkInfo workInfo) {
                                         if(workInfo!=null && workInfo.getState().isFinished()){
+                                            for (int i = 0; i < usuariosPalabras.size(); i++){
+                                                perfilPalabras.add(diccUsuarioPerfil.get(usuariosPalabras.get(i)));
+                                            }
+                                            ListView ranking = (ListView) findViewById(R.id.listaRankingPalabras);
+                                            AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuariosPalabras.toArray(new String[0]), puntosPalabras.toArray(new String[0]), perfilPalabras.toArray(new String[0]));
+                                            ranking.setAdapter(eladap);
                                         }
                                     }
                                 });
@@ -158,6 +164,12 @@ public class Ranking extends AppCompatActivity {
                                     @Override
                                     public void onChanged(WorkInfo workInfo) {
                                         if(workInfo!=null && workInfo.getState().isFinished()){
+                                            for (int i = 0; i < usuariosBotones.size(); i++){
+                                                perfilBotones.add(diccUsuarioPerfil.get(usuariosBotones.get(i)));
+                                            }
+                                            ListView ranking2 = (ListView) findViewById(R.id.listaRankingBotones);
+                                            AdaptadorListViewRanking eladap2 = new AdaptadorListViewRanking(getApplicationContext(), usuariosBotones.toArray(new String[0]), puntosBotones.toArray(new String[0]), perfilBotones.toArray(new String[0]));
+                                            ranking2.setAdapter(eladap2);
                                         }
                                     }
                                 });
@@ -171,27 +183,6 @@ public class Ranking extends AppCompatActivity {
             }
         });
         WorkManager.getInstance(Ranking.this).enqueue(otwr);
-
-        //ESPERAMOS UNOS SEGUNDOS ANTES DE CREAR LAS INTERFACES
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < usuariosPalabras.size(); i++){
-                    perfilPalabras.add(diccUsuarioPerfil.get(usuariosPalabras.get(i)));
-                }
-                ListView ranking = (ListView) findViewById(R.id.listaRankingPalabras);
-                AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuariosPalabras.toArray(new String[0]), puntosPalabras.toArray(new String[0]), perfilPalabras.toArray(new String[0]));
-                ranking.setAdapter(eladap);
-
-                for (int i = 0; i < usuariosBotones.size(); i++){
-                    perfilBotones.add(diccUsuarioPerfil.get(usuariosBotones.get(i)));
-                }
-                ListView ranking2 = (ListView) findViewById(R.id.listaRankingBotones);
-                AdaptadorListViewRanking eladap2 = new AdaptadorListViewRanking(getApplicationContext(), usuariosBotones.toArray(new String[0]), puntosBotones.toArray(new String[0]), perfilBotones.toArray(new String[0]));
-                ranking2.setAdapter(eladap2);
-            }
-        },5000);
     }
 
     //PARA QUE NO HAYA PROBLEMAS AL ACTUALIZAR EL RANKING
