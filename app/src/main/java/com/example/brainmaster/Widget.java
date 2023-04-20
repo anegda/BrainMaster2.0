@@ -8,6 +8,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+import androidx.preference.PreferenceManager;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
@@ -40,10 +42,20 @@ import java.util.Collections;
 public class Widget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        //ELEGIMOS LA FRASE
-        ArrayList<String> frases = new ArrayList<String>();
+        //ELEGIMOS LA FRASE SEGÚN EL IDIOMA (por defecto español)
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String idioma = prefs.getString("idiomapref","es");
         InputStream fich = context.getResources().openRawResource(R.raw.frases);
+
+        if(idioma.equals("es")){
+            fich = context.getResources().openRawResource(R.raw.frases);
+        }else if(idioma.equals("en")){
+            fich = context.getResources().openRawResource(R.raw.sentences);
+        }else if(idioma.equals("eu")){
+            fich = context.getResources().openRawResource(R.raw.esaldiak);
+        }
         BufferedReader buff = new BufferedReader(new InputStreamReader(fich));
+        ArrayList<String> frases = new ArrayList<String>();
         try {
             String linea = buff.readLine();
             while( linea != null) {

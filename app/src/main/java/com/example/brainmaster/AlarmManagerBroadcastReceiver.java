@@ -5,7 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
+
+import androidx.preference.PreferenceManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,9 +22,20 @@ import java.util.Collections;
 public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        //ELEGIMOS LA FRASE
-        ArrayList<String> frases = new ArrayList<String>();
+        //ELEGIMOS LA FRASE SEGÚN EL IDIOMA (por defecto español)
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String idioma = prefs.getString("idiomapref","es");
         InputStream fich = context.getResources().openRawResource(R.raw.frases);
+
+        if(idioma.equals("es")){
+            fich = context.getResources().openRawResource(R.raw.frases);
+        }else if(idioma.equals("en")){
+            fich = context.getResources().openRawResource(R.raw.sentences);
+        }else if(idioma.equals("eu")){
+            fich = context.getResources().openRawResource(R.raw.esaldiak);
+        }
+
+        ArrayList<String> frases = new ArrayList<String>();
         BufferedReader buff = new BufferedReader(new InputStreamReader(fich));
         try {
             String linea = buff.readLine();
