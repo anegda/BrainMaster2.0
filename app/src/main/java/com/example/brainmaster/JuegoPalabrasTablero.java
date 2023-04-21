@@ -37,6 +37,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
     static ClasePalabrasJuego juego;
     static String latitud;
     static String longitud;
+    static String nombreUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
@@ -84,6 +85,11 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
         int puntuación = juego.getPuntos();
         puntosText.setText(getString(R.string.puntuacion)+" "+Integer.toString(puntuación));
 
+        //OBTENER NOMBRE DE USUARIO
+        if (getIntent().hasExtra("usuario")){
+            nombreUsuario = getIntent().getStringExtra("usuario");
+        }
+
         //AÑADIMOS FUNCIONALIDAD AL BOTÓN NUEVO
         Button btn_nuevo = (Button) findViewById(R.id.btn_nuevo);
         btn_nuevo.setOnClickListener(new View.OnClickListener() {
@@ -96,9 +102,6 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                 boolean seguir = juego.comprobarRespuesta(false,palabraAct);
                 //SI PERDEMOS
                 if(!seguir){
-                    //OBTENEMOS EL NOMBRE GUARDADO COMO VARIABLE STATIC DE LA ACTIVITY MENU
-                    String nombreU = Menu.nombreUsuario;
-
                     //OBTENEMOS LA PUNTUACIÓN
                     int puntos =juego.getPuntos();
 
@@ -118,7 +121,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                         //INSERT EN BD REMOTA
                                         Data datos = new Data.Builder()
                                                 .putInt("funcion", 5)
-                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putString("usuario", nombreUsuario)
                                                 .putInt("puntos", puntos)
                                                 .putString("tipo", "palabras")
                                                 .putString("latitud", latitud)
@@ -138,7 +141,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                         //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
                                         Data datos = new Data.Builder()
                                                 .putInt("funcion", 5)
-                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putString("usuario", nombreUsuario)
                                                 .putInt("puntos", puntos)
                                                 .putString("tipo", "palabras")
                                                 .putString("latitud", "")
@@ -164,7 +167,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                     //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
                                     Data datos = new Data.Builder()
                                             .putInt("funcion", 5)
-                                            .putString("usuario", Menu.nombreUsuario)
+                                            .putString("usuario", nombreUsuario)
                                             .putInt("puntos", puntos)
                                             .putString("tipo", "palabras")
                                             .putString("latitud", "")
@@ -219,9 +222,6 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                 boolean seguir = juego.comprobarRespuesta(true,palabraAct);
                 //SI PERDEMOS
                 if(!seguir){
-                    //OBTENEMOS EL NOMBRE GUARDADO COMO VARIABLE STATIC DE LA ACTIVITY MENU
-                    String nombreU = Menu.nombreUsuario;
-
                     //OBTENEMOS LA PUNTUACIÓN
                     int puntos =juego.getPuntos();
 
@@ -241,7 +241,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                         //INSERT EN BD REMOTA
                                         Data datos = new Data.Builder()
                                                 .putInt("funcion", 5)
-                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putString("usuario", nombreUsuario)
                                                 .putInt("puntos", puntos)
                                                 .putString("tipo", "palabras")
                                                 .putString("latitud", latitud)
@@ -261,7 +261,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                         //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
                                         Data datos = new Data.Builder()
                                                 .putInt("funcion", 5)
-                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putString("usuario", nombreUsuario)
                                                 .putInt("puntos", puntos)
                                                 .putString("tipo", "palabras")
                                                 .putString("latitud", "")
@@ -287,7 +287,7 @@ public class JuegoPalabrasTablero extends AppCompatActivity {
                                     //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
                                     Data datos = new Data.Builder()
                                             .putInt("funcion", 5)
-                                            .putString("usuario", Menu.nombreUsuario)
+                                            .putString("usuario", nombreUsuario)
                                             .putInt("puntos", puntos)
                                             .putString("tipo", "palabras")
                                             .putString("latitud", "")

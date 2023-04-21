@@ -42,6 +42,8 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
     static String latitud ="";
     static String longitud ="";
 
+    static String nombreUsuario;
+
     //RUNNABLE EMPLEADO PARA HACER LA ANIMACIÓN DE LA SECUENCIA DE BOTONES.
     Runnable ronda = new Runnable() {
         @Override
@@ -136,6 +138,11 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
         Handler handler = new Handler();
         handler.postDelayed(ronda,500);
 
+        //OBTENER NOMBRE DE USUARIO
+        if (getIntent().hasExtra("usuario")){
+            nombreUsuario = getIntent().getStringExtra("usuario");
+        }
+
         //REALIZAMOS LA COMPARACIÓN AGREGANDOLE UN LISTENER AL BOTON "OK"
         Button btn_enter = findViewById(R.id.btn_enter);
         btn_enter.setOnClickListener(new View.OnClickListener() {
@@ -156,9 +163,6 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                     handler.postDelayed(ronda,500);
                 }
                 else{
-                    //OBTENEMOS EL NOMBRE GUARDADO COMO VARIABLE STATIC DE LA ACTIVITY MENU
-                    String nombreU = Menu.nombreUsuario;
-
                     //OBTENEMOS LA PUNTUACIÓN
                     int puntos =juego.getPuntos();
 
@@ -178,7 +182,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                                         //INSERT EN BD REMOTA
                                         Data datos = new Data.Builder()
                                                 .putInt("funcion", 5)
-                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putString("usuario", nombreUsuario)
                                                 .putInt("puntos", puntos)
                                                 .putString("tipo", "botones")
                                                 .putString("latitud", latitud)
@@ -198,7 +202,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                                         //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
                                         Data datos = new Data.Builder()
                                                 .putInt("funcion", 5)
-                                                .putString("usuario", Menu.nombreUsuario)
+                                                .putString("usuario", nombreUsuario)
                                                 .putInt("puntos", puntos)
                                                 .putString("tipo", "botones")
                                                 .putString("latitud", "")
@@ -224,7 +228,7 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
                                     //INTRODUCIMOS LA PUNTUACIÓN EN LA BD REMOTA (SIN UBICACIÓN)
                                     Data datos = new Data.Builder()
                                             .putInt("funcion", 5)
-                                            .putString("usuario", Menu.nombreUsuario)
+                                            .putString("usuario", nombreUsuario)
                                             .putInt("puntos", puntos)
                                             .putString("tipo", "botones")
                                             .putString("latitud", "")

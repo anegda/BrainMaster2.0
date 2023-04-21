@@ -43,6 +43,7 @@ public class Perfil extends AppCompatActivity {
     Calendar calendario = Calendar.getInstance();
 
     static String fotoDePerfil;
+    static String nombreUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //ESTABLECER IDIOMA USANDO PREFERENCIAS
@@ -71,9 +72,12 @@ public class Perfil extends AppCompatActivity {
         setContentView(R.layout.activity_perfil);
 
         //RELLENAMOS LOS CAMPOS
+        if (getIntent().hasExtra("usuario")){
+            nombreUsuario = getIntent().getStringExtra("usuario");
+        }
         Data datos0 = new Data.Builder()
                 .putInt("funcion",2)
-                .putString("usuario", Menu.nombreUsuario).build();
+                .putString("usuario", nombreUsuario).build();
         OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
         WorkManager.getInstance(Perfil.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Perfil.this, new Observer<WorkInfo>() {
             @Override

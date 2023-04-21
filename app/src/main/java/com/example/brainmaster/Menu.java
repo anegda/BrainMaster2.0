@@ -78,11 +78,15 @@ public class Menu extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.preferencias:
-                        startActivity(new Intent(Menu.this, Ajustes.class));
+                        Intent i = new Intent(Menu.this, Ajustes.class);
+                        i.putExtra("usuario",nombreUsuario);
+                        startActivity(i);
                         finish();
                         break;
                     case R.id.perfil:
-                        startActivity(new Intent(Menu.this, Perfil.class));
+                        Intent i2 = new Intent(Menu.this, Perfil.class);
+                        i2.putExtra("usuario",nombreUsuario);
+                        startActivity(i2);
                         finish();
                         break;
                     case R.id.compartir:
@@ -99,7 +103,9 @@ public class Menu extends AppCompatActivity {
                         startActivity(Intent.createChooser(compartir, "Compartir vía"));
                         break;
                     case R.id.contactos:
-                        startActivity(new Intent(Menu.this, Contactos.class));
+                        Intent i3 = new Intent(Menu.this, Contactos.class);
+                        i3.putExtra("usuario",nombreUsuario);
+                        startActivity(i3);
                         finish();
                         break;
                 }
@@ -113,11 +119,15 @@ public class Menu extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
-                    startActivity(new Intent(Menu.this, JuegoBotonesTablero.class));
+                    Intent i = new Intent(Menu.this, JuegoBotonesTablero.class);
+                    i.putExtra("usuario",nombreUsuario);
+                    startActivity(i);
                     finish();
                 }
                 else if(position==1){
-                    startActivity(new Intent(Menu.this, JuegoPalabrasTablero.class));
+                    Intent i = new Intent(Menu.this, JuegoPalabrasTablero.class);
+                    i.putExtra("usuario",nombreUsuario);
+                    startActivity(i);
                     finish();
                 }
                 else if(position==2){
@@ -125,7 +135,9 @@ public class Menu extends AppCompatActivity {
                     finish();
                 }
                 else if(position==3){
-                    startActivity(new Intent(Menu.this, MapsActivity.class));
+                    Intent i = new Intent(Menu.this, MapsActivity.class);
+                    i.putExtra("usuario",nombreUsuario);
+                    startActivity(i);
                     finish();
                 }
             }

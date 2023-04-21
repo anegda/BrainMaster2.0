@@ -46,6 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    static String nombreUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         super.onCreate(savedInstanceState);
 
+        //OBTENER NOMBRE DE USUARIO
+        if (getIntent().hasExtra("usuario")){
+            nombreUsuario = getIntent().getStringExtra("usuario");
+        }
+
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -90,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //LLAMAMOS A LA BD REMOTA Y HACEMOS UN SELECT DE LAS PARTIDAS REALIZADAS
         Data datos = new Data.Builder()
                 .putInt("funcion",7)
-                .putString("usuario", Menu.nombreUsuario).build();
+                .putString("usuario", nombreUsuario).build();
         OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
         WorkManager.getInstance(MapsActivity.this).getWorkInfoByIdLiveData(otwr.getId()).observe(MapsActivity.this, new Observer<WorkInfo>() {
             @Override
