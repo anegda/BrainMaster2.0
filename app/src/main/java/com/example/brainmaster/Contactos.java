@@ -1,7 +1,12 @@
 package com.example.brainmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -21,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -68,42 +74,57 @@ public class Contactos extends AppCompatActivity {
         arraypertenecia = new ArrayList<String>();
         arrayKeys = new ArrayList<String>();
         while(cursor.moveToNext()){
-            arraydedatos.add(cursor.getString(0));
-            arrayKeys.add(cursor.getString(1));
-
             //MIRO SI EL EMAIL ESTÁ REGISTRADO A LA APP
-            miBD GestorBD = new miBD(Contactos.this, "BrainMaster", null, 1);
-            SQLiteDatabase bd = GestorBD.getWritableDatabase();
-            String[] campos = new String[] {"Codigo"};
-            String [] argumentos = new String[] {cursor.getString(0)};
-            Cursor c2 = bd.query("Usuarios",campos,"email=?",argumentos, null,null,null);
-            //SI EXISTE EL EMAIL
-            if(c2.getCount()>0) {
-                arraypertenecia.add(getString(R.string.registrado));
-            }else{
-                arraypertenecia.add(getString(R.string.noRegistrado));
-            }
-        }
-        String[] a = arraydedatos.toArray(new String[0]);
-        String[] a2 = arraypertenecia.toArray(new String[0]);
+            String email = cursor.getString(0);
+            String key = cursor.getString(1);
+            Data datos0 = new Data.Builder()
+                    .putInt("funcion",9)
+                    .putString("email", cursor.getString(0)).build();
+            OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
+            WorkManager.getInstance(Contactos.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Contactos.this, new Observer<WorkInfo>() {
+                @Override
+                public void onChanged(WorkInfo workInfo) {
+                    if(workInfo!=null && workInfo.getState().isFinished()){
+                        arraydedatos.add(email);
+                        arrayKeys.add(key);
 
-        //CREAMOS UN LISTVIEW QUE EXPRESA SI NUESTROS CONTACTOS ESTÁN O NO REGISTRADOS EN LA APP
-        ArrayAdapter eladaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2,android.R.id.text1,arraydedatos){
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View vista= super.getView(position, convertView, parent);
-                TextView lineaprincipal=(TextView) vista.findViewById(android.R.id.text1);
-                TextView lineasecundaria=(TextView) vista.findViewById(android.R.id.text2);
-                lineaprincipal.setText(a[position]);
-                lineasecundaria.setText(a2[position].toString());
-                return vista;
-            }
-        };
-        ListView lista = (ListView) findViewById(R.id.listaContactos);
-        lista.setAdapter(eladaptador);
+                        Data outputData = workInfo.getOutputData();
+                        boolean registrado = outputData.getBoolean("registrado", false);
+                        if(registrado) {
+                            arraypertenecia.add(getString(R.string.registrado));
+                        }
+                        else{
+                            arraypertenecia.add(getString(R.string.noRegistrado));
+                        }
+                        String[] a = arraydedatos.toArray(new String[0]);
+                        String[] a2 = arraypertenecia.toArray(new String[0]);
+
+                        Log.d("DAS", String.valueOf(a.length));
+                        Log.d("DAS", String.valueOf(a2.length));
+
+                        //CREAMOS UN LISTVIEW QUE EXPRESA SI NUESTROS CONTACTOS ESTÁN O NO REGISTRADOS EN LA APP
+                        ArrayAdapter eladaptador = new ArrayAdapter<String>(Contactos.this, android.R.layout.simple_list_item_2,android.R.id.text1,arraydedatos){
+                            @Override
+                            public View getView(int position, View convertView, ViewGroup parent) {
+                                View vista= super.getView(position, convertView, parent);
+                                TextView lineaprincipal=(TextView) vista.findViewById(android.R.id.text1);
+                                TextView lineasecundaria=(TextView) vista.findViewById(android.R.id.text2);
+                                lineaprincipal.setText(a[position]);
+                                lineasecundaria.setText(a2[position].toString());
+                                return vista;
+                            }
+                        };
+                        ListView lista = (ListView) findViewById(R.id.listaContactos);
+                        lista.setAdapter(eladaptador);
+                    }
+                }
+            });
+            WorkManager.getInstance(Contactos.this).enqueue(otwr0);
+        }
 
         //AÑADIMOS LISTENERS PARA ELIMINAR O INVITAR CONTACTOS
         //PULSACIÓN CORTA ES INVITAR
+        ListView lista = (ListView) findViewById(R.id.listaContactos);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
