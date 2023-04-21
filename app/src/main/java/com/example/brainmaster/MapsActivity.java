@@ -94,7 +94,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onChanged(WorkInfo workInfo) {
                 if(workInfo!=null && workInfo.getState().isFinished()){
                     Data outputData = workInfo.getOutputData();
-                    if(outputData!=null){
+                    if(outputData!=null && !outputData.toString().equals("Data {}")){
+                        Log.d("DAS", String.valueOf(outputData));
                         String result = outputData.getString("result");
                         JSONParser parser = new JSONParser();
                         try {
