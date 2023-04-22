@@ -71,4 +71,5 @@
     <string name="añadir">ADD</string>
     <string name="registrado">Registered</string>
     <string name="noRegistrado">Not registered</string>
+    <string name="errorConexion">ERROR OF CONNECTION</string>
 </resources>

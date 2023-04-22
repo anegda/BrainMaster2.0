@@ -71,4 +71,5 @@
     <string name="añadir">GEHITU</string>
     <string name="registrado">Erregistratuta</string>
     <string name="noRegistrado">Ez dago erregistratuta</string>
+    <string name="errorConexion">CONEXIO ERROREA</string>
 </resources>
