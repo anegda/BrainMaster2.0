@@ -105,7 +105,6 @@ public class Ranking extends AppCompatActivity {
                                 try {
                                     JSONArray jsonArray = (JSONArray) parser.parse(result);
 
-
                                     for (int i = 0; i < jsonArray.size() && i < 5; i++) {
                                         JSONObject obj = (JSONObject) jsonArray.get(i);
                                         String usuario = (String) obj.get("usuario");
@@ -125,19 +124,7 @@ public class Ranking extends AppCompatActivity {
                                                     for (int i = 0; i < usuariosPalabras.size(); i++) {
                                                         perfilPalabras.add(diccUsuarioPerfil.get(usuariosPalabras.get(i)));
                                                     }
-                                                    if (perfilPalabras.size() != usuariosPalabras.size()) {
-                                                        //EN CASO DE QUE LA CONEXIÓN SEA LENTA O MALA
-                                                        Toast.makeText(getApplicationContext(), getString(R.string.errorConexion), Toast.LENGTH_LONG).show();
-
-                                                        //LISTA PALABRAS VACÍA
-                                                        ArrayList<String> usuariosPalabras1 = new ArrayList<String>();
-                                                        ArrayList<String> puntosPalabras1 = new ArrayList<String>();
-                                                        ArrayList<String> perfilPalabras1 = new ArrayList<String>();
-
-                                                        ListView ranking = (ListView) findViewById(R.id.listaRankingPalabras);
-                                                        AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuariosPalabras1.toArray(new String[0]), puntosPalabras1.toArray(new String[0]), perfilPalabras1.toArray(new String[0]));
-                                                        ranking.setAdapter(eladap);
-                                                    } else {
+                                                    if (perfilPalabras.size() == usuariosPalabras.size()) {
                                                         ListView ranking = (ListView) findViewById(R.id.listaRankingPalabras);
                                                         AdaptadorListViewRanking eladap = new AdaptadorListViewRanking(getApplicationContext(), usuariosPalabras.toArray(new String[0]), puntosPalabras.toArray(new String[0]), perfilPalabras.toArray(new String[0]));
                                                         ranking.setAdapter(eladap);
@@ -208,19 +195,7 @@ public class Ranking extends AppCompatActivity {
                                                     for (int i = 0; i < usuariosBotones.size(); i++) {
                                                         perfilBotones.add(diccUsuarioPerfil.get(usuariosBotones.get(i)));
                                                     }
-                                                    if (perfilBotones.size()!=usuariosBotones.size()){
-                                                        //EN CASO DE QUE LA CONEXIÓN SEA LENTA O MALA
-                                                        Toast.makeText(getApplicationContext(), getString(R.string.errorConexion), Toast.LENGTH_LONG).show();
-
-                                                        //LISTA BOTONES VACÍA
-                                                        ArrayList<String> usuariosBotones1 = new ArrayList<String>();
-                                                        ArrayList<String> puntosBotones1 = new ArrayList<String>();
-                                                        ArrayList<String> perfilBotones1 = new ArrayList<String>();
-
-                                                        ListView ranking2 = (ListView) findViewById(R.id.listaRankingBotones);
-                                                        AdaptadorListViewRanking eladap2 = new AdaptadorListViewRanking(getApplicationContext(), usuariosBotones1.toArray(new String[0]), puntosBotones1.toArray(new String[0]), perfilBotones1.toArray(new String[0]));
-                                                        ranking2.setAdapter(eladap2);
-                                                    }else{
+                                                    if (perfilBotones.size()==usuariosBotones.size()){
                                                         ListView ranking2 = (ListView) findViewById(R.id.listaRankingBotones);
                                                         AdaptadorListViewRanking eladap2 = new AdaptadorListViewRanking(getApplicationContext(), usuariosBotones.toArray(new String[0]), puntosBotones.toArray(new String[0]), perfilBotones.toArray(new String[0]));
                                                         ranking2.setAdapter(eladap2);
