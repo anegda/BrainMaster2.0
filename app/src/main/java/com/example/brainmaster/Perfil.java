@@ -7,6 +7,8 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -65,56 +67,63 @@ public class Perfil extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
-        //RELLENAMOS LOS CAMPOS
-        if (getIntent().hasExtra("usuario")){
-            nombreUsuario = getIntent().getStringExtra("usuario");
-        }
-        Data datos0 = new Data.Builder()
-                .putInt("funcion",2)
-                .putString("usuario", nombreUsuario).build();
-        OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
-        WorkManager.getInstance(Perfil.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Perfil.this, new Observer<WorkInfo>() {
-            @Override
-            public void onChanged(WorkInfo workInfo) {
-                if(workInfo!=null && workInfo.getState().isFinished()){
-                    Data outputData = workInfo.getOutputData();
-                    if(outputData!=null){
-                        String nombre = outputData.getString("nombre");
-                        EditText nombreE = (EditText) findViewById(R.id.nombreEEdit);
-                        nombreE.setText(nombre);
-                        nombreE.setEnabled(false);
+        //COMPROBAMOS SI EXISTE CONEXIÓN A INTERNET
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||  connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
+        if(!connected){
+            Toast.makeText(getApplicationContext(), getString(R.string.errorConexion), Toast.LENGTH_LONG).show();
+        }else {
 
-                        String apellidos = outputData.getString("apellidos");
-                        EditText apellidosE = (EditText) findViewById(R.id.apellidoEEdit);
-                        apellidosE.setText(apellidos);
-                        apellidosE.setEnabled(false);
+            //RELLENAMOS LOS CAMPOS
+            if (getIntent().hasExtra("usuario")) {
+                nombreUsuario = getIntent().getStringExtra("usuario");
+            }
+            Data datos0 = new Data.Builder()
+                    .putInt("funcion", 2)
+                    .putString("usuario", nombreUsuario).build();
+            OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
+            WorkManager.getInstance(Perfil.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Perfil.this, new Observer<WorkInfo>() {
+                @Override
+                public void onChanged(WorkInfo workInfo) {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        Data outputData = workInfo.getOutputData();
+                        if (outputData != null) {
+                            String nombre = outputData.getString("nombre");
+                            EditText nombreE = (EditText) findViewById(R.id.nombreEEdit);
+                            nombreE.setText(nombre);
+                            nombreE.setEnabled(false);
 
-                        String usuario = outputData.getString("usuario");
-                        EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
-                        usuarioE.setText(usuario);
-                        usuarioE.setEnabled(false);
+                            String apellidos = outputData.getString("apellidos");
+                            EditText apellidosE = (EditText) findViewById(R.id.apellidoEEdit);
+                            apellidosE.setText(apellidos);
+                            apellidosE.setEnabled(false);
 
-                        String email = outputData.getString("email");
-                        EditText emailE = (EditText)  findViewById(R.id.emailEEdit);
-                        emailE.setText(email);
-                        emailE.setEnabled(false);
+                            String usuario = outputData.getString("usuario");
+                            EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
+                            usuarioE.setText(usuario);
+                            usuarioE.setEnabled(false);
 
-                        /**
-                         * Basado en el código extraído de Stack Overflow
-                         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
-                         * Autor: https://stackoverflow.com/users/1191766/sachin10
-                         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
-                         */
-                        byte [] encodeByte = Base64.getDecoder().decode(fotoDePerfil);
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-                        ImageView imgView=(ImageView) findViewById(R.id.fotoDePerfilE);
-                        imgView.setImageBitmap(bitmap);
+                            String email = outputData.getString("email");
+                            EditText emailE = (EditText) findViewById(R.id.emailEEdit);
+                            emailE.setText(email);
+                            emailE.setEnabled(false);
+
+                            /**
+                             * Basado en el código extraído de Stack Overflow
+                             * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+                             * Autor: https://stackoverflow.com/users/1191766/sachin10
+                             * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+                             */
+                            byte[] encodeByte = Base64.getDecoder().decode(fotoDePerfil);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                            ImageView imgView = (ImageView) findViewById(R.id.fotoDePerfilE);
+                            imgView.setImageBitmap(bitmap);
+                        }
                     }
                 }
-            }
-        });
-        WorkManager.getInstance(Perfil.this).enqueue(otwr0);
-
+            });
+            WorkManager.getInstance(Perfil.this).enqueue(otwr0);
+        }
         //QUITAMOS LA ACTION BAR
         getSupportActionBar().hide();
 
@@ -123,56 +132,63 @@ public class Perfil extends AppCompatActivity {
         btn_editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //OBTENEMOS LOS DATOS DE LOS EDITTEXT
-
-                EditText passwordE = (EditText) findViewById(R.id.contraEEdit);
-                String password = passwordE.getText().toString();
-
-                EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
-                String usuario = usuarioE.getText().toString();
-
-                //COMPROBAMOS QUE TODOS LOS DATOS HAN SIDO INTRODUCIDOS
-                if (password.equals("")) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
+                //COMPROBAMOS SI EXISTE CONEXIÓN A INTERNET
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
+                if (!connected) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.errorConexion), Toast.LENGTH_LONG).show();
                 } else {
-                    //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
-                    /**
-                     * Basado en el código extraído de Stack Overflow
-                     * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
-                     * Autor: https://stackoverflow.com/users/1191766/sachin10
-                     * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
-                     */
-                    ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfilE);
-                    Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    img.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    byte[] b = baos.toByteArray();
-                    //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
-                    b = tratarImagen(b);
-                    fotoDePerfil = Base64.getEncoder().encodeToString(b);
 
-                    //ACTUALIZAMOS EL USUARIO EN LA BD
-                    Data datos0 = new Data.Builder()
-                            .putInt("funcion",4)
-                            .putString("usuario", usuario)
-                            .putString("password", password).build();
-                    OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
-                    WorkManager.getInstance(Perfil.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Perfil.this, new Observer<WorkInfo>() {
-                        @Override
-                        public void onChanged(WorkInfo workInfo) {
-                            if(workInfo!=null && workInfo.getState().isFinished()){
-                                Data outputData = workInfo.getOutputData();
-                                if(outputData!=null){
-                                    //ABRIMOS EL MENU
-                                    Intent i = new Intent(Perfil.this, Menu.class);
-                                    startActivity(i);
-                                    finish();
+                    //OBTENEMOS LOS DATOS DE LOS EDITTEXT
+                    EditText passwordE = (EditText) findViewById(R.id.contraEEdit);
+                    String password = passwordE.getText().toString();
+
+                    EditText usuarioE = (EditText) findViewById(R.id.usuarioEEdit);
+                    String usuario = usuarioE.getText().toString();
+
+                    //COMPROBAMOS QUE TODOS LOS DATOS HAN SIDO INTRODUCIDOS
+                    if (password.equals("")) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
+                    } else {
+                        //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
+                        /**
+                         * Basado en el código extraído de Stack Overflow
+                         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+                         * Autor: https://stackoverflow.com/users/1191766/sachin10
+                         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+                         */
+                        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfilE);
+                        Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        img.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        byte[] b = baos.toByteArray();
+                        //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
+                        b = tratarImagen(b);
+                        fotoDePerfil = Base64.getEncoder().encodeToString(b);
+
+                        //ACTUALIZAMOS EL USUARIO EN LA BD
+                        Data datos0 = new Data.Builder()
+                                .putInt("funcion", 4)
+                                .putString("usuario", usuario)
+                                .putString("password", password).build();
+                        OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
+                        WorkManager.getInstance(Perfil.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Perfil.this, new Observer<WorkInfo>() {
+                            @Override
+                            public void onChanged(WorkInfo workInfo) {
+                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                    Data outputData = workInfo.getOutputData();
+                                    if (outputData != null) {
+                                        //ABRIMOS EL MENU
+                                        Intent i = new Intent(Perfil.this, Menu.class);
+                                        startActivity(i);
+                                        finish();
+                                    }
                                 }
                             }
-                        }
-                    });
-                    WorkManager.getInstance(Perfil.this).enqueue(otwr0);
+                        });
+                        WorkManager.getInstance(Perfil.this).enqueue(otwr0);
 
+                    }
                 }
             }
         });

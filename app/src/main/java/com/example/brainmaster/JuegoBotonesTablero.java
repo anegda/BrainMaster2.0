@@ -9,12 +9,15 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -122,6 +125,13 @@ public class JuegoBotonesTablero extends AppCompatActivity implements FragmentBo
 
         //QUITAMOS LA ACTION BAR
         getSupportActionBar().hide();
+
+        //COMPROBAMOS SI EXISTE CONEXIÓN A INTERNET
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||  connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
+        if(!connected){
+            Toast.makeText(getApplicationContext(), getString(R.string.errorConexion), Toast.LENGTH_LONG).show();
+        }
 
         //SI ESTÁ EN HORIZONTAL ACTUALIZAR EL OTRO FRAGMENT
         int orientation = getResources().getConfiguration().orientation;
