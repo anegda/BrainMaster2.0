@@ -37,7 +37,8 @@ public class conexionBDWebService extends Worker {
         switch (opcion){
             case 1:
                 resultado = insertarUsuarios();
-                return Result.success();
+                outputData = new Data.Builder().putBoolean("correcto",resultado).build();
+                return Result.success(outputData);
             case 2:
                 outputData = selectNombreUsuario();
                 if(outputData==null) {

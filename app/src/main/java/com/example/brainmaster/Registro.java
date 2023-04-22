@@ -175,10 +175,12 @@ public class Registro extends AppCompatActivity {
                                                 @Override
                                                 public void onChanged(WorkInfo workInfo) {
                                                     if (workInfo != null && workInfo.getState().isFinished()) {
-                                                        Intent i = new Intent(Registro.this, Menu.class);
-                                                        i.putExtra("usuario", usuario);
-                                                        startActivity(i);
-                                                        finish();
+                                                        if(workInfo.getOutputData().getBoolean("correcto", false)){
+                                                            Intent i = new Intent(Registro.this, Menu.class);
+                                                            i.putExtra("usuario", usuario);
+                                                            startActivity(i);
+                                                            finish();
+                                                        }
                                                     }
                                                 }
                                             });
