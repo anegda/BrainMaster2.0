@@ -9,6 +9,8 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -103,84 +105,91 @@ public class Registro extends AppCompatActivity {
             @SuppressLint("MissingPermission")
             @Override
             public void onClick(View view) {
-                //OBTENEMOS TODOS LOS DATOS DE LOS EDITTEXT
-                EditText nombreE = (EditText) findViewById(R.id.nombreREdit);
-                String nombre = nombreE.getText().toString();
-                EditText apellidosE = (EditText) findViewById(R.id.apellidoREdit);
-                String apellidos = apellidosE.getText().toString();
-                EditText usuarioE = (EditText) findViewById(R.id.usuarioREdit);
-                String usuario = usuarioE.getText().toString();
-                EditText passwordE = (EditText) findViewById(R.id.contraREdit);
-                String password = passwordE.getText().toString();
-                EditText emailE = (EditText) findViewById(R.id.emailREdit);
-                String email = emailE.getText().toString();
-                EditText fechaNacE = (EditText) findViewById(R.id.fechaNacREdit);
-                String fechaNac = fechaNacE.getText().toString();
-
-                //COMPROBAMOS QUE TODOS LOS DATOS HAN SIDO INTRODUCIDOS
-                if (nombre.equals("") || apellidos.equals("") || usuario.equals("") || password.equals("") || email.equals("") || fechaNac.equals("")) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
+                //COMPROBAMOS SI EXISTE CONEXIÓN A INTERNET
+                ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||  connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
+                if(!connected){
+                    Toast.makeText(getApplicationContext(), getString(R.string.errorConexion), Toast.LENGTH_LONG).show();
                 } else {
-                    //SELECT EN BASE DE DATOS REMOTA PARA COMPROBAR SI EL USUARIO ESTÁ DISPONIBLE
-                    Data datos0 = new Data.Builder()
-                            .putInt("funcion",2)
-                            .putString("usuario", usuario).build();
-                    OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
-                    WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Registro.this, new Observer<WorkInfo>() {
-                        @Override
-                        public void onChanged(WorkInfo workInfo) {
-                            if(workInfo!=null && workInfo.getState().isFinished()){
-                                Data outputData = workInfo.getOutputData();
-                                if(outputData!=null){
-                                    boolean existe = outputData.getBoolean("existe", false);
-                                    if (existe) {
-                                        Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
-                                        /**
-                                         * Basado en el código extraído de Stack Overflow
-                                         * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
-                                         * Autor: https://stackoverflow.com/users/1191766/sachin10
-                                         * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
-                                         */
-                                        ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
-                                        Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
-                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                        img.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                                        byte[] b = baos.toByteArray();
-                                        //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
-                                        b = tratarImagen(b);
-                                        fotoDePerfil = Base64.getEncoder().encodeToString(b);
+                    //OBTENEMOS TODOS LOS DATOS DE LOS EDITTEXT
+                    EditText nombreE = (EditText) findViewById(R.id.nombreREdit);
+                    String nombre = nombreE.getText().toString();
+                    EditText apellidosE = (EditText) findViewById(R.id.apellidoREdit);
+                    String apellidos = apellidosE.getText().toString();
+                    EditText usuarioE = (EditText) findViewById(R.id.usuarioREdit);
+                    String usuario = usuarioE.getText().toString();
+                    EditText passwordE = (EditText) findViewById(R.id.contraREdit);
+                    String password = passwordE.getText().toString();
+                    EditText emailE = (EditText) findViewById(R.id.emailREdit);
+                    String email = emailE.getText().toString();
+                    EditText fechaNacE = (EditText) findViewById(R.id.fechaNacREdit);
+                    String fechaNac = fechaNacE.getText().toString();
 
-                                        //INSERT EN BD REMOTA
-                                        Data datos = new Data.Builder()
-                                                .putInt("funcion", 1)
-                                                .putString("nombre", nombre)
-                                                .putString("apellidos", apellidos)
-                                                .putString("usuario", usuario)
-                                                .putString("password", password)
-                                                .putString("email", email)
-                                                .putString("fechaNac", fechaNac)
-                                                .build();
-                                        OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
-                                        WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Registro.this, new Observer<WorkInfo>() {
-                                            @Override
-                                            public void onChanged(WorkInfo workInfo) {
-                                                if (workInfo != null && workInfo.getState().isFinished()) {
-                                                    Intent i = new Intent(Registro.this, Menu.class);
-                                                    i.putExtra("usuario", usuario);
-                                                    startActivity(i);
-                                                    finish();
+                    //COMPROBAMOS QUE TODOS LOS DATOS HAN SIDO INTRODUCIDOS
+                    if (nombre.equals("") || apellidos.equals("") || usuario.equals("") || password.equals("") || email.equals("") || fechaNac.equals("")) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.errorCampos), Toast.LENGTH_SHORT).show();
+                    } else {
+                        //SELECT EN BASE DE DATOS REMOTA PARA COMPROBAR SI EL USUARIO ESTÁ DISPONIBLE
+                        Data datos0 = new Data.Builder()
+                                .putInt("funcion", 2)
+                                .putString("usuario", usuario).build();
+                        OneTimeWorkRequest otwr0 = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos0).build();
+                        WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr0.getId()).observe(Registro.this, new Observer<WorkInfo>() {
+                            @Override
+                            public void onChanged(WorkInfo workInfo) {
+                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                    Data outputData = workInfo.getOutputData();
+                                    if (outputData != null) {
+                                        boolean existe = outputData.getBoolean("existe", false);
+                                        if (existe) {
+                                            Toast.makeText(getApplicationContext(), getString(R.string.errorRegistro), Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            //OBTENER STRING DEL BITMAP PARA ALMACENARLO EN LA BD
+                                            /**
+                                             * Basado en el código extraído de Stack Overflow
+                                             * Pregunta: https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+                                             * Autor: https://stackoverflow.com/users/1191766/sachin10
+                                             * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
+                                             */
+                                            ImageView fotoPerfil = (ImageView) findViewById(R.id.fotoDePerfil);
+                                            Bitmap img = ((BitmapDrawable) fotoPerfil.getDrawable()).getBitmap();
+                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                            img.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                            byte[] b = baos.toByteArray();
+                                            //PARA QUE NO EXISTAN PROBLEMAS CON EL TAMAÑO DE LA IMAGEN
+                                            b = tratarImagen(b);
+                                            fotoDePerfil = Base64.getEncoder().encodeToString(b);
+
+                                            //INSERT EN BD REMOTA
+                                            Data datos = new Data.Builder()
+                                                    .putInt("funcion", 1)
+                                                    .putString("nombre", nombre)
+                                                    .putString("apellidos", apellidos)
+                                                    .putString("usuario", usuario)
+                                                    .putString("password", password)
+                                                    .putString("email", email)
+                                                    .putString("fechaNac", fechaNac)
+                                                    .build();
+                                            OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(conexionBDWebService.class).setInputData(datos).build();
+                                            WorkManager.getInstance(Registro.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Registro.this, new Observer<WorkInfo>() {
+                                                @Override
+                                                public void onChanged(WorkInfo workInfo) {
+                                                    if (workInfo != null && workInfo.getState().isFinished()) {
+                                                        Intent i = new Intent(Registro.this, Menu.class);
+                                                        i.putExtra("usuario", usuario);
+                                                        startActivity(i);
+                                                        finish();
+                                                    }
                                                 }
-                                            }
-                                        });
-                                        WorkManager.getInstance(Registro.this).enqueue(otwr);
+                                            });
+                                            WorkManager.getInstance(Registro.this).enqueue(otwr);
+                                        }
                                     }
                                 }
                             }
-                        }
-                    });
-                    WorkManager.getInstance(Registro.this).enqueue(otwr0);
+                        });
+                        WorkManager.getInstance(Registro.this).enqueue(otwr0);
+                    }
                 }
             }
         });
