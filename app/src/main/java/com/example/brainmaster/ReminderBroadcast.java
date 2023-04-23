@@ -6,6 +6,13 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.util.Log;
+
+import androidx.preference.PreferenceManager;
+
+import java.util.Locale;
 
 
 public class ReminderBroadcast extends BroadcastReceiver {
@@ -18,11 +25,25 @@ public class ReminderBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         //CREAMOS LA NOTIFICACIÓN
+
+        //ELEGIMOS IDIOMA
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        String idioma = prefs.getString("idiomapref", "es");
+        String titulo = "Es la hora de practicar!";
+        String texto = "Entrenar el cerebro es super importante";
+        if(idioma.equals("eu")){
+            titulo = "Praktikatzeko ordua da!";
+            texto = "Garuna entrenatzea oso garrantzitsua da.";
+        } else if (idioma.equals("en")) {
+            titulo = "Its time for practice!";
+            texto = "Training the brain is very important.";
+        }
+
         //Codigo basado en los apuntes de egela: Tema 05 - Dialogs y notificaciones
         Notification.Builder builder = new Notification.Builder(context, "notifyDaily");
         builder.setSmallIcon(R.drawable.logo)
-                .setContentTitle(context.getResources().getString(R.string.noti2Titulo))
-                .setContentText(context.getResources().getString(R.string.noti2Contenido));
+                .setContentTitle(titulo)
+                .setContentText(texto);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES. O ) {
