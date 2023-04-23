@@ -114,10 +114,12 @@ public class Perfil extends AppCompatActivity {
                              * Autor: https://stackoverflow.com/users/1191766/sachin10
                              * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
                              */
-                            byte[] encodeByte = Base64.getDecoder().decode(fotoDePerfil);
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-                            ImageView imgView = (ImageView) findViewById(R.id.fotoDePerfilE);
-                            imgView.setImageBitmap(bitmap);
+                            if(fotoDePerfil!=null) {
+                                byte[] encodeByte = Base64.getDecoder().decode(fotoDePerfil);
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                                ImageView imgView = (ImageView) findViewById(R.id.fotoDePerfilE);
+                                imgView.setImageBitmap(bitmap);
+                            }
                         }
                     }
                 }

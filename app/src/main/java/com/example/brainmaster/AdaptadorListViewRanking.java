@@ -61,10 +61,15 @@ public class AdaptadorListViewRanking extends BaseAdapter {
          * Autor: https://stackoverflow.com/users/1191766/sachin10
          * Modificado por Ane García para traducir varios términos y adaptarlo a la aplicación
          */
-        byte [] encodeByte = Base64.getDecoder().decode(imagenes[i]);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-        ImageView img=(ImageView) view.findViewById(R.id.imagenRanking);
-        img.setImageBitmap(bitmap);
+        if (imagenes[i]==null){
+            ImageView img=(ImageView) view.findViewById(R.id.imagenRanking);
+            img.setBackgroundResource(R.drawable.ranking);
+        }else {
+            byte[] encodeByte = Base64.getDecoder().decode(imagenes[i]);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            ImageView img = (ImageView) view.findViewById(R.id.imagenRanking);
+            img.setImageBitmap(bitmap);
+        }
         return view;
     }
 }
